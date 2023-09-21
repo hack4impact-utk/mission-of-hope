@@ -1,38 +1,10 @@
-<!-- DELETE THIS SECTION AFTER USING TEMPLATE -->
-
-## About this repository
-
-This is a template repository meant to act as a starting point for new NextJS projects. This template will help us to standardize our development process and make it easier to onboard new developers.
-
-<!-- DELETE THIS SECTION AFTER USING TEMPLATE -->
-
-### What's Included
-
-- React/NextJS
-- MongoDB/Mongoose
-  - `utils/db-connect.ts` contains connection caching functionality for accessing MongoDB.
-- Material UI
-- Zod
-- Jest
-- ESLint
-- Prettier
-- VS Code
-  - Recommended extensions
-    - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-    - [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
-    - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-    - [Jest](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest)
-    - [Jest Runner](https://marketplace.visualstudio.com/items?itemName=firsttris.vscode-jest-runner)
-    - [Pretty TS Errors](https://marketplace.visualstudio.com/items?itemName=yoavbls.pretty-ts-errors)
-- GitHub
-  - [Pull Request template](https://github.com/hack4impact-utk/nextjs-template/blob/main/.github/pull_request_template.md)
-- Pre-commit linting hook
-
-# Project Title
+# Mission of Hope
 
 ## Overview
 
-Put an overview of the non-profit you are working with and what you are doing for them here.
+[Mission of Hope](https://missionofhope.org/) distributes school supplies to the poorest communities in rural Appalachia. They are partnered with 42 elementary and high schools in Southeast Kentucky and Northeast Tennessee. Additionally, they give toys, food, hygiene products, and clothes to children and families. Every year, they provide direct aid to over 13,000 children and families.
+
+This project aims to creat an inventory/donation system.
 
 ## Getting Started
 
