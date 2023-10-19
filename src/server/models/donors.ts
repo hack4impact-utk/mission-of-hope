@@ -15,9 +15,9 @@ const DonorSchema = new Schema(
       type: String,
       required: true,
     },
-    donationid: {
+    donation: {
       type: Schema.Types.ObjectId,
-      ref: 'Donation Id',
+      ref: 'Donation',
       required: true,
     },
   },
@@ -29,4 +29,4 @@ const DonorSchema = new Schema(
 export interface DonorDocument extends Omit<Donor, '_id'>, Document {}
 
 export default (models.Donation as Model<DonorDocument>) ||
-  model<DonorDocument>('Donation', DonorSchema);
+  model<DonorDocument>('Donor', DonorSchema);

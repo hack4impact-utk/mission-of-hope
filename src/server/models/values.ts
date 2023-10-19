@@ -16,9 +16,9 @@ const ValueSchema = new Schema(
       type: Boolean,
       required: true,
     },
-    donationid: {
+    donation: {
       type: Schema.Types.ObjectId,
-      ref: 'Donation Id',
+      ref: 'Donation',
       required: true,
     },
   },
@@ -30,4 +30,4 @@ const ValueSchema = new Schema(
 export interface ValueDocument extends Omit<Value, '_id'>, Document {}
 
 export default (models.Donation as Model<ValueDocument>) ||
-  model<ValueDocument>('Donation', ValueSchema);
+  model<ValueDocument>('Value', ValueSchema);
