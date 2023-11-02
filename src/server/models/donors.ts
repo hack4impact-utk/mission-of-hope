@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose';
-import { Donor } from '../../types/persons';
+import { DonorEntry } from '../../types/persons';
 
 const DonorSchema = new Schema(
   {
@@ -15,18 +15,18 @@ const DonorSchema = new Schema(
       type: String,
       required: true,
     },
-    donation: {
-      type: Schema.Types.ObjectId,
-      ref: 'Donation',
+    address: {
+      type: String,
       required: true,
     },
   },
   {
     versionKey: false,
+    tracking: true,
   }
 );
 
-export interface DonorDocument extends Omit<Donor, '_id'>, Document {}
+export interface DonorDocument extends Omit<DonorEntry, '_id'>, Document {}
 
 export default (models.Donation as Model<DonorDocument>) ||
   model<DonorDocument>('Donor', DonorSchema);
