@@ -6,6 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // Validate the request body against the schema
     const validateResult = zCreateUserRequest.safeParse(body);
     if (!validateResult.success) {
       return NextResponse.json(
@@ -14,6 +15,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // call the createUser function from the server actions
     const result = await createUser(validateResult.data);
     if (!result) {
       return NextResponse.json(
@@ -22,6 +24,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Return the user ID if successful
     return NextResponse.json({ _id: result._id }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
