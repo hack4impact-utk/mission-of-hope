@@ -1,3 +1,5 @@
+import PageHop from './jmcmaho9';
+
 export default function Home() {
-  return <h1>Home page</h1>;
+  return <PageHop></PageHop>;
 }
