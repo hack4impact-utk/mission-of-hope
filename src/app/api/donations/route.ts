@@ -1,20 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Donation } from '@/types/donation';
+import { zCreateDonationRequest } from '@/types/donation';
 import { createDonation } from '@/server/actions/donations';
 // import { CreateDonation } from '@/server/actions/donations';
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const donation: Donation = body;
+  try {
+    const requestBody = await request.json();
+    const validationResult = zCreateDonationRequest.safeParse(requestBody);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { message: validationResult.error },
+        { status: 400 }
+      );
+    }
 
-  const result = await createDonation(donation);
-  if (!result) {
-    return NextResponse.json(
-      { message: 'Donation Not Found' },
-      { status: 404 }
-    );
+    const result = await createDonation(requestBody);
+    if (!result) {
+      return NextResponse.json(
+        { message: 'Donation Not Found' },
+        { status: 404 }
+      );
+    }
+    console.log(result);
+
+    return NextResponse.json({ message: 'succsess' }, { status: 201 });
+  } catch {
+    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
-  console.log(result);
-
-  return NextResponse.json({ response: 'succsess' }, { status: 200 });
 }

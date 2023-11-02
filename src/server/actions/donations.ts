@@ -1,11 +1,13 @@
 import dbConnect from '@/utils/db-connect';
 import DonationSchema from '../models/donations';
-import { Donation } from '@/types/donation';
+import { CreateDonationRequest, DonationResponse } from '@/types/donation';
 
-export async function createDonation(donation: Donation): Promise<Donation> {
+export async function createDonation(
+  donation: CreateDonationRequest
+): Promise<DonationResponse> {
   await dbConnect();
 
-  const response: Donation = await DonationSchema.create(donation);
+  const response: DonationResponse = await DonationSchema.create(donation);
 
   return response;
 }
