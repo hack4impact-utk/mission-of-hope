@@ -1,0 +1,21 @@
+import { z } from 'zod';
+import zBase from './base';
+
+export const zItemBase = z.object({
+  category: z.string(),
+  name: z.string(),
+  high: z.number().optional(),
+  low: z.number().optional(),
+});
+
+export const zItemEntity = zItemBase.extend({ ...zBase.shape });
+
+export const zCreateItemRequest = zItemBase;
+
+export const zItemResponse = zItemEntity;
+
+export interface ItemEntity extends z.infer<typeof zItemEntity> {}
+
+export interface CreateItemRequest extends z.infer<typeof zCreateItemRequest> {}
+
+export interface ItemResponse extends z.infer<typeof zItemResponse> {}
