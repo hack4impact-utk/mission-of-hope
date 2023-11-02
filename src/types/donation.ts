@@ -1,21 +1,54 @@
-import { User, Donor } from './persons';
+import zBase from './base';
+import { z } from 'zod';
+import zObjectId from './objectId';
+import { zItemResponse } from './items';
 
-enum Evaluation {
-  High,
-  Low,
-}
+export const evaluationEnum = ['Hight', 'Low', 'Other'] as const;
 
-export interface Donation {
-  user: User;
-  name: string;
-  catagory: string;
-  entryDate: Date;
-  donor: Donor;
-  value: Value;
-}
+export const zDonationItemBase = z.object({
+  item: zObjectId,
+  quantity: z.number(),
+  barcode: z.array(z.string()).optional(),
+  value: z.object({
+    price: z.number(),
+    evaluation: z.enum(evaluationEnum),
+    inRange: z.boolean(),
+  }),
+});
 
-export interface Value {
-  price: number;
-  value: Evaluation;
-  inRange: boolean;
-}
+export const zDonationItemEntity = zDonationItemBase.extend({ ...zBase.shape });
+
+export const zCreateDonationItemRequest = zDonationItemBase;
+
+export const zDonationItemResponse = zDonationItemEntity.extend({
+  item: zItemResponse,
+});
+
+export interface DonationItemEntity
+  extends z.infer<typeof zDonationItemEntity> {}
+
+export interface CreateDonationItemRequest
+  extends z.infer<typeof zCreateDonationItemRequest> {}
+
+export interface DonationItemResponse
+  extends z.infer<typeof zDonationItemResponse> {}
+
+export const zDonationBase = z.object({
+  user: zObjectId,
+  items: z.array(zObjectId),
+  entryDate: z.date(),
+  donor: zObjectId,
+});
+
+export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });
+
+export const zCreateDonationRequest = zDonationBase;
+
+export const zDonationResponse = zDonationEntity;
+
+export interface DonationEntity extends z.infer<typeof zDonationEntity> {}
+
+export interface CreateDonationRequest
+  extends z.infer<typeof zCreateDonationRequest> {}
+
+export interface DonationResponse extends z.infer<typeof zDonationResponse> {}
