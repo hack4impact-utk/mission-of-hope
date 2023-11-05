@@ -8,8 +8,8 @@ const DonationSchema = new Schema(
       ref: 'User',
       required: true,
     },
-    value: {
-      type: Schema.Types.ObjectId,
+    items: {
+      type: [Schema.Types.ObjectId],
       ref: 'DonationItem',
       required: true,
     },

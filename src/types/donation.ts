@@ -36,7 +36,7 @@ export interface DonationItemResponse
 export const zDonationBase = z.object({
   user: zObjectId,
   items: z.array(zObjectId),
-  entryDate: z.date(),
+  entryDate: z.coerce.date(),
   donor: zObjectId,
 });
 
