@@ -15,15 +15,8 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await createDonation(requestBody);
-    if (!result) {
-      return NextResponse.json(
-        { message: 'Donation Not Found' },
-        { status: 404 }
-      );
-    }
-    console.log(result);
 
-    return NextResponse.json({ message: 'succsess' }, { status: 201 });
+    return NextResponse.json({ _id: result._id }, { status: 201 });
   } catch {
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
