@@ -17,12 +17,6 @@ export async function POST(request: NextRequest) {
 
     // call the createUser function from the server actions
     const result = await createUser(validateResult.data);
-    if (!result) {
-      return NextResponse.json(
-        { message: 'User creation failed' },
-        { status: 500 }
-      );
-    }
 
     // Return the user ID if successful
     return NextResponse.json({ _id: result._id }, { status: 201 });
