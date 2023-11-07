@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await createDonation(requestBody);
+    const result = await createDonation(validationResult.data);
 
     return NextResponse.json({ _id: result._id }, { status: 201 });
   } catch {
