@@ -17,7 +17,7 @@ export const zCreateUserRequest = zUserBase;
 
 export const zUserResponse = zUserEntity;
 
-export interface UserEntry extends z.infer<typeof zUserEntity> {}
+export interface UserEntity extends z.infer<typeof zUserEntity> {}
 
 export interface CreateUserRequest extends z.infer<typeof zCreateUserRequest> {}
 
@@ -33,7 +33,7 @@ export const zCreateDonorRequest = zDonorBase;
 
 export const zDonorResponse = zDonorEntity;
 
-export interface DonorEntry extends z.infer<typeof zDonorEntity> {}
+export interface DonorEntity extends z.infer<typeof zDonorEntity> {}
 
 export interface CreateDonorRequest
   extends z.infer<typeof zCreateDonorRequest> {}
