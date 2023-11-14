@@ -5,11 +5,11 @@ import { CreateDonorRequest, DonorResponse } from '@/types/persons';
 export async function createDonors(
   donor: CreateDonorRequest
 ): Promise<DonorResponse> {
-  // Connect to the MongoDB database
+  // Connect to the database
   await dbConnect();
 
   // Make a Donor using the mongoose create methods
-  // FIXME: this line is wrong
-  const request: DonorResponse = await DonorSchema.create(donor);
-  return request;
+  // TODO: I think this line is causing the error
+  const response: DonorResponse = await DonorSchema.create(donor);
+  return response;
 }
