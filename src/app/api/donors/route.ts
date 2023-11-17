@@ -19,8 +19,9 @@ export async function POST(request: NextRequest) {
     const result = await createDonors(validationResult.data);
 
     return NextResponse.json({ _id: result._id }, { status: 201 });
-  } catch {
+  } catch (error) {
     // create a response for any unknown errors
+    console.log(error);
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
 }

@@ -9,7 +9,7 @@ export async function createDonors(
   await dbConnect();
 
   // Make a Donor using the mongoose create methods
-  // TODO: I think this line is causing the error
   const response: DonorResponse = await DonorSchema.create(donor);
+
   return response;
 }
