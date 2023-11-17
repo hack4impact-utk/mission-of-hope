@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { zCreateDonationRequest } from '@/types/donation';
-import { createDonation } from '@/server/actions/donations';
+import { zCreateDonorRequest } from '@/types/persons';
+import { createDonors } from '@/server/actions/donors';
 
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
-    const validationResult = zCreateDonationRequest.safeParse(requestBody);
+    const validationResult = zCreateDonorRequest.safeParse(requestBody);
+
+    // Check for invalid body
     if (!validationResult.success) {
       return NextResponse.json(
         { message: validationResult.error },
@@ -13,10 +15,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await createDonation(validationResult.data);
+    // Creates a donor with mongoose driver
+    const result = await createDonors(validationResult.data);
 
     return NextResponse.json({ _id: result._id }, { status: 201 });
-  } catch {
+  } catch (error) {
+    // create a response for any unknown errors
+    console.log(error);
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
 }
