@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createItem } from '@/server/actions/items';
 import { zCreateItemRequest } from '@/types/items';
-// import { CreateDonation } from '@/server/actions/donations';
+// import { CreateItem } from '@/server/actions/donations';
 
 export async function POST(request: NextRequest) {
   try {
