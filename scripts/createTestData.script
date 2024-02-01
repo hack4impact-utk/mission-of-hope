@@ -2,9 +2,11 @@ use("test")
 
 // if specified, clear out all existing collections (except the users collection)
 if (true) {
-   db.volunteers.deleteMany({})
-   db.organizations.deleteMany({})
-   db.eventVolunteers.deleteMany({})
+   db.donors.deleteMany({})
+   db.users.deleteMany({})
+   db.items.deleteMany({})
+   db.donationItem.deleteMany({})
+   db.donation.deleteMany({})
 }
 
 // create 10 donorID variables
