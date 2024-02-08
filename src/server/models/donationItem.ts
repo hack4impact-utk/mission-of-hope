@@ -2,7 +2,7 @@ import { model, Schema, Document, models, Model } from 'mongoose';
 import { evaluationEnum } from '../../types/donation';
 import { DonationItemEntity } from '../../types/donation';
 
-const DonationItemtSchema = new Schema(
+const DonationItemSchema = new Schema(
   {
     item: {
       type: Schema.Types.ObjectId,
@@ -47,4 +47,4 @@ export interface DonationItemDocument
     Document {}
 
 export default (models.Donation as Model<DonationItemDocument>) ||
-  model<DonationItemDocument>('Value', DonationItemtSchema);
+  model<DonationItemDocument>('Value', DonationItemSchema);

@@ -11,7 +11,7 @@ if (true) {
 
 // create 10 donorID variables
 for (let i = 1; i <= 10; i++) {
-  this[`donorID${i}`] = ObjectId();
+  this[`donorId${i}`] = ObjectId();
 }
 
 db.donors.insertMany([
@@ -251,7 +251,7 @@ for (let i = 1; i <= 10; i++) {
 db.donationItem.insertMany([
     {
         "_id": donationItemId1,
-        "item": itemId1
+        "item": itemId1,
         "quantity": 10,
         "barcode": "ABC123",
         "value": {
@@ -368,25 +368,25 @@ for (let i = 1; i <= 10; i++) {
 
 db.donation.insertMany([
    {
-        "user": userId1
+        "user": userId1,
         "items": [itemId1],
         "entryDate": "2024-01-31",
         "donor": donorId1
     },
     {
-        "user": userId1
+        "user": userId1,
         "items": [itemId2, itemId4],
         "entryDate": "2024-02-01",
         "donor": donorId2
     },
     {
-        "user": userId2
+        "user": userId2,
         "items": [itemId4, itemId5, itemId6],
         "entryDate": "2024-02-02",
         "donor": donorId3
     },
     {
-        "user": userId3
+        "user": userId3,
         "items": [itemId7, itemId8, itemId9, itemId10],
         "entryDate": "2024-02-03",
         "donor": donorId4
