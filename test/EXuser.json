@@ -1,0 +1,28 @@
+{
+  "title": "Root",
+  "type": "object",
+  "required": ["lastName", "firstName", "email", "admin"],
+  "properties": {
+    "lastName": {
+      "$id": "#root/lastName",
+      "title": "LastName",
+      "type": "string"
+    },
+    "firstName": {
+      "$id": "#root/firstName",
+      "title": "FirstName",
+      "type": "string"
+    },
+    "email": {
+      "$id": "#root/email",
+      "title": "Email",
+      "type": "string"
+    },
+    "admin": {
+      "$id": "#root/admin",
+      "title": "Admin",
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

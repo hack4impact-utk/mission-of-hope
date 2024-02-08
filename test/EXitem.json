@@ -1,0 +1,27 @@
+{
+  "title": "Root",
+  "type": "object",
+  "required": ["name", "category", "high", "low"],
+  "properties": {
+    "name": {
+      "$id": "#root/name",
+      "title": "Name",
+      "type": "string"
+    },
+    "category": {
+      "$id": "#root/category",
+      "title": "Category",
+      "type": "string"
+    },
+    "high": {
+      "$id": "#root/high",
+      "title": "High",
+      "type": "number"
+    },
+    "low": {
+      "$id": "#root/address",
+      "title": "Address",
+      "type": "number"
+    }
+  }
+}
