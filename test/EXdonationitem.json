@@ -1,0 +1,46 @@
+{
+  "title": "Root",
+  "type": "object",
+  "required": ["item", "quantity", "barcode", "value"],
+  "properties": {
+    "item": {
+      "$id": "#root/item",
+      "title": "Item",
+      "type": "objectID"
+    },
+    "quantity": {
+      "$id": "#root/quantity",
+      "title": "Quantity",
+      "type": "number"
+    },
+    "barcode": {
+      "$id": "#root/barcode",
+      "title": "Barcode",
+      "type": "string"
+    },
+    "value": {
+      "$id": "#root/value",
+      "title": "value",
+      "type": "object",
+      "required": ["price", "evaluation", "inRange"],
+      "properties": {
+        "price": {
+          "$id": "#root/price",
+          "title": "Price",
+          "type": "number"
+        },
+        "evaluation": {
+          "$id": "#root/evaluation",
+          "title": "Evaluation",
+          "type": "string",
+          "enum": ["High", "Low", "Other"]
+        },
+        "inRange": {
+          "$id": "#root/inRange",
+          "title": "InRange",
+          "type": "string"
+        }
+      }
+    }
+  }
+}
