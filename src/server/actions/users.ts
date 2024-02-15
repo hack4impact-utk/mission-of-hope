@@ -1,11 +1,22 @@
-import UserSchema from '../models/users';
+import { CreateUserRequest, UserResponse } from '@/types/persons';
 import dbConnect from '@/utils/db-connect';
-import { UserResponse } from '@/types/persons';
+import UserSchema from '@/server/models/users';
 
 export async function getAllUsers(): Promise<UserResponse[]> {
   await dbConnect();
 
   const response: UserResponse[] = await UserSchema.find();
 
+  return response;
+}
+
+export async function createUser(
+  user: CreateUserRequest
+): Promise<UserResponse> {
+  // Connect to the database
+  await dbConnect();
+
+  // call mongoose create method
+  const response: UserResponse = await UserSchema.create(user);
   return response;
 }
