@@ -1,6 +1,15 @@
-import { createUser } from '@/server/actions/users';
+import { createUser, getAllUsers } from '@/server/actions/users';
 import { zCreateUserRequest } from '@/types/persons';
 import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET() {
+  try {
+    const result = await getAllUsers();
+    return NextResponse.json(result, { status: 200 });
+  } catch {
+    return NextResponse.json({ message: 'Error' }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {

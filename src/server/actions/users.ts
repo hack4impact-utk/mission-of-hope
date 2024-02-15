@@ -2,6 +2,14 @@ import { CreateUserRequest, UserResponse } from '@/types/persons';
 import dbConnect from '@/utils/db-connect';
 import UserSchema from '@/server/models/users';
 
+export async function getAllUsers(): Promise<UserResponse[]> {
+  await dbConnect();
+
+  const response: UserResponse[] = await UserSchema.find();
+
+  return response;
+}
+
 export async function createUser(
   user: CreateUserRequest
 ): Promise<UserResponse> {
