@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     // Return the user ID if successful
     return NextResponse.json({ _id: result._id }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
 }
