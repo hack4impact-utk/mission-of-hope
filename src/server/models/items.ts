@@ -28,5 +28,5 @@ const ItemSchema = new Schema(
 
 export interface ItemDocument extends Omit<ItemEntity, '_id'>, Document {}
 
-export default (models.Donation as Model<ItemDocument>) ||
+export default (models.Items as Model<ItemDocument>) ||
   model<ItemDocument>('Item', ItemSchema);

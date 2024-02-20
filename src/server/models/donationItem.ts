@@ -46,5 +46,5 @@ export interface DonationItemDocument
   extends Omit<DonationItemEntity, '_id'>,
     Document {}
 
-export default (models.Donation as Model<DonationItemDocument>) ||
+export default (models.DonationItem as Model<DonationItemDocument>) ||
   model<DonationItemDocument>('Value', DonationItemSchema);

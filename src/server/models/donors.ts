@@ -28,5 +28,5 @@ const DonorSchema = new Schema(
 
 export interface DonorDocument extends Omit<DonorEntity, '_id'>, Document {}
 
-export default (models.Donation as Model<DonorDocument>) ||
+export default (models.Donors as Model<DonorDocument>) ||
   model<DonorDocument>('Donor', DonorSchema);

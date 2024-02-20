@@ -6,12 +6,12 @@ if (true) {
    db.users.deleteMany({})
    db.items.deleteMany({})
    db.donationItem.deleteMany({})
-   db.donation.deleteMany({})
+   db.donations.deleteMany({})
 }
 
 // create 10 donorID variables
 for (let i = 1; i <= 10; i++) {
-  this[`donorId${i}`] = ObjectId();
+  this[`donorID${i}`] = ObjectId();
 }
 
 db.donors.insertMany([
@@ -366,7 +366,7 @@ for (let i = 1; i <= 10; i++) {
   this[`donationId${i}`] = ObjectId();
 }
 
-db.donation.insertMany([
+db.donations.insertMany([
    {
         "user": userId1,
         "items": [itemId1],
