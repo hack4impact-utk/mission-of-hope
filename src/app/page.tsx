@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Link from '@mui/material/Link';
+import '../server/actions/donations';
 
 export default function Home() {
   return (
