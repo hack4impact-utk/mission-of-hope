@@ -1,7 +1,6 @@
+import { CreateDonorRequest, DonorResponse } from '@/types/persons';
 import dbConnect from '@/utils/db-connect';
 import DonorSchema from '../models/donors';
-import { CreateDonorRequest, DonorResponse, DonorResponse } from '@/types/persons';
-
 
 export async function getAllDonors(): Promise<DonorResponse[]> {
   await dbConnect();
@@ -19,7 +18,6 @@ export async function createDonors(
 
   // Make a Donor using the mongoose create methods
   const response: DonorResponse = await DonorSchema.create(donor);
-
 
   return response;
 }
