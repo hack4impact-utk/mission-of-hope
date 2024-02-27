@@ -31,8 +31,7 @@ export async function getDonorById(id: string): Promise<DonorResponse | null> {
 
   try {
     // Find the Donor by id and populate the item field
-    const donor: DonorResponse | null =
-      await DonorSchema.findById(id).populate('item');
+    const donor: DonorResponse | null = await DonorSchema.findById(id);
 
     return donor;
   } catch (error) {
