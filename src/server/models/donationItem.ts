@@ -47,4 +47,8 @@ export interface DonationItemDocument
     Document {}
 
 export default (models.DonationItem as Model<DonationItemDocument>) ||
-  model<DonationItemDocument>('Value', DonationItemSchema);
+  model<DonationItemDocument>(
+    'DonationItem',
+    DonationItemSchema,
+    'donationItem'
+  );
