@@ -4,9 +4,9 @@ import { getDonorById } from '../../../../server/actions/donors';
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { volunteerId: string } }
+  { params }: { params: { donorId: string } }
 ) {
-  if (!params || !params.volunteerId) {
+  if (!params || !params.donorId) {
     return NextResponse.json(
       { error: 'Invalid request, no volunteer ID provided' },
       { status: 400 }
@@ -14,7 +14,7 @@ export async function GET(
   }
   try {
     // Get the donor by id
-    const result: DonorResponse | null = await getDonorById(params.volunteerId);
+    const result: DonorResponse | null = await getDonorById(params.donorId);
     // error checking to see if donor is found
     if (result) {
       return NextResponse.json(result, { status: 200 });
