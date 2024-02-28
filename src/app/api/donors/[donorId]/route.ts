@@ -6,6 +6,7 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: { donorId: string } }
 ) {
+  // Check if the request has a donorId
   if (!params || !params.donorId) {
     return NextResponse.json(
       { error: 'Invalid request, no volunteer ID provided' },
@@ -15,14 +16,9 @@ export async function GET(
   try {
     // Get the donor by id
     const result: DonorResponse | null = await getDonorById(params.donorId);
-    // error checking to see if donor is found
-    if (result) {
-      return NextResponse.json(result, { status: 200 });
-    } else {
-      return NextResponse.json({ error: 'Donor not found' }, { status: 500 });
-    }
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    // Catch any errors and throw them
-    throw error;
+    // if the donor is not found, return a 500 error
+    return NextResponse.json({ error: 'Donor not found' }, { status: 500 });
   }
 }
