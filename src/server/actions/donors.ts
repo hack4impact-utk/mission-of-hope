@@ -1,4 +1,7 @@
-import { CreateDonorRequest, DonorResponse } from '@/types/persons';
+import {
+  CreateDonorRequest,
+  DonorResponse, //deleted a duplicate DonorResponse
+} from '@/types/persons';
 import dbConnect from '@/utils/db-connect';
 import DonorSchema from '../models/donors';
 
@@ -20,4 +23,19 @@ export async function createDonors(
   const response: DonorResponse = await DonorSchema.create(donor);
 
   return response;
+}
+
+export async function getDonorById(id: string): Promise<DonorResponse | null> {
+  //Connect to the database
+  await dbConnect();
+
+  try {
+    // Find the Donor by id and populate the item field
+    const donor: DonorResponse | null = await DonorSchema.findById(id);
+
+    return donor;
+  } catch (error) {
+    // Catch any errors and throw them
+    throw error;
+  }
 }
