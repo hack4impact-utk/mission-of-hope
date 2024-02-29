@@ -1,9 +1,9 @@
-import dbConnect from '@/utils/db-connect';
-import DonorSchema from '../models/donors';
 import {
   CreateDonorRequest,
   DonorResponse, //deleted a duplicate DonorResponse
 } from '@/types/persons';
+import dbConnect from '@/utils/db-connect';
+import DonorSchema from '../models/donors';
 
 export async function getAllDonors(): Promise<DonorResponse[]> {
   await dbConnect();

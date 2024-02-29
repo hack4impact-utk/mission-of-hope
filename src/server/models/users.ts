@@ -28,5 +28,5 @@ const UserSchema = new Schema(
 
 export interface UserDocument extends Omit<UserEntity, '_id'>, Document {}
 
-export default (models.Users as Model<UserDocument>) ||
+export default (models.User as Model<UserDocument>) ||
   model<UserDocument>('User', UserSchema);
