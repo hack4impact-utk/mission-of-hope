@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   FormControl,
-  InputLabel,
-  Input,
+  TextField,
   Button,
   Select,
   MenuItem,
+  InputLabel,
 } from '@mui/material';
 import './styles.css';
 
@@ -18,110 +18,151 @@ const AddDonationForm = () => {
       </div>
       <div className="form-container">
         <form>
-          <FormControl>
-            <InputLabel htmlFor="donorName">Donor Name</InputLabel>
-            <Input id="donorName" />
-          </FormControl>
+          <TextField
+            id="donorName"
+            label="Donor Name"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donationDate">Donation Date</InputLabel>
-            <Input type="date" id="donationDate" />
-          </FormControl>
+          <TextField
+            type="date"
+            id="donationDate"
+            label="Donation Date"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="category">Category</InputLabel>
-            <Input id="category" />
-          </FormControl>
+          <TextField
+            id="category"
+            label="Category"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donatedItem">Donated Item</InputLabel>
-            <Input id="donatedItem" />
-          </FormControl>
+          <TextField
+            id="donatedItem"
+            label="Donated Item"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="itemValue">Item Value</InputLabel>
-            <Input id="itemValue" />
-          </FormControl>
+          <TextField
+            id="itemValue"
+            label="Item Value"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="quantity">Quantity</InputLabel>
-            <Input type="number" id="quantity" />
-          </FormControl>
+          <TextField
+            type="number"
+            id="quantity"
+            label="Quantity"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donationValue">Donation Value</InputLabel>
-            <Input id="donationValue" />
-          </FormControl>
+          <TextField
+            id="donationValue"
+            label="Donation Value"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
+          <FormControl fullWidth margin="normal" variant="outlined">
             <InputLabel id="highOrLowValue-label">High or Low Value</InputLabel>
             <Select
               labelId="highOrLowValue-label"
               id="highOrLowValue"
-              displayEmpty
-              value=""
+              label="High or Low Value"
             >
-              <MenuItem value="" disabled>
-                Select
-              </MenuItem>
               <MenuItem value="high">High</MenuItem>
               <MenuItem value="low">Low</MenuItem>
             </Select>
           </FormControl>
 
-          <FormControl>
-            <InputLabel htmlFor="user">User</InputLabel>
-            <Input id="user" />
-          </FormControl>
+          <TextField
+            id="user"
+            label="User"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
+          <FormControl fullWidth margin="normal" variant="outlined">
             <InputLabel id="hasDonatedBefore-label">
               Has this donor previously donated?
             </InputLabel>
             <Select
               labelId="hasDonatedBefore-label"
               id="hasDonatedBefore"
-              displayEmpty
-              value=""
+              label="Has this donor previously donated?"
             >
-              <MenuItem value="" disabled>
-                Select
-              </MenuItem>
               <MenuItem value="yes">Yes</MenuItem>
               <MenuItem value="no">No</MenuItem>
             </Select>
           </FormControl>
 
-          {/* Repeat the FormControl pattern for the new donor fields */}
-          <FormControl>
-            <InputLabel htmlFor="donorEmail">Email</InputLabel>
-            <Input type="email" id="donorEmail" />
-          </FormControl>
+          {/* Repeat the TextField pattern for the new donor fields */}
+          <TextField
+            type="email"
+            id="donorEmail"
+            label="Email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donorPhone">Phone</InputLabel>
-            <Input type="tel" id="donorPhone" />
-          </FormControl>
+          <TextField
+            type="tel"
+            id="donorPhone"
+            label="Phone"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donorAddress">Address</InputLabel>
-            <Input id="donorAddress" />
-          </FormControl>
+          <TextField
+            id="donorAddress"
+            label="Address"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donorCity">City</InputLabel>
-            <Input id="donorCity" />
-          </FormControl>
+          <TextField
+            id="donorCity"
+            label="City"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donorState">State</InputLabel>
-            <Input id="donorState" />
-          </FormControl>
+          <TextField
+            id="donorState"
+            label="State"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
-          <FormControl>
-            <InputLabel htmlFor="donorZip">Zip Code</InputLabel>
-            <Input id="donorZip" />
-          </FormControl>
+          <TextField
+            id="donorZip"
+            label="Zip Code"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
           <Button
             type="submit"
