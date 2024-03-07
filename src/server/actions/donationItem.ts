@@ -1,5 +1,9 @@
 import DonationItemSchema from '@/server/models/donationItem';
-import { DonationItemResponse } from '@/types/donation';
+import {
+  CreateDonationItemRequest,
+  DonationItemEntity,
+  DonationItemResponse,
+} from '@/types/donation';
 import dbConnect from '@/utils/db-connect';
 import ItemSchema from '@/server/models/items';
 ItemSchema;
@@ -16,4 +20,13 @@ export async function getDonationItemById(
   } catch (error) {
     return null;
   }
+}
+
+export async function createDonationItem(
+  donationItem: CreateDonationItemRequest
+): Promise<DonationItemEntity> {
+  await dbConnect();
+
+  const response = await DonationItemSchema.create(donationItem);
+  return response;
 }
