@@ -1,4 +1,13 @@
 /* AddDonationForm.css */
+*{
+    padding: 0px;
+    margin: 0px;
+}
+.topBar{
+    height: 10vh;
+    background-color: #4CAF50;
+}
+
 .form-container {
     padding: 20px;
     font-family: 'Arial, sans-serif';
