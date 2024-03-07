@@ -1,0 +1,40 @@
+/* AddDonationForm.css */
+.form-container {
+    padding: 20px;
+    font-family: 'Arial, sans-serif';
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+}
+
+.form-group.flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flex-item {
+    flex: 1;
+}
+
+.flex-item:not(:last-child) {
+    margin-right: 5px;
+}
+
+.flex-item:not(:first-child) {
+    margin-left: 5px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
