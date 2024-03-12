@@ -1,6 +1,7 @@
 * {
   padding: 0;
   margin: 0;
+  /* font-size: 18px; */
 }
 
 .topBar {
@@ -28,7 +29,30 @@
 }
 
 .form-container {
-  margin: 100px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 30px;
   padding: 10px;
   box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.25);
 }
+
+.form-container .MuiFormControl-root {
+  flex: 1;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between; /* This will space out the children evenly */
+  gap: 20px; /* Adjust the gap between items as needed */
+}
+
+/* It's a good idea to make the TextFields take equal width when flexed */
+.flex-container .MuiFormControl-root {
+  flex: 1;
+}
+
+#donorName {
+  width: 10px;
+}
+
