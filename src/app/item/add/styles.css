@@ -1,21 +1,18 @@
-/* AddDonationForm.css */
-*{
-    padding: 0px;
-    margin: 0px;
-        /* border: 1px solid gray; */
+* {
+  padding: 0;
+  margin: 0;
 }
 
-.topBar{
-    height: 15vh;
-    background-color: #4CAF50;
+.topBar {
+  width: 1440px;
+  height: 82px;
+  background-color: #379541cc;
 }
 
-.title{
-    margin: 30px;
+.vector {
+  position: absolute;
+  width: 100%;
+  height: 0px;
+  top: 223px;
+  border: 1px solid rgba(118, 118, 118, 0.5);
 }
-
-.form-container{
-    outline: 1px solid gray;
-    padding: 20px;
-}
-

@@ -16,6 +16,7 @@ const AddDonationForm = () => {
       <div className="title">
         <h1>Add Donation</h1>
       </div>
+      <div className="vector"></div>
       <div className="form-container">
         <form>
           <TextField
