@@ -117,7 +117,7 @@ const AddDonationForm = () => {
               variant="contained"
               color="primary"
               fullWidth // This makes the button take the full width of its container
-              style={{ height: '60px' }} // Adjust the height as needed to match the TextField components
+              style={{ height: '60px', textTransform: 'none' }} // Adjust the height as needed to match the TextField components
               className="submit-button"
             >
               Add Donation

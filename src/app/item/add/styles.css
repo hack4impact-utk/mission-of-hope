@@ -1,7 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 * {
   padding: 0;
   margin: 0;
-
   font-family: 'Inter';
 }
 
@@ -35,6 +35,7 @@
 .submit-button {
   padding: 10px;
   margin-top: 15px;
+  font-size: large;
   background-color: rgba(55, 149, 65, 0.8);
   color: white;
   cursor: pointer;
