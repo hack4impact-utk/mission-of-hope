@@ -13,187 +13,199 @@ import './styles.css';
 const AddDonationForm = () => {
   return (
     <>
-      <div className="topBar"></div>
+      {/*  need to put in navbar when finished */}
+      <div className="topBar">{/* need to put in profile icon */}</div>
       <div className="title">
         <h1>Add Donation</h1>
       </div>
       <div className="vector"></div>
-      <Grid
-        container
-        spacing={3}
-        className="form-container"
-        justifyContent="center"
-      >
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="donorName"
-            label="Donor Name"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="date"
-            id="donationDate"
-            label="Donation Date"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="category"
-            label="Category"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="donatedItem"
-            label="Donated Item"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="number"
-            id="quantity"
-            label="Quantity"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="itemValue"
-            label="Item Value"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="donationValue"
-            label="Donation Value"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
-            <InputLabel id="highOrLowValue-label">High or Low Value</InputLabel>
-            <Select
-              labelId="highOrLowValue-label"
-              id="highOrLowValue"
-              label="High or Low Value"
+      <div className="form-container">
+        <Grid container spacing={3} justifyContent="left">
+          <Grid item xs={12} sm={8}>
+            <TextField
+              id="donorName"
+              label="Donor Name"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              type="date"
+              id="donationDate"
+              label="Donation Date"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <TextField
+              id="category"
+              label="Category"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              id="donatedItem"
+              label="Donated Item"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              type="number"
+              id="quantity"
+              label="Quantity"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              id="itemValue"
+              label="Item Value"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              id="donationValue"
+              label="Donation Value"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth margin="normal" variant="outlined">
+              <InputLabel id="highOrLowValue-label">
+                High or Low Value
+              </InputLabel>
+              <Select
+                labelId="highOrLowValue-label"
+                id="highOrLowValue"
+                label="High or Low Value"
+              >
+                <MenuItem value="high">High</MenuItem>
+                <MenuItem value="low">Low</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              id="user"
+              label="User"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth // This makes the button take the full width of its container
+              style={{ height: '60px' }} // Adjust the height as needed to match the TextField components
+              className="submit-button"
             >
-              <MenuItem value="high">High</MenuItem>
-              <MenuItem value="low">Low</MenuItem>
-            </Select>
-          </FormControl>
+              Add Donation
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <FormControl fullWidth margin="normal" variant="outlined">
+              <InputLabel id="hasDonatedBefore-label">
+                Has this donor previously donated?
+              </InputLabel>
+              <Select
+                labelId="hasDonatedBefore-label"
+                id="hasDonatedBefore"
+                label="Has this donor previously donated?"
+              >
+                <MenuItem value="yes">Yes</MenuItem>
+                <MenuItem value="no">No</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={4.5}>
+            <TextField
+              id="donorName"
+              label="Donor Name"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={4.5}>
+            <TextField
+              type="email"
+              id="donorEmail"
+              label="Email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              type="tel"
+              id="donorPhone"
+              label="Phone"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4.5}>
+            <TextField
+              id="donorAddress"
+              label="Address"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              id="donorCity"
+              label="City"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <TextField
+              id="donorState"
+              label="State"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12} sm={2.5}>
+            <TextField
+              id="donorZip"
+              label="Zip Code"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="user"
-            label="User"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className="submit-button"
-          >
-            Add Donation
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
-            <InputLabel id="hasDonatedBefore-label">
-              Has this donor previously donated?
-            </InputLabel>
-            <Select
-              labelId="hasDonatedBefore-label"
-              id="hasDonatedBefore"
-              label="Has this donor previously donated?"
-            >
-              <MenuItem value="yes">Yes</MenuItem>
-              <MenuItem value="no">No</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="email"
-            id="donorEmail"
-            label="Email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="tel"
-            id="donorPhone"
-            label="Phone"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="donorAddress"
-            label="Address"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="donorCity"
-            label="City"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="donorState"
-            label="State"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="donorZip"
-            label="Zip Code"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-        </Grid>
-      </Grid>
+      </div>
     </>
   );
 };
