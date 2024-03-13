@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   FormControl,
   TextField,
@@ -7,8 +6,8 @@ import {
   MenuItem,
   InputLabel,
   Grid,
-} from '@mui/material';
-import './styles.css';
+} from '@mui/material'; //import necessary components from material ui
+import './styles.css'; //import css
 
 const AddDonationForm = () => {
   return (
@@ -18,9 +17,12 @@ const AddDonationForm = () => {
       <div className="title">
         <h1>Add Donation</h1>
       </div>
-      <div className="vector"></div>
+      <div className="vector">{/* vector as seen on figma */}</div>
       <div className="form-container">
         <Grid container spacing={3} justifyContent="left">
+          {/* Start of grid container */}
+          {/* Each box is seperated into a grid item */}
+          {/* xs and sm control the size of the element out of a 12 basis */}
           <Grid item xs={12} sm={8}>
             <TextField
               id="donorName"
@@ -116,8 +118,8 @@ const AddDonationForm = () => {
               type="submit"
               variant="contained"
               color="primary"
-              fullWidth // This makes the button take the full width of its container
-              style={{ height: '60px', textTransform: 'none' }} // Adjust the height as needed to match the TextField components
+              fullWidth
+              style={{ height: '60px', textTransform: 'none' }}
               className="submit-button"
             >
               Add Donation
@@ -209,5 +211,5 @@ const AddDonationForm = () => {
     </>
   );
 };
-
+// Export the form
 export default AddDonationForm;
