@@ -1,25 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Grid,
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import { Grid, TextField, Button } from '@mui/material';
 import './styles.css';
 
 const AddItemForm = () => {
-  const [itemRef, setItemRef] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [barcodes, setBarcodes] = useState('');
-  const [price, setPrice] = useState('');
-  const [evaluation, setEvaluation] = useState('');
-  const [inRange, setInRange] = useState('');
-
+  const [itemName, setItemName] = useState('');
+  const [category, setCategory] = useState('');
+  const [highValue, setHigh] = useState('');
+  const [lowValue, setLow] = useState('');
   return (
     <>
       <div className="topBar"></div>
@@ -29,91 +18,55 @@ const AddItemForm = () => {
       <div className="vector">{/* vector as seen on figma */}</div>
       <div className="form-container">
         <Grid container spacing={3} justifyContent="left">
-          {/* each grid item gets an xs and an sm value for grid position. */}
-          <Grid item xs={12} sm={9}>
+          {/* each grid item gets an xs and an sm value for grid position.*/}
+          <Grid item xs={12} sm={12}>
             <TextField
-              id="itemRef"
+              required
+              id="itemName"
               label="Item Name"
               variant="outlined"
               fullWidth
               margin="normal"
-              value={itemRef}
-              onChange={(e) => setItemRef(e.target.value)}
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              type="number"
-              id="quantity"
-              label="Quantity"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-            />
-          </Grid>
+          {/* May need to convert to dropdown later */}
           <Grid item xs={12}>
-            {/* still need to put in camera button or something to input barcode */}
             <TextField
-              id="barcode"
-              label="Barcode"
+              required
+              id="Category"
+              label="Category"
               variant="outlined"
               fullWidth
               margin="normal"
-              value={barcodes}
-              onChange={(e) => setBarcodes(e.target.value)}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={6}>
             <TextField
               type="number"
-              id="price"
-              label="Price"
+              id="highValue"
+              label="High Value"
               variant="outlined"
               fullWidth
               margin="normal"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={highValue}
+              onChange={(e) => setHigh(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth margin="normal" variant="outlined">
-              <InputLabel id="evaluation-label">Evaluation</InputLabel>
-              <Select
-                labelId="evaluation-label"
-                id="evaluation"
-                value={evaluation}
-                label="Evaluation"
-                onChange={(e) => setEvaluation(e.target.value)}
-              >
-                {['high', 'low'].map((value) => (
-                  <MenuItem key={value} value={value}>
-                    {value.charAt(0).toUpperCase() + value.slice(1)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth margin="normal" variant="outlined">
-              <InputLabel id="inRange-label">
-                Price in Expected Range
-              </InputLabel>
-              <Select
-                labelId="inRange-label"
-                id="inRange"
-                value={inRange}
-                label="Price in Expected Range"
-                onChange={(e) => setInRange(e.target.value)}
-              >
-                {['Yes', 'No'].map((value) => (
-                  <MenuItem key={value} value={value}>
-                    {value.charAt(0).toUpperCase() + value.slice(1)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              type="number"
+              id="lowValue"
+              label="Low Value"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={lowValue}
+              onChange={(e) => setLow(e.target.value)}
+            />
           </Grid>
           <Grid item xs={12}>
             <Button
