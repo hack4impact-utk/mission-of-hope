@@ -13,7 +13,7 @@ const AddItemForm = () => {
     <>
       <div className="topBar"></div>
       <div className="title">
-        <h1>Add Donation Item</h1>
+        <h1>Add Item</h1>
       </div>
       <div className="vector">{/* vector as seen on figma */}</div>
       <div className="form-container">
