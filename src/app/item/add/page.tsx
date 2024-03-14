@@ -13,7 +13,6 @@ import {
 import './styles.css';
 
 const AddItemForm = () => {
-  // Example state for item reference, could be replaced by actual item fetching and selection mechanism
   const [itemRef, setItemRef] = useState('');
   const [quantity, setQuantity] = useState('');
   const [barcodes, setBarcodes] = useState('');
@@ -30,6 +29,7 @@ const AddItemForm = () => {
       <div className="vector">{/* vector as seen on figma */}</div>
       <div className="form-container">
         <Grid container spacing={3} justifyContent="left">
+          {/* each grid item gets an xs and an sm value for grid position. */}
           <Grid item xs={12} sm={9}>
             <TextField
               id="itemRef"
@@ -54,6 +54,7 @@ const AddItemForm = () => {
             />
           </Grid>
           <Grid item xs={12}>
+            {/* still need to put in camera button or something to input barcode */}
             <TextField
               id="barcode"
               label="Barcode"
