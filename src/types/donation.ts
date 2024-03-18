@@ -9,7 +9,7 @@ export const evaluationEnum = ['Hight', 'Low', 'Other'] as const;
 export const zDonationItemBase = z.object({
   item: zObjectId,
   quantity: z.number(),
-  barcode: z.array(z.string()).optional(),
+  barcode: z.string().optional(),
   value: z.object({
     price: z.number(),
     evaluation: z.enum(evaluationEnum),
