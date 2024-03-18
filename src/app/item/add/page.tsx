@@ -1,28 +1,32 @@
 'use client';
 
 import { useState } from 'react';
-import { Grid, TextField, Button } from '@mui/material';
-import './styles.css';
+import { Grid, TextField, Button, Typography, Box } from '@mui/material';
 
 const AddItemForm = () => {
   const [itemName, setItemName] = useState('');
   const [category, setCategory] = useState('');
-  const [highValue, setHigh] = useState('');
-  const [lowValue, setLow] = useState('');
+  const [highValue, setHighValue] = useState('');
+  const [lowValue, setLowValue] = useState('');
+
   return (
-    <>
-      <div className="topBar"></div>
-      <div className="title">
-        <h1>Add Item</h1>
-      </div>
-      <div className="vector">{/* vector as seen on figma */}</div>
-      <div className="form-container">
-        <Grid container spacing={3} justifyContent="left">
-          {/* each grid item gets an xs and an sm value for grid position.*/}
-          <Grid item xs={12} sm={12}>
+    <Box>
+      <Box
+        sx={{ width: '100%', height: 82, backgroundColor: '#379541cc' }}
+      ></Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', height: 100, pl: 7 }}>
+        <Typography variant="h4">Add Item</Typography>
+      </Box>
+      <Box sx={{ width: '100%', border: '1px solid rgba(118, 118, 118, 0.5)' }}>
+        {/* vector as seen on figma */}
+      </Box>
+      <Box
+        sx={{ p: 5, m: 7, boxShadow: '4px 4px 4px 4px rgba(0, 0, 0, 0.25)' }}
+      >
+        <Grid container spacing={3} justifyContent="flex-start">
+          <Grid item xs={12}>
             <TextField
               required
-              id="itemName"
               label="Item Name"
               variant="outlined"
               fullWidth
@@ -31,11 +35,9 @@ const AddItemForm = () => {
               onChange={(e) => setItemName(e.target.value)}
             />
           </Grid>
-          {/* May need to convert to dropdown later */}
           <Grid item xs={12}>
             <TextField
               required
-              id="Category"
               label="Category"
               variant="outlined"
               fullWidth
@@ -43,6 +45,7 @@ const AddItemForm = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             />
+            {/* Consider using Select component here for dropdown */}
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -53,7 +56,10 @@ const AddItemForm = () => {
               fullWidth
               margin="normal"
               value={highValue}
-              onChange={(e) => setHigh(e.target.value)}
+              // now sets value to 0 if input is negative
+              onChange={(e) =>
+                setHighValue(Number(e.target.value) < 0 ? '0' : e.target.value)
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -65,24 +71,32 @@ const AddItemForm = () => {
               fullWidth
               margin="normal"
               value={lowValue}
-              onChange={(e) => setLow(e.target.value)}
+              onChange={(e) =>
+                setLowValue(Number(e.target.value) < 0 ? '0' : e.target.value)
+              }
             />
           </Grid>
+
           <Grid item xs={12}>
             <Button
-              className="submit-button"
               type="submit"
               variant="contained"
               color="primary"
               fullWidth
-              style={{ height: '56px', textTransform: 'none' }}
+              sx={{
+                height: 56,
+                textTransform: 'none',
+                mt: 2,
+                fontSize: 'large',
+                backgroundColor: 'rgba(55, 149, 65, 0.8)',
+              }}
             >
               Add Donation Item
             </Button>
           </Grid>
         </Grid>
-      </div>
-    </>
+      </Box>
+    </Box>
   );
 };
 
