@@ -7,7 +7,7 @@ export async function GET() {
     const result = await getAllUsers();
     return NextResponse.json(result, { status: 200 });
   } catch {
-    return NextResponse.json({ message: 'Error' }, { status: 500 });
+    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
 }
 
