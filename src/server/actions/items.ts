@@ -4,7 +4,7 @@ import { CreateItemRequest, ItemResponse } from '@/types/items';
 import items from '../models/items';
 
 export async function createItem(
-  items: CreateItemRequest
+  item: CreateItemRequest
 ): Promise<ItemResponse> {
   await dbConnect();
 
