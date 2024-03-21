@@ -13,10 +13,13 @@ export async function getDonationItemById(
   try {
     await dbConnect();
 
-    const form: DonationItemResponse | null =
-      await DonationItemSchema.findById(id).populate('item');
+    // const formI = await DonationItemSchema.findById(id).populate('item');
+    console.log(id);
 
-    return form;
+    // const form: DonationItemResponse | null =
+    //   await DonationItemSchema.findById(id).populate('item');
+
+    return null;
   } catch (error) {
     return null;
   }
