@@ -5,7 +5,7 @@ if (true) {
    db.donors.deleteMany({})
    db.users.deleteMany({})
    db.items.deleteMany({})
-   db.donationItem.deleteMany({})
+   db.donationItems.deleteMany({})
    db.donations.deleteMany({})
 }
 
@@ -248,7 +248,7 @@ for (let i = 1; i <= 10; i++) {
   this[`donationItemId${i}`] = ObjectId();
 }
 
-db.donationItem.insertMany([
+db.donationItems.insertMany([
     {
         "_id": donationItemId1,
         "item": itemId1,
@@ -371,24 +371,24 @@ db.donations.insertMany([
         "user": userId1,
         "items": [itemId1],
         "entryDate": "2024-01-31",
-        "donor": donorId1
+        "donor": donorID1
     },
     {
         "user": userId1,
         "items": [itemId2, itemId4],
         "entryDate": "2024-02-01",
-        "donor": donorId2
+        "donor": donorID2
     },
     {
         "user": userId2,
         "items": [itemId4, itemId5, itemId6],
         "entryDate": "2024-02-02",
-        "donor": donorId3
+        "donor": donorID3
     },
     {
         "user": userId3,
         "items": [itemId7, itemId8, itemId9, itemId10],
         "entryDate": "2024-02-03",
-        "donor": donorId4
+        "donor": donorID4
     }
 ])

@@ -1,30 +1,41 @@
+'use client'; //Needed for useState
 import Card from '@mui/material/Card';
+import { Typography } from '@mui/material';
 import CardContent from '@mui/material/CardContent';
+import { getDonationItems } from '@/server/actions/donationItem';
+import { DonationItemResponse } from '@/types/donation';
 
-export default function Home() {
-  const exDonItem = {
-    _id: {
-      $oid: '65c1251027ca0d6da7ccf409',
-    },
-    item: {
-      $oid: '65c1251027ca0d6da7ccf3ff',
-    },
-    quantity: 10,
-    barcode: 'ABC123',
-    value: {
-      price: 499.99,
-      evaluation: 'High',
-      inRange: true,
-    },
-  };
-  return (
-    <Card>
-      <CardContent>
-        <h1>ProductA</h1>
-        <p>Quantity: {exDonItem.quantity}</p>
-        <p>Price: {exDonItem.value.price}</p>
-        <p>Evaluation: {exDonItem.value.evaluation}</p>
-      </CardContent>
-    </Card>
-  );
+async function findDonationItems(): Promise<DonationItemResponse[] | null> {
+  try {
+    return await getDonationItems();
+  } catch (error) {
+    return null;
+  }
+}
+
+// eslint-disable-next-line @next/next/no-async-client-component
+export default async function Home() {
+  try {
+    const listOfDItems: DonationItemResponse[] | null =
+      await findDonationItems();
+
+    if (listOfDItems !== null) {
+      const dItemData: DonationItemResponse = listOfDItems[0];
+      return (
+        <Card>
+          <CardContent>
+            <Typography sx={{ fontWeight: 'bold' }} variant="h6" pt={2}>
+              dItemData.item.name
+            </Typography>
+            <Typography>Quantity: {dItemData.quantity}</Typography>
+            <Typography>Price: {dItemData.value.price}</Typography>
+            <Typography>Evaluation: {dItemData.value.evaluation}</Typography>
+          </CardContent>
+        </Card>
+      );
+    } else return <Card>Null</Card>;
+  } catch (error) {
+    console.log('help');
+    return null;
+  }
 }
