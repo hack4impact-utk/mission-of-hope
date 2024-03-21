@@ -15,7 +15,7 @@ const DonationItemSchema = new Schema(
     },
     barcode: {
       type: String,
-      required: true,
+      required: false,
     },
     value: {
       type: {
