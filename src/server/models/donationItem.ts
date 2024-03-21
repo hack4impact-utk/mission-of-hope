@@ -14,7 +14,7 @@ const DonationItemSchema = new Schema(
       required: true,
     },
     barcode: {
-      type: [String],
+      type: String,
       required: true,
     },
     value: {
@@ -47,4 +47,8 @@ export interface DonationItemDocument
     Document {}
 
 export default (models.DonationItem as Model<DonationItemDocument>) ||
-  model<DonationItemDocument>('Value', DonationItemSchema);
+  model<DonationItemDocument>(
+    'DonationItem',
+    DonationItemSchema,
+    'donationItem'
+  );

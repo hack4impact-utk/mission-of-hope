@@ -19,8 +19,7 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
   try {
     await dbConnect();
 
-    const response: DonationResponse[] =
-      await DonationSchema.find().populate('user');
+    const response: DonationResponse[] = await DonationSchema.find();
 
     return response;
   } catch (error) {

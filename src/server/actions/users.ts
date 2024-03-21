@@ -1,6 +1,6 @@
+import UserSchema from '@/server/models/users';
 import { CreateUserRequest, UserResponse } from '@/types/persons';
 import dbConnect from '@/utils/db-connect';
-import UserSchema from '@/server/models/users';
 
 export async function getAllUsers(): Promise<UserResponse[]> {
   await dbConnect();
@@ -19,4 +19,16 @@ export async function createUser(
   // call mongoose create method
   const response: UserResponse = await UserSchema.create(user);
   return response;
+}
+
+export async function getUserById(
+  userId: string
+): Promise<UserResponse | null> {
+  try {
+    await dbConnect();
+    const user: UserResponse | null = await UserSchema.findById(userId);
+    return user;
+  } catch (error) {
+    return null;
+  }
 }
