@@ -17,3 +17,16 @@ export async function getDonationItemById(
     return null;
   }
 }
+
+export async function getAllDonationItems(): Promise<DonationItemResponse[]> {
+  try {
+    await dbConnect();
+
+    const response: DonationItemResponse[] =
+      await DonationItemSchema.find().populate('item');
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
