@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { Grid, TextField, Button, Typography, Box } from '@mui/material';
 
@@ -10,19 +9,43 @@ const AddItemForm = () => {
   const [lowValue, setLowValue] = useState('');
 
   return (
-    <Box>
+    <>
       <Box
-        sx={{ width: '100%', height: 82, backgroundColor: '#379541cc' }}
+        sx={{
+          width: '100%',
+          height: '10vh',
+          backgroundColor: '#379541cc',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+        }}
       ></Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', height: 100, pl: 7 }}>
-        <Typography variant="h4">Add Item</Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          height: 100,
+          pl: 7,
+          mt: '10vh',
+        }}
+      >
+        <Typography variant="h4" sx={{ pl: 5 }}>
+          Add Item
+        </Typography>
       </Box>
-      <Box sx={{ width: '100%', border: '1px solid rgba(118, 118, 118, 0.5)' }}>
+      <Box
+        sx={{
+          width: '100%',
+          border: '1px solid rgba(118, 118, 118, 0.5)',
+          position: 'absolute',
+          left: 0,
+          right: 0,
+        }}
+      >
         {/* vector as seen on figma */}
       </Box>
-      <Box
-        sx={{ p: 5, m: 7, boxShadow: '4px 4px 4px 4px rgba(0, 0, 0, 0.25)' }}
-      >
+      <Box sx={{ p: 5, m: 7, boxShadow: 4 }}>
         <Grid container spacing={3} justifyContent="flex-start">
           <Grid item xs={12}>
             <TextField
@@ -56,7 +79,6 @@ const AddItemForm = () => {
               fullWidth
               margin="normal"
               value={highValue}
-              // now sets value to 0 if input is negative
               onChange={(e) =>
                 setHighValue(Number(e.target.value) < 0 ? '0' : e.target.value)
               }
@@ -76,7 +98,6 @@ const AddItemForm = () => {
               }
             />
           </Grid>
-
           <Grid item xs={12}>
             <Button
               type="submit"
@@ -86,7 +107,6 @@ const AddItemForm = () => {
               sx={{
                 height: 56,
                 textTransform: 'none',
-                mt: 2,
                 fontSize: 'large',
                 backgroundColor: 'rgba(55, 149, 65, 0.8)',
               }}
@@ -96,7 +116,7 @@ const AddItemForm = () => {
           </Grid>
         </Grid>
       </Box>
-    </Box>
+    </>
   );
 };
 
