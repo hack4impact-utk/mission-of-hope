@@ -34,7 +34,10 @@ export default function Home() {
           <Link href="./User" style={{ color: 'black', fontSize: '40px' }}>
             User
           </Link>
-          <Link href="./Item" style={{ color: 'black', fontSize: '40px' }}>
+          <Link
+            href="./donationItem"
+            style={{ color: 'black', fontSize: '40px' }}
+          >
             Inventory
           </Link>
         </div>
