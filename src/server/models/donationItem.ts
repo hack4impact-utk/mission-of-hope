@@ -1,6 +1,5 @@
-import { model, Schema, Document, models, Model } from 'mongoose';
-import { evaluationEnum } from '../../types/donation';
-import { DonationItemEntity } from '../../types/donation';
+import { Document, Model, Schema, model, models } from 'mongoose';
+import { DonationItemEntity, evaluationEnum } from '../../types/donation';
 
 const DonationItemSchema = new Schema(
   {
@@ -14,7 +13,7 @@ const DonationItemSchema = new Schema(
       required: true,
     },
     barcode: {
-      type: [String],
+      type: String,
       required: true,
     },
     value: {
@@ -46,9 +45,9 @@ export interface DonationItemDocument
   extends Omit<DonationItemEntity, '_id'>,
     Document {}
 
-export default (models.DonationItem as Model<DonationItemDocument>) ||
+export default (models.DonationItems as Model<DonationItemDocument>) ||
   model<DonationItemDocument>(
-    'DonationItem',
+    'DonationItems',
     DonationItemSchema,
-    'donationItem'
+    'donationItems'
   );
