@@ -1,4 +1,7 @@
-import { createDonationItem } from '@/server/actions/donationItem';
+import {
+  createDonationItem,
+  getAllDonationItems,
+} from '@/server/actions/donationItem';
 import { zCreateDonationItemRequest } from '@/types/donation';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -18,5 +21,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ _id: result._id }, { status: 201 });
   } catch {
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const result = await getAllDonationItems();
+    return NextResponse.json(result, { status: 200 });
+  } catch {
+    return NextResponse.json({ message: 'Error' }, { status: 500 });
   }
 }
