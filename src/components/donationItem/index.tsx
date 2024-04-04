@@ -9,7 +9,7 @@ interface Props {
   onChange: (donationItemData: DonationItemResponse) => void;
 }
 
-export default function Home(props: Props) {
+export default function DonationItemAutofill(props: Props) {
   const [donationItemOptions] = useState<DonationItemResponse[]>(
     props.donationItems
   );
