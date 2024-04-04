@@ -1,5 +1,6 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 
 import React from 'react';
 
@@ -31,23 +32,30 @@ export default function BasicCard() {
       <div
         style={{ display: 'flex', justifyContent: 'center', color: 'orange' }}
       >
-        <h1>User List</h1>
+        <Typography variant="h4" fontWeight="bold" sx={{ pl: 0 }}>
+          User List
+        </Typography>
       </div>
 
       {userList.map((user) => {
         return (
           <Card key={user._id.$oid} sx={{ minWidth: 275 }}>
-            <div>
-              {/* <div style={{ display: 'flex', justifyContent: 'center' }}> */}
-              <CardContent>
-                <h2 style={{ display: 'flex', justifyContent: 'center' }}>
-                  {user.firstName + ' ' + user.lastName}
-                </h2>
-                <p style={{ display: 'flex', justifyContent: 'center' }}>
-                  {user.email}
-                </p>
-              </CardContent>
-            </div>
+            {/* <div style={{ display: 'flex', justifyContent: 'center' }}> */}
+            <CardContent>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                {user.firstName + ' ' + user.lastName}
+              </Typography>
+              <Typography
+                variant="body1"
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                {user.email}
+              </Typography>
+            </CardContent>
           </Card>
         );
       })}
