@@ -25,6 +25,19 @@ export async function getDonationItemById(
   }
 }
 
+export async function getAllDonationItems(): Promise<DonationItemResponse[]> {
+  try {
+    await dbConnect();
+
+    const response: DonationItemResponse[] =
+      await DonationItemSchema.find().populate('item');
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function createDonationItem(
   donationItem: CreateDonationItemRequest
 ): Promise<DonationItemEntity> {
