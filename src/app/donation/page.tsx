@@ -1,5 +1,5 @@
 'use client';
-import { Button, InputLabel } from '@mui/material';
+import { Button, InputLabel, Typography } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -141,20 +141,25 @@ export default function DonationsForm() {
           </FormControl>
         </div>
 
+        {prevDonated && (
+          <Typography component="h3" mb={1}>
+            Please fill out the email before proceeding
+          </Typography>
+        )}
         {/* For when user selects from yes/no dropdown */}
         <div className={styles.nameEmailPhone}>
-          <TextField
-            id="outlined-required"
-            label="Donor Name"
-            value={dropdownDonorName}
-            onChange={(e) => setDropdownDonarName(e.target.value)}
-          />
           <TextField
             label="Email"
             id="outlined-required"
             value={donorEmail}
             onChange={(e) => setDonorEmail(e.target.value)}
             type="email"
+          />
+          <TextField
+            id="outlined-required"
+            label="Donor Name"
+            value={dropdownDonorName}
+            onChange={(e) => setDropdownDonarName(e.target.value)}
           />
           <TextField
             label="Phone"
