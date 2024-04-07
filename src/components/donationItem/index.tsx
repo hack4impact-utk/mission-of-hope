@@ -1,8 +1,8 @@
 'use client'; //Needed for useState
 // import { Autocomplete, Card, CardContent, TextField, Typography } from '@mui/material';
-import { Card, CardContent, Typography } from '@mui/material';
+// import { Card, CardContent, Typography } from '@mui/material';
 import { DonationItemResponse } from '@/types/donation';
-import { useState } from 'react';
+// import { useState } from 'react';
 
 interface Props {
   donationItems: DonationItemResponse[];
@@ -13,11 +13,15 @@ export default function DonationItemAutofill(props: Props) {
   // const [donationItemOptions] = useState<DonationItemResponse[]>(
   //   props.donationItems
   // );
-  const [donationItem /*, changeDonation*/] = useState<DonationItemResponse>(
-    props.donationItemData
-  );
+  // const [donationItem /*, changeDonation*/] = useState<DonationItemResponse>(
+  //   props.donationItemData
+  // );
+  console.log(props.donationItems);
   return (
     <>
+      <DonationItemTable
+        donationItemData={props.donationItemData}
+      ></DonationItemTable>
       {/* <Autocomplete
       sx={{ mt: 2 }}
       freeSolo
@@ -47,7 +51,6 @@ export default function DonationItemAutofill(props: Props) {
         />
       )}
     /> */}
-      <DonationItemTable donationItemData={donationItem}></DonationItemTable>
     </>
   );
 }
@@ -62,18 +65,20 @@ function DonationItemTable(data: TableData) {
   //   await findDonationItems();
   // useEffect(() => dItemChange(listOfDItems[0]), [listOfDItems])
 
+  console.log(data);
   return (
-    <Card>
-      <CardContent>
-        <Typography sx={{ fontWeight: 'bold' }} variant="h6" pt={2}>
-          {data.donationItemData.item.name}
-        </Typography>
-        <Typography>Quantity: {data.donationItemData.quantity}</Typography>
-        <Typography>Price: {data.donationItemData.value.price}</Typography>
-        <Typography>
-          Evaluation: {data.donationItemData.value.evaluation}
-        </Typography>
-      </CardContent>
-    </Card>
+    <p>Hello</p>
+    // <Card>
+    //   <CardContent>
+    //     <Typography sx={{ fontWeight: 'bold' }} variant="h6" pt={2}>
+    //       {data.donationItemData.item.name}
+    //     </Typography>
+    //     <Typography>Quantity: {data.donationItemData.quantity}</Typography>
+    //     <Typography>Price: {data.donationItemData.value.price}</Typography>
+    //     <Typography>
+    //       Evaluation: {data.donationItemData.value.evaluation}
+    //     </Typography>
+    //   </CardContent>
+    // </Card>
   );
 }

@@ -15,13 +15,13 @@ import { getAllDonationItems } from '@/server/actions/donationItem';
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
   const listOfDItems: DonationItemResponse[] = await getAllDonationItems();
-  console.log(listOfDItems);
+  // console.log(listOfDItems[0]);
 
   return (
     <DonationItemAutofill
       donationItems={listOfDItems}
       donationItemData={listOfDItems[0]}
-    ></DonationItemAutofill>
+    />
   );
 }
 // try {
