@@ -10,7 +10,7 @@ const AddItemForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    // Validate form fields
     const requestData = {
       name: itemName,
       category: category,
@@ -19,6 +19,7 @@ const AddItemForm = () => {
     };
 
     try {
+      // Send POST request to add item
       const response = await fetch('../../api/items', {
         method: 'POST',
         headers: {
@@ -26,7 +27,7 @@ const AddItemForm = () => {
         },
         body: JSON.stringify(requestData),
       });
-
+      // Check if response is successful
       if (response.ok) {
         // Handle successful response
         console.log('Item added successfully');
