@@ -8,36 +8,28 @@ import { useState } from 'react';
 import styles from './styles.module.css';
 
 export default function DonationsForm() {
-  const [donorName, setDonorName] = useState('');
-  const [donationDate, setDonationDate] = useState('');
-  const [category, setCategory] = useState('');
-  const [donatedItem, setDonatedItem] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [alertQuantity, setAlertQuantity] = useState('');
-  const [itemValue, setItemValue] = useState('');
-  const [donationValue, setDonationValue] = useState('');
-  const [prevDonated, setPrevDonated] = useState(false);
-  const [user, setUser] = useState('');
-  const [dropdownDonorName, setDropdownDonarName] = useState('');
-  const [donorEmail, setDonorEmail] = useState('');
-  const [donorPhone, setDonorPhone] = useState('');
-  const [donorAddress, setDonorAddress] = useState('');
-  const [donorCity, setDonorCity] = useState('');
-  const [donorState, setDonorState] = useState('');
-  const [donorZip, setDonorZip] = useState('');
+  const [donorData, setDonorData] = useState({
+    donorName: '',
+    donationDate: '',
+    category: '',
+    donatedItem: '',
+    quantity: '',
+    alertQuantity: '',
+    itemValue: '',
+    donationValue: '',
+    prevDonated: false,
+    user: '',
+    dropdownDonorName: '',
+    donorEmail: '',
+    donorPhone: '',
+    donorAddress: '',
+    donorCity: '',
+    donorState: '',
+    donorZip: '',
+  });
 
   const handleAddDonation = () => {
     alert('Donation added successfully!');
-    setDonorName('');
-    setDonationDate('');
-    setCategory('');
-    setDonatedItem('');
-    setQuantity('');
-    setAlertQuantity('');
-    setItemValue('');
-    setDonationValue('');
-    setUser('');
-    setPrevDonated(false);
   };
 
   return (
@@ -51,39 +43,49 @@ export default function DonationsForm() {
             className={styles.donorNameField}
             id="outlined-required"
             label="Donor Name"
-            value={donorName}
-            onChange={(e) => setDonorName(e.target.value)}
+            value={donorData.donorName}
+            onChange={(e) =>
+              setDonorData({ ...donorData, donorName: e.target.value })
+            }
           />
           <TextField
             className={styles.donationDateField}
             id="outlined-required"
-            value={donationDate}
+            value={donorData.donationDate}
             type="date"
-            onChange={(e) => setDonationDate(e.target.value)}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donationDate: e.target.value });
+            }}
           />
         </div>
         <TextField
           className={styles.categoryField}
           id="outlined-required"
           label="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={donorData.category}
+          onChange={(e) => {
+            setDonorData({ ...donorData, category: e.target.value });
+          }}
         />
         <div className={styles.thirdRowContainer}>
           <TextField
             className={styles.donatedItemField}
             label="Donated Item"
             id="outlined-multiline-static"
-            value={donatedItem}
-            onChange={(e) => setDonatedItem(e.target.value)}
+            value={donorData.donatedItem}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donatedItem: e.target.value });
+            }}
           />
           <TextField
             className={styles.quantityField}
             id="outlined-required"
             label="Quantity"
             type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            value={donorData.quantity}
+            onChange={(e) => {
+              setDonorData({ ...donorData, quantity: e.target.value });
+            }}
           />
         </div>
         <div className={styles.fourthRowContainer}>
@@ -91,30 +93,38 @@ export default function DonationsForm() {
             id="outlined-required"
             label="Item Value"
             type="number"
-            value={itemValue}
-            onChange={(e) => setItemValue(e.target.value)}
+            value={donorData.itemValue}
+            onChange={(e) => {
+              setDonorData({ ...donorData, itemValue: e.target.value });
+            }}
           />
           <TextField
             id="outlined-required"
             label="Donation Value"
             type="number"
-            value={donationValue}
-            onChange={(e) => setDonationValue(e.target.value)}
+            value={donorData.donationValue}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donationValue: e.target.value });
+            }}
           />
           <TextField
             className={styles.alertQuantityField}
             id="outlined-required"
             label="High or Low Value"
-            value={alertQuantity}
-            onChange={(e) => setAlertQuantity(e.target.value)}
+            value={donorData.alertQuantity}
+            onChange={(e) => {
+              setDonorData({ ...donorData, alertQuantity: e.target.value });
+            }}
           />
         </div>
         <TextField
           className={styles.userField}
           id="outlined-required"
           label="User"
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
+          value={donorData.user}
+          onChange={(e) => {
+            setDonorData({ ...donorData, user: e.target.value });
+          }}
         />
         <div className={styles.lastRowContainer}>
           <Button
@@ -130,8 +140,13 @@ export default function DonationsForm() {
               Has this donor previously donated?
             </InputLabel>
             <Select
-              value={prevDonated ? 'yes' : 'no'}
-              onChange={(e) => setPrevDonated(e.target.value === 'yes')}
+              value={donorData.prevDonated ? 'yes' : 'no'}
+              onChange={(e) => {
+                setDonorData({
+                  ...donorData,
+                  prevDonated: e.target.value === 'yes',
+                });
+              }}
               label="Has this donor previously donated?"
               id="donor-donated"
             >
@@ -141,7 +156,7 @@ export default function DonationsForm() {
           </FormControl>
         </div>
 
-        {prevDonated && (
+        {donorData.prevDonated && (
           <Typography component="h3" mb={1}>
             Please fill out the email before proceeding
           </Typography>
@@ -151,49 +166,63 @@ export default function DonationsForm() {
           <TextField
             label="Email"
             id="outlined-required"
-            value={donorEmail}
-            onChange={(e) => setDonorEmail(e.target.value)}
+            value={donorData.donorEmail}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donorEmail: e.target.value });
+            }}
             type="email"
           />
           <TextField
             id="outlined-required"
             label="Donor Name"
-            value={dropdownDonorName}
-            onChange={(e) => setDropdownDonarName(e.target.value)}
+            value={donorData.dropdownDonorName}
+            onChange={(e) => {
+              setDonorData({ ...donorData, dropdownDonorName: e.target.value });
+            }}
           />
           <TextField
             label="Phone"
             id="outlined-required"
             type="tel"
-            value={donorPhone}
-            onChange={(e) => setDonorPhone(e.target.value)}
+            value={donorData.donorPhone}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donorPhone: e.target.value });
+            }}
           />
         </div>
         <div className={styles.addressCityStateZip}>
           <TextField
             label="Address"
             id="outlined-required"
-            value={donorAddress}
-            onChange={(e) => setDonorAddress(e.target.value)}
+            value={donorData.donorAddress}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donorAddress: e.target.value });
+            }}
           />
           <TextField
             label="City"
             id="outlined-required"
-            value={donorCity}
-            onChange={(e) => setDonorCity(e.target.value)}
+            value={donorData.donorCity}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donorCity: e.target.value });
+            }}
           />
           <TextField
             label="State"
             id="outlined-required"
-            value={donorState}
-            onChange={(e) => setDonorState(e.target.value)}
+            value={donorData.donorState}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donorState: e.target.value });
+            }}
           />
           <TextField
             label="Zip"
             id="outlined-required"
-            value={donorZip}
+            value={donorData.donorZip}
             type="number"
-            onChange={(e) => setDonorZip(e.target.value)}
+            onChange={(e) => {
+              setDonorData({ ...donorData, donorZip: e.target.value });
+            }}
           />
         </div>
       </div>
