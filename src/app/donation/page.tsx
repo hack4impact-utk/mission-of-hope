@@ -1,13 +1,30 @@
 'use client';
-import { Button, InputLabel, Typography } from '@mui/material';
+import AutofillDonorEmail from '@/components/AutofillDonorEmail';
+import { getAllDonors } from '@/server/actions/donors';
+import { DonorResponse } from '@/types/persons';
+import {
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
 import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 
 export default function DonationsForm() {
+  const [donorOptions, setDonorOptions] = useState<DonorResponse[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const donors = JSON.parse(JSON.stringify(await getAllDonors()));
+      setDonorOptions(donors);
+    }
+    fetchData();
+  }, []);
+
   const [donorData, setDonorData] = useState({
     donorName: '',
     donationDate: '',
@@ -20,7 +37,6 @@ export default function DonationsForm() {
     prevDonated: false,
     user: '',
     dropdownDonorName: '',
-    donorEmail: '',
     donorPhone: '',
     donorAddress: '',
     donorCity: '',
@@ -44,7 +60,7 @@ export default function DonationsForm() {
             id="outlined-required"
             label="Donor Name"
             value={donorData.donorName}
-            onChange={(e) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setDonorData({ ...donorData, donorName: e.target.value })
             }
           />
@@ -53,7 +69,7 @@ export default function DonationsForm() {
             id="outlined-required"
             value={donorData.donationDate}
             type="date"
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donationDate: e.target.value });
             }}
           />
@@ -63,7 +79,7 @@ export default function DonationsForm() {
           id="outlined-required"
           label="Category"
           value={donorData.category}
-          onChange={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setDonorData({ ...donorData, category: e.target.value });
           }}
         />
@@ -73,7 +89,7 @@ export default function DonationsForm() {
             label="Donated Item"
             id="outlined-multiline-static"
             value={donorData.donatedItem}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donatedItem: e.target.value });
             }}
           />
@@ -83,7 +99,7 @@ export default function DonationsForm() {
             label="Quantity"
             type="number"
             value={donorData.quantity}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, quantity: e.target.value });
             }}
           />
@@ -94,7 +110,7 @@ export default function DonationsForm() {
             label="Item Value"
             type="number"
             value={donorData.itemValue}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, itemValue: e.target.value });
             }}
           />
@@ -103,7 +119,7 @@ export default function DonationsForm() {
             label="Donation Value"
             type="number"
             value={donorData.donationValue}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donationValue: e.target.value });
             }}
           />
@@ -112,7 +128,7 @@ export default function DonationsForm() {
             id="outlined-required"
             label="High or Low Value"
             value={donorData.alertQuantity}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, alertQuantity: e.target.value });
             }}
           />
@@ -122,7 +138,7 @@ export default function DonationsForm() {
           id="outlined-required"
           label="User"
           value={donorData.user}
-          onChange={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setDonorData({ ...donorData, user: e.target.value });
           }}
         />
@@ -163,20 +179,15 @@ export default function DonationsForm() {
         )}
         {/* For when user selects from yes/no dropdown */}
         <div className={styles.nameEmailPhone}>
-          <TextField
-            label="Email"
-            id="outlined-required"
-            value={donorData.donorEmail}
-            onChange={(e) => {
-              setDonorData({ ...donorData, donorEmail: e.target.value });
-            }}
-            type="email"
+          <AutofillDonorEmail
+            DonorOptions={donorOptions}
+            DonorOption={donorOptions[0]}
           />
           <TextField
             id="outlined-required"
             label="Donor Name"
             value={donorData.dropdownDonorName}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, dropdownDonorName: e.target.value });
             }}
           />
@@ -185,7 +196,7 @@ export default function DonationsForm() {
             id="outlined-required"
             type="tel"
             value={donorData.donorPhone}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donorPhone: e.target.value });
             }}
           />
@@ -195,7 +206,7 @@ export default function DonationsForm() {
             label="Address"
             id="outlined-required"
             value={donorData.donorAddress}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donorAddress: e.target.value });
             }}
           />
@@ -203,7 +214,7 @@ export default function DonationsForm() {
             label="City"
             id="outlined-required"
             value={donorData.donorCity}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donorCity: e.target.value });
             }}
           />
@@ -211,7 +222,7 @@ export default function DonationsForm() {
             label="State"
             id="outlined-required"
             value={donorData.donorState}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donorState: e.target.value });
             }}
           />
@@ -220,7 +231,7 @@ export default function DonationsForm() {
             id="outlined-required"
             value={donorData.donorZip}
             type="number"
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, donorZip: e.target.value });
             }}
           />
