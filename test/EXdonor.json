@@ -1,7 +1,15 @@
 {
   "title": "Root",
   "type": "object",
-  "required": ["lastName", "firstName", "email", "address"],
+  "required": [
+    "lastName",
+    "firstName",
+    "email",
+    "address",
+    "city",
+    "state",
+    "zip"
+  ],
   "properties": {
     "lastName": {
       "$id": "#root/lastName",
@@ -21,6 +29,21 @@
     "address": {
       "$id": "#root/address",
       "title": "Address",
+      "type": "string"
+    },
+    "city": {
+      "$id": "#root/city",
+      "title": "City",
+      "type": "string"
+    },
+    "state": {
+      "$id": "#root/state",
+      "title": "State",
+      "type": "string"
+    },
+    "zip": {
+      "$id": "#root/zip",
+      "title": "Zip",
       "type": "string"
     }
   }
