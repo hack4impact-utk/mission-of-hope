@@ -27,10 +27,6 @@ const DonationItemSchema = new Schema(
           enum: evaluationEnum,
           required: false,
         },
-        inRange: {
-          type: Boolean,
-          required: true,
-        },
       },
       required: true,
     },

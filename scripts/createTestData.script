@@ -5,7 +5,7 @@ if (true) {
    db.donors.deleteMany({})
    db.users.deleteMany({})
    db.items.deleteMany({})
-   db.donationItem.deleteMany({})
+   db.donationItems.deleteMany({})
    db.donations.deleteMany({})
 }
 
@@ -23,7 +23,7 @@ db.donors.insertMany([
         "address": "123 Main St",
         "city": "Anytown",
         "state": "CA",
-        "zip": "12345"
+        "zip": 12345
     },
     {
         "_id": donorID2,
@@ -33,7 +33,7 @@ db.donors.insertMany([
         "address": "456 Elm St",
         "city": "Smallville",
         "state": "NY",
-        "zip": "54321"
+        "zip": 54321
     },
     {
         "_id": donorID3,
@@ -43,7 +43,7 @@ db.donors.insertMany([
         "address": "789 Oak St",
         "city": "Metropolis",
         "state": "IL",
-        "zip": "67890"
+        "zip": 67890
     },
     {
         "_id": donorID4,
@@ -53,7 +53,7 @@ db.donors.insertMany([
         "address": "101 Pine St",
         "city": "Gotham",
         "state": "NJ",
-        "zip": "13579"
+        "zip": 13579
     },
     {
         "_id": donorID5,
@@ -63,7 +63,7 @@ db.donors.insertMany([
         "address": "246 Cedar St",
         "city": "Central City",
         "state": "MO",
-        "zip": "24680"
+        "zip": 24680
     },
     {
         "_id": donorID6,
@@ -73,7 +73,7 @@ db.donors.insertMany([
         "address": "369 Maple St",
         "city": "Star City",
         "state": "WA",
-        "zip": "97531"
+        "zip": 97531
     },
     {
         "_id": donorID7,
@@ -83,7 +83,7 @@ db.donors.insertMany([
         "address": "483 Birch St",
         "city": "Atlantis",
         "state": "CA",
-        "zip": "12345"
+        "zip": 12345
     },
     {
         "_id": donorID8,
@@ -93,7 +93,7 @@ db.donors.insertMany([
         "address": "579 Fir St",
         "city": "Themyscira",
         "state": "MA",
-        "zip": "54321"
+        "zip": 54321
     },
     {
         "_id": donorID9,
@@ -103,7 +103,7 @@ db.donors.insertMany([
         "address": "678 Pine St",
         "city": "Xavier's School for Gifted Youngsters",
         "state": "NY",
-        "zip": "67890"
+        "zip": 67890
     },
     {
         "_id": donorID10,
@@ -113,7 +113,7 @@ db.donors.insertMany([
         "address": "789 Elm St",
         "city": "Hogwarts",
         "state": "PA",
-        "zip": "13579"
+        "zip": 13579
     },
 ])
 
@@ -278,7 +278,7 @@ for (let i = 1; i <= 10; i++) {
   this[`donationItemId${i}`] = ObjectId();
 }
 
-db.donationItem.insertMany([
+db.donationItems.insertMany([
     {
         "_id": donationItemId1,
         "item": itemId1,
@@ -287,7 +287,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 499.99,
             "evaluation": "High",
-            "inRange": true
         }
     },
     {
@@ -298,7 +297,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 29.99,
             "evaluation": "Low",
-            "inRange": true
         }
     },
     {
@@ -308,8 +306,7 @@ db.donationItem.insertMany([
         "barcode": "123XYZ",
         "value": {
             "price": 9.99,
-            "evaluation": "Other",
-            "inRange": false
+            "evaluation": "New",
         }
     },
     {
@@ -320,7 +317,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 29.99,
             "evaluation": "High",
-            "inRange": true
         }
     },
     {
@@ -331,7 +327,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 24.99,
             "evaluation": "Low",
-            "inRange": true
         }
     },
     {
@@ -341,8 +336,7 @@ db.donationItem.insertMany([
         "barcode": "XYZ123",
         "value": {
             "price": 599.99,
-            "evaluation": "Other",
-            "inRange": false
+            "evaluation": "New",
         }
     },
     {
@@ -353,7 +347,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 129.99,
             "evaluation": "High",
-            "inRange": true
         }
     },
     {
@@ -364,7 +357,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 34.99,
             "evaluation": "Low",
-            "inRange": true
         }
     },
     {
@@ -374,8 +366,7 @@ db.donationItem.insertMany([
         "barcode": "123ABC",
         "value": {
             "price": 599.99,
-            "evaluation": "Other",
-            "inRange": false
+            "evaluation": "New",
         }
     },
     {
@@ -386,7 +377,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 199.99,
             "evaluation": "High",
-            "inRange": true
         }
     }
 ])
@@ -401,24 +391,24 @@ db.donations.insertMany([
         "user": userId1,
         "items": [itemId1],
         "entryDate": "2024-01-31",
-        "donor": donorId1
+        "donor": donorID1
     },
     {
         "user": userId1,
         "items": [itemId2, itemId4],
         "entryDate": "2024-02-01",
-        "donor": donorId2
+        "donor": donorID2
     },
     {
         "user": userId2,
         "items": [itemId4, itemId5, itemId6],
         "entryDate": "2024-02-02",
-        "donor": donorId3
+        "donor": donorID3
     },
     {
         "user": userId3,
         "items": [itemId7, itemId8, itemId9, itemId10],
         "entryDate": "2024-02-03",
-        "donor": donorId4
+        "donor": donorID4
     }
 ])

@@ -44,7 +44,7 @@
     "zip": {
       "$id": "#root/zip",
       "title": "Zip",
-      "type": "string"
+      "type": "number"
     }
   }
 }
