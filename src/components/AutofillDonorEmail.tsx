@@ -4,32 +4,27 @@ import { useState } from 'react';
 
 interface Donor {
   DonorOptions: DonorResponse[];
-  DonorOption: DonorResponse;
+  onDonorSelect: (donor: DonorResponse) => void;
 }
 
 export default function AutofillDonorEmail(props: Donor) {
   const [donorOptions] = useState<DonorResponse[]>(props.DonorOptions);
 
-  const [donorOption, setDonorOption] = useState<DonorResponse>(
-    props.DonorOption
-  );
-
   function onEmailChange(value: string) {
-    const donorMatch = donorOptions.filter(
+    const donorMatch = donorOptions.find(
       (don) => don.email.toLowerCase() === value.toLowerCase()
     );
-
-    if (donorMatch.length === 1) {
-      setDonorOption(donorMatch[0]);
+    if (donorMatch) {
+      // Pass selected donor details back to parent component
+      props.onDonorSelect(donorMatch);
     }
   }
 
   return (
     <Autocomplete
-      sx={{ mt: 2 }}
       freeSolo
       autoComplete
-      value={donorOption.email || ''}
+      value={''}
       options={donorOptions}
       isOptionEqualToValue={(option, value) => option._id === value._id}
       getOptionLabel={(don) => (typeof don === 'string' ? don : don.email)}
@@ -45,7 +40,7 @@ export default function AutofillDonorEmail(props: Donor) {
           {...params}
           label="Email Address"
           id="outlined-required"
-          value={donorOption.email || ''}
+          value={''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             onEmailChange(e.target.value);
           }}
