@@ -20,7 +20,7 @@ const TopBar: React.FC = () => {
         p: 2, // add some space between icon and bar
       }}
     >
-      <Link href="/login">
+      <Link href="/signin">
         <svg
           width="56"
           height="57"
