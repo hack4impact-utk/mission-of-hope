@@ -1,30 +1,65 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Chip,
+} from '@mui/material/';
+import { getAllDonationItems } from '@/server/actions/donationItem';
 
-export default function Home() {
-  const exDonItem = {
-    _id: {
-      $oid: '65c1251027ca0d6da7ccf409',
-    },
-    item: {
-      $oid: '65c1251027ca0d6da7ccf3ff',
-    },
-    quantity: 10,
-    barcode: 'ABC123',
-    value: {
-      price: 499.99,
-      evaluation: 'High',
-      inRange: true,
-    },
-  };
+export default async function Home() {
+  const rows = await getAllDonationItems();
+
   return (
-    <Card>
-      <CardContent>
-        <h1>ProductA</h1>
-        <p>Quantity: {exDonItem.quantity}</p>
-        <p>Price: {exDonItem.value.price}</p>
-        <p>Evaluation: {exDonItem.value.evaluation}</p>
-      </CardContent>
-    </Card>
+    <TableContainer>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Product</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Category</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
+              Quantity
+            </TableCell>
+            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
+              Evaluation
+            </TableCell>
+            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
+              Barcode (if food)
+            </TableCell>
+            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
+              Price
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows &&
+            rows.map((row) => (
+              <TableRow key={row._id}>
+                <TableCell component="th" scope="row">
+                  {row.item.name}
+                </TableCell>
+                <TableCell>{row.item.category}</TableCell>
+                <TableCell align="center">{row.quantity}</TableCell>
+                <TableCell align="center">{row.value.evaluation}</TableCell>
+                <TableCell align="center">
+                  {row.barcode && (
+                    <Chip
+                      label={row.barcode}
+                      sx={{
+                        bgcolor: '#37954173',
+                        border: 'solid',
+                        borderColor: '#ABABAB',
+                      }}
+                    />
+                  )}
+                </TableCell>
+                <TableCell align="center">${row.value.price}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }

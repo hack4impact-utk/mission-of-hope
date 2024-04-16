@@ -25,6 +25,9 @@ export interface UserResponse extends z.infer<typeof zUserResponse> {}
 
 export const zDonorBase = zPersonBase.extend({
   address: z.string(),
+  city: z.string(),
+  state: z.string(),
+  zip: z.number(),
 });
 
 export const zDonorEntity = zDonorBase.extend({ ...zBase.shape });
