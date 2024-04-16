@@ -3,8 +3,12 @@ import AutofillDonorEmail from '@/components/AutofillDonorEmail';
 import { DonorResponse } from '@/types/persons';
 import {
   Button,
+  FormControlLabel,
+  FormLabel,
   InputLabel,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
   Typography,
@@ -27,7 +31,7 @@ export default function AddDonationView({
     donatedItem: '',
     quantity: '',
     alertQuantity: '',
-    itemValue: '',
+    newOrUsed: '',
     donationValue: '',
     prevDonated: false,
     user: '',
@@ -112,15 +116,33 @@ export default function AddDonationView({
           />
         </div>
         <div className={styles.fourthRowContainer}>
-          <TextField
-            id="outlined-required"
-            label="Item Value"
-            type="number"
-            value={donorData.itemValue}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donorData, itemValue: e.target.value });
-            }}
-          />
+          <FormControl variant="filled" className={styles.donorDonatedSelect}>
+            <FormLabel component="legend">Item Condition</FormLabel>
+            <RadioGroup row aria-label="new or used" name="newOrUsed">
+              <FormControlLabel
+                value="new"
+                control={<Radio />}
+                label="New"
+                onChange={(e) => {
+                  setDonorData({
+                    ...donorData,
+                    newOrUsed: (e.target as HTMLInputElement).value,
+                  });
+                }}
+              />
+              <FormControlLabel
+                value="used"
+                control={<Radio />}
+                label="Used"
+                onChange={(e) => {
+                  setDonorData({
+                    ...donorData,
+                    newOrUsed: (e.target as HTMLInputElement).value,
+                  });
+                }}
+              />
+            </RadioGroup>
+          </FormControl>
           <TextField
             id="outlined-required"
             label="Donation Value"
