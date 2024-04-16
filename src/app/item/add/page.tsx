@@ -151,7 +151,7 @@ const AddItemForm = () => {
                   backgroundColor: 'rgba(55, 149, 65, 0.8)',
                 }}
               >
-                Add Donation Item
+                Add Item
               </Button>
             </Grid>
           </Grid>
