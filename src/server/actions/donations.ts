@@ -5,6 +5,10 @@ import {
   DonationEntity,
   DonationResponse,
 } from '@/types/donation';
+import UserSchema from '@/server/models/users';
+import DonorSchema from '@/server/models/donors';
+UserSchema;
+DonorSchema;
 
 export async function createDonation(
   donation: CreateDonationRequest
@@ -19,7 +23,11 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
   try {
     await dbConnect();
 
-    const response: DonationResponse[] = await DonationSchema.find();
+    console.log('Donation Call');
+    const response: DonationResponse[] = await DonationSchema.find().populate([
+      'user',
+      'donor',
+    ]);
 
     return response;
   } catch (error) {

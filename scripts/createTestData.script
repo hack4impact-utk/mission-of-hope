@@ -5,7 +5,7 @@ if (true) {
    db.donors.deleteMany({})
    db.users.deleteMany({})
    db.items.deleteMany({})
-   db.donationItem.deleteMany({})
+   db.donationItems.deleteMany({})
    db.donations.deleteMany({})
 }
 
@@ -17,73 +17,103 @@ for (let i = 1; i <= 10; i++) {
 db.donors.insertMany([
     {
         "_id": donorID1,
-        "lastName": "Doe",
+        "lastName": "Smith",
         "firstName": "John",
-        "email": "john.doe@example.com",
-        "address": "123 Main Street"
+        "email": "john.smith@example.com",
+        "address": "123 Main St",
+        "city": "Anytown",
+        "state": "CA",
+        "zip": 12345
     },
     {
         "_id": donorID2,
-        "lastName": "Smith",
-        "firstName": "Jane",
-        "email": "jane.smith@example.com",
-        "address": "456 Oak Avenue"
+        "lastName": "Johnson",
+        "firstName": "Emily",
+        "email": "emily.johnson@example.com",
+        "address": "456 Elm St",
+        "city": "Smallville",
+        "state": "NY",
+        "zip": 54321
     },
     {
         "_id": donorID3,
-        "lastName": "Johnson",
-        "firstName": "Robert",
-        "email": "robert.johnson@example.com",
-        "address": "789 Pine Lane"
+        "lastName": "Williams",
+        "firstName": "David",
+        "email": "david.williams@example.com",
+        "address": "789 Oak St",
+        "city": "Metropolis",
+        "state": "IL",
+        "zip": 67890
     },
     {
         "_id": donorID4,
         "lastName": "Brown",
-        "firstName": "Emily",
-        "email": "emily.brown@example.com",
-        "address": "101 Maple Street"
+        "firstName": "Sarah",
+        "email": "sarah.brown@example.com",
+        "address": "101 Pine St",
+        "city": "Gotham",
+        "state": "NJ",
+        "zip": 13579
     },
     {
         "_id": donorID5,
-        "lastName": "Davis",
+        "lastName": "Jones",
         "firstName": "Michael",
-        "email": "michael.davis@example.com",
-        "address": "202 Elm Avenue"
+        "email": "michael.jones@example.com",
+        "address": "246 Cedar St",
+        "city": "Central City",
+        "state": "MO",
+        "zip": 24680
     },
     {
         "_id": donorID6,
-        "lastName": "Wilson",
-        "firstName": "Olivia",
-        "email": "olivia.wilson@example.com",
-        "address": "303 Cedar Lane"
+        "lastName": "Davis",
+        "firstName": "Jessica",
+        "email": "jessica.davis@example.com",
+        "address": "369 Maple St",
+        "city": "Star City",
+        "state": "WA",
+        "zip": 97531
     },
     {
         "_id": donorID7,
-        "lastName": "Jones",
-        "firstName": "William",
-        "email": "william.jones@example.com",
-        "address": "404 Birch Street"
+        "lastName": "Wilson",
+        "firstName": "Daniel",
+        "email": "daniel.wilson@example.com",
+        "address": "483 Birch St",
+        "city": "Atlantis",
+        "state": "CA",
+        "zip": 12345
     },
     {
         "_id": donorID8,
         "lastName": "Taylor",
-        "firstName": "Sophia",
-        "email": "sophia.taylor@example.com",
-        "address": "505 Pine Avenue"
+        "firstName": "Amanda",
+        "email": "amanda.taylor@example.com",
+        "address": "579 Fir St",
+        "city": "Themyscira",
+        "state": "MA",
+        "zip": 54321
     },
     {
         "_id": donorID9,
-        "lastName": "Miller",
-        "firstName": "Ethan",
-        "email": "ethan.miller@example.com",
-        "address": "606 Oak Lane"
+        "lastName": "Martinez",
+        "firstName": "Chris",
+        "email": "chris.martinez@example.com",
+        "address": "678 Pine St",
+        "city": "Xavier's School for Gifted Youngsters",
+        "state": "NY",
+        "zip": 67890
     },
     {
         "_id": donorID10,
-        "lastName": "Anderson",
-        "firstName": "Ava",
-        "email": "ava.anderson@example.com",
-        "address": "707 Maple Street"
+        "lastName": "Garcia",
+        "firstName": "Jennifer",
+        "email": "jennifer.garcia@example.com",
+        "address": "789 Elm St",
+        "city": "Hogwarts",
+        "state": "PA",
+        "zip": 13579
     },
 ])
 
@@ -248,7 +278,7 @@ for (let i = 1; i <= 10; i++) {
   this[`donationItemId${i}`] = ObjectId();
 }
 
-db.donationItem.insertMany([
+db.donationItems.insertMany([
     {
         "_id": donationItemId1,
         "item": itemId1,
@@ -257,7 +287,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 499.99,
             "evaluation": "High",
-            "inRange": true
         }
     },
     {
@@ -268,7 +297,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 29.99,
             "evaluation": "Low",
-            "inRange": true
         }
     },
     {
@@ -278,8 +306,7 @@ db.donationItem.insertMany([
         "barcode": "123XYZ",
         "value": {
             "price": 9.99,
-            "evaluation": "Other",
-            "inRange": false
+            "evaluation": "New",
         }
     },
     {
@@ -290,7 +317,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 29.99,
             "evaluation": "High",
-            "inRange": true
         }
     },
     {
@@ -301,7 +327,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 24.99,
             "evaluation": "Low",
-            "inRange": true
         }
     },
     {
@@ -311,8 +336,7 @@ db.donationItem.insertMany([
         "barcode": "XYZ123",
         "value": {
             "price": 599.99,
-            "evaluation": "Other",
-            "inRange": false
+            "evaluation": "New",
         }
     },
     {
@@ -323,7 +347,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 129.99,
             "evaluation": "High",
-            "inRange": true
         }
     },
     {
@@ -334,7 +357,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 34.99,
             "evaluation": "Low",
-            "inRange": true
         }
     },
     {
@@ -344,8 +366,7 @@ db.donationItem.insertMany([
         "barcode": "123ABC",
         "value": {
             "price": 599.99,
-            "evaluation": "Other",
-            "inRange": false
+            "evaluation": "New",
         }
     },
     {
@@ -356,7 +377,6 @@ db.donationItem.insertMany([
         "value": {
             "price": 199.99,
             "evaluation": "High",
-            "inRange": true
         }
     }
 ])
@@ -371,24 +391,24 @@ db.donations.insertMany([
         "user": userId1,
         "items": [itemId1],
         "entryDate": "2024-01-31",
-        "donor": donorId1
+        "donor": donorID1
     },
     {
         "user": userId1,
         "items": [itemId2, itemId4],
         "entryDate": "2024-02-01",
-        "donor": donorId2
+        "donor": donorID2
     },
     {
         "user": userId2,
         "items": [itemId4, itemId5, itemId6],
         "entryDate": "2024-02-02",
-        "donor": donorId3
+        "donor": donorID3
     },
     {
         "user": userId3,
         "items": [itemId7, itemId8, itemId9, itemId10],
         "entryDate": "2024-02-03",
-        "donor": donorId4
+        "donor": donorID4
     }
 ])

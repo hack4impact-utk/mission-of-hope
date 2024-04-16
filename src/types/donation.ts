@@ -3,7 +3,7 @@ import { z } from 'zod';
 import zObjectId from './objectId';
 import { zItemResponse } from './items';
 
-export const evaluationEnum = ['Hight', 'Low', 'Other'] as const;
+export const evaluationEnum = ['Hight', 'Low', 'New'] as const;
 
 export const zDonationItemBase = z.object({
   item: zObjectId,
@@ -12,7 +12,6 @@ export const zDonationItemBase = z.object({
   value: z.object({
     price: z.number(),
     evaluation: z.enum(evaluationEnum),
-    inRange: z.boolean(),
   }),
 });
 

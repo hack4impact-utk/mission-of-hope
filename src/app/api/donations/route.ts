@@ -6,7 +6,8 @@ export async function GET() {
   try {
     const result = await getAllDonations();
     return NextResponse.json(result, { status: 200 });
-  } catch {
+  } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
 }
