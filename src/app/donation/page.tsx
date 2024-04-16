@@ -43,20 +43,19 @@ export default function DonationsForm() {
     // If donor has previously donated, don't add them to the database
     if (prevDonated) return;
 
-    //donor shcema
+    const nameParts = dropdownDonorName.split(' ');
     const donor = {
-      //TODO: change this once page is updated
-      firstName: donorName.split(' ')[0],
-      lastName: donorName.split(' ')[1],
+      firstName: nameParts[0],
+      lastName: nameParts[1] || '',
       email: donorEmail,
       address: donorAddress,
-      city: donorCity,
       state: donorState,
-      zip: donorZip,
+      city: donorCity,
+      zip: Number(donorZip),
     };
 
     try {
-      //fetch request to add donor
+      // fetch request to add donor
       const response = await fetch('../api/donors', {
         method: 'POST',
         headers: {
@@ -68,10 +67,9 @@ export default function DonationsForm() {
       if (response.ok) {
         console.log('Donor added successfully');
       } else {
-        console.log('Error adding donor');
+        console.log('Error adding donor, status:', response.status);
       }
     } catch (error) {
-      // catch error
       console.error('Error:', error);
     }
   };
