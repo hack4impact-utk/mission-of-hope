@@ -66,6 +66,13 @@ export default function DonationsForm() {
 
       if (response.ok) {
         console.log('Donor added successfully');
+        setDropdownDonarName('');
+        setDonorEmail('');
+        setDonorPhone('');
+        setDonorAddress('');
+        setDonorCity('');
+        setDonorState('');
+        setDonorZip('');
       } else {
         console.log('Error adding donor, status:', response.status);
       }
