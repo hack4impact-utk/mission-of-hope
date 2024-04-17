@@ -10,7 +10,6 @@ export async function getAllDonors(): Promise<DonorResponse[]> {
 
   const response: DonorResponse[] = await DonorSchema.find();
 
-  console.log(response);
   return response;
 }
 
