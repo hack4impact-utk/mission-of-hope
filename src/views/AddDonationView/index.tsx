@@ -1,18 +1,7 @@
 'use client';
 import AutofillDonorEmail from '@/components/AutofillDonorEmail';
 import { DonorResponse } from '@/types/persons';
-import {
-  Button,
-  FormControlLabel,
-  FormLabel,
-  InputLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Button, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import { useState } from 'react';
 import styles from './styles.module.css';
@@ -32,11 +21,9 @@ export default function AddDonationView({
     quantity: '',
     alertQuantity: '',
     newOrUsed: '',
-    donationValue: '',
+    price: '',
     prevDonated: false,
     user: '',
-    dropdownDonorName: '',
-    donorPhone: '',
     donorAddress: '',
     donorCity: '',
     donorState: '',
@@ -46,11 +33,10 @@ export default function AddDonationView({
   const handleDonorSelect = (selectedDonor: DonorResponse) => {
     setDonorData({
       ...donorData,
-      dropdownDonorName: `${selectedDonor.firstName} ${selectedDonor.lastName}`,
+      donorName: `${selectedDonor.firstName} ${selectedDonor.lastName}`,
       donorAddress: selectedDonor.address,
       donorCity: selectedDonor.city,
       donorState: selectedDonor.state,
-      // donorPhone: selectedDonor.phone,
       donorZip: selectedDonor.zip.toString(),
     });
   };
@@ -66,14 +52,9 @@ export default function AddDonationView({
       <hr></hr>
       <div className={styles.donationsFormContainer}>
         <div className={styles.nameAndDateContainer}>
-          <TextField
-            className={styles.donorNameField}
-            id="outlined-required"
-            label="Donor Name"
-            value={donorData.donorName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setDonorData({ ...donorData, donorName: e.target.value })
-            }
+          <AutofillDonorEmail
+            DonorOptions={donorOptions}
+            onDonorSelect={handleDonorSelect}
           />
           <TextField
             className={styles.donationDateField}
@@ -116,42 +97,22 @@ export default function AddDonationView({
           />
         </div>
         <div className={styles.fourthRowContainer}>
-          <FormControl variant="filled" className={styles.donorDonatedSelect}>
-            <FormLabel component="legend">Item Condition</FormLabel>
-            <RadioGroup row aria-label="new or used" name="newOrUsed">
-              <FormControlLabel
-                value="new"
-                control={<Radio />}
-                label="New"
-                onChange={(e) => {
-                  setDonorData({
-                    ...donorData,
-                    newOrUsed: (e.target as HTMLInputElement).value,
-                  });
-                }}
-              />
-              <FormControlLabel
-                value="used"
-                control={<Radio />}
-                label="Used"
-                onChange={(e) => {
-                  setDonorData({
-                    ...donorData,
-                    newOrUsed: (e.target as HTMLInputElement).value,
-                  });
-                }}
-              />
-            </RadioGroup>
+          <FormControl variant="outlined" className={styles.newOrUsedSelect}>
+            <InputLabel id="demo-simple-select-filled-label">
+              New or Used
+            </InputLabel>
+            <Select
+              value={donorData.newOrUsed}
+              onChange={(e) => {
+                setDonorData({ ...donorData, newOrUsed: e.target.value });
+              }}
+              label="New or Used"
+              id="new-or-used"
+            >
+              <MenuItem value="new">New</MenuItem>
+              <MenuItem value="used">Used</MenuItem>
+            </Select>
           </FormControl>
-          <TextField
-            id="outlined-required"
-            label="Donation Value"
-            type="number"
-            value={donorData.donationValue}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donorData, donationValue: e.target.value });
-            }}
-          />
           <TextField
             className={styles.alertQuantityField}
             id="outlined-required"
@@ -159,6 +120,15 @@ export default function AddDonationView({
             value={donorData.alertQuantity}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setDonorData({ ...donorData, alertQuantity: e.target.value });
+            }}
+          />
+          <TextField
+            id="outlined-required"
+            label="Price"
+            type="number"
+            value={donorData.price}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setDonorData({ ...donorData, price: e.target.value });
             }}
           />
         </div>
@@ -201,32 +171,14 @@ export default function AddDonationView({
           </FormControl>
         </div>
 
-        {donorData.prevDonated && (
-          <Typography component="h3" mb={1}>
-            Please fill out the email before proceeding
-          </Typography>
-        )}
         {/* For when user selects from yes/no dropdown */}
         <div className={styles.nameEmailPhone}>
-          <AutofillDonorEmail
-            DonorOptions={donorOptions}
-            onDonorSelect={handleDonorSelect}
-          />
           <TextField
             id="outlined-required"
             label="Donor Name"
-            value={donorData.dropdownDonorName}
+            value={donorData.donorName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donorData, dropdownDonorName: e.target.value });
-            }}
-          />
-          <TextField
-            label="Phone"
-            id="outlined-required"
-            type="tel"
-            value={donorData.donorPhone}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donorData, donorPhone: e.target.value });
+              setDonorData({ ...donorData, donorName: e.target.value });
             }}
           />
         </div>
