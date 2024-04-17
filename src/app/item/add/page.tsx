@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Grid, TextField, Button, Typography, Box } from '@mui/material';
+import TopBar from '@/components/top-bar';
 
 const AddItemForm = () => {
   const [itemName, setItemName] = useState('');
@@ -10,17 +11,7 @@ const AddItemForm = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          width: '100%',
-          height: '10vh',
-          backgroundColor: '#379541cc',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-        }}
-      ></Box>
+      <TopBar />
       <Box
         sx={{
           display: 'flex',
