@@ -23,6 +23,7 @@ export default function AddDonationView({
 }: AddDonationViewProps) {
   const [donorData, setDonorData] = useState({
     donorName: '',
+    donorEmail: '',
     donationDate: '',
     category: '',
     donatedItem: '',
@@ -44,6 +45,7 @@ export default function AddDonationView({
       donorName: `${selectedDonor.firstName} ${selectedDonor.lastName}`,
       donorAddress: selectedDonor.address,
       donorCity: selectedDonor.city,
+      donorEmail: selectedDonor.email,
       donorState: selectedDonor.state,
       donorZip: selectedDonor.zip.toString(),
     });
@@ -51,6 +53,71 @@ export default function AddDonationView({
 
   const handleAddDonation = () => {
     alert('Donation added successfully!');
+    donorData.donationDate = '';
+    donorData.donorEmail = '';
+    donorData.category = '';
+    donorData.donatedItem = '';
+    donorData.quantity = '';
+    donorData.alertQuantity = '';
+    donorData.newOrUsed = '';
+    donorData.price = '';
+    donorData.prevDonated = false;
+    donorData.user = '';
+    donorData.donorName = '';
+    donorData.donorAddress = '';
+    donorData.donorCity = '';
+    donorData.donorState = '';
+    donorData.donorZip = '';
+  };
+
+  const handleAddDonor = async () => {
+    // If donor has previously donated, don't add them to the database
+    if (donorData.prevDonated) return;
+
+    const nameParts = donorData.donorName.split(' ');
+    const donor = {
+      firstName: nameParts[0],
+      lastName: nameParts[1] || '',
+      email: donorData.donorEmail,
+      address: donorData.donorAddress,
+      state: donorData.donorState,
+      city: donorData.donorCity,
+      zip: Number(donorData.donorZip),
+    };
+
+    try {
+      // fetch request to add donor
+      const response = await fetch('/api/donors', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(donor),
+      });
+
+      if (response.ok) {
+        console.log('Donor added successfully');
+        donorData.donationDate = '';
+        donorData.donorEmail = '';
+        donorData.category = '';
+        donorData.donatedItem = '';
+        donorData.quantity = '';
+        donorData.alertQuantity = '';
+        donorData.newOrUsed = '';
+        donorData.price = '';
+        donorData.prevDonated = false;
+        donorData.user = '';
+        donorData.donorName = '';
+        donorData.donorAddress = '';
+        donorData.donorCity = '';
+        donorData.donorState = '';
+        donorData.donorZip = '';
+      } else {
+        console.log('Error adding donor, status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -181,7 +248,7 @@ export default function AddDonationView({
             variant="contained"
             size="large"
             sx={{ backgroundColor: '#379541cc' }}
-            onClick={handleAddDonation}
+            onClick={() => [handleAddDonor(), handleAddDonation()]}
           >
             Add Donation
           </Button>
@@ -205,11 +272,6 @@ export default function AddDonationView({
             </Select>
           </FormControl>
         </Grid>
-        {donorData.prevDonated && (
-          <Grid item xs={12}>
-            <Typography>Please fill out the email before proceeding</Typography>
-          </Grid>
-        )}
         <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
