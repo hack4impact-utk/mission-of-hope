@@ -18,9 +18,29 @@ export default function AddItemView() {
   const [category, setCategory] = useState('');
   const [highValue, setHighValue] = useState('');
   const [lowValue, setLowValue] = useState('');
+  const [highValueError, setHighValueError] = useState('');
+  const [lowValueError, setLowValueError] = useState('');
+
+  const formatPriceFields = (
+    value: string,
+    setValue: (value: string) => void,
+    setError: (error: string) => void
+  ): void => {
+    // Validate high and low values
+    if (Number(value) < 0 || isNaN(Number(value))) {
+      setError('value must be a positive number');
+      return;
+    } else {
+      setError('');
+    }
+
+    const formattedValue = Number(value).toFixed(2);
+    setValue(formattedValue);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     // Validate form fields
     const requestData = {
       name: itemName,
@@ -113,41 +133,65 @@ export default function AddItemView() {
               <FormControl fullWidth sx={{ m: 1 }}>
                 <InputLabel htmlFor="highValue">High Value</InputLabel>
                 <OutlinedInput
+                  error={!!highValueError}
                   label="High Value"
                   id="highValue"
                   type="number"
                   value={highValue}
                   onChange={(e) => setHighValue(e.target.value)}
                   onBlur={(e) =>
-                    setHighValue(Number(e.target.value).toFixed(2))
+                    formatPriceFields(
+                      e.target.value,
+                      setHighValue,
+                      setHighValueError
+                    )
                   }
                   startAdornment={
                     <InputAdornment position="start">$</InputAdornment>
                   }
                 />
+                {highValueError && (
+                  <Typography variant="caption" color="error">
+                    {highValueError}
+                  </Typography>
+                )}
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth sx={{ m: 1 }}>
                 <InputLabel htmlFor="lowValue">Low Value</InputLabel>
                 <OutlinedInput
+                  error={!!lowValueError}
                   label="Low Value"
                   id="lowValue"
                   type="number"
                   value={lowValue}
                   onChange={(e) => setLowValue(e.target.value)}
-                  onBlur={(e) => setLowValue(Number(e.target.value).toFixed(2))}
+                  onBlur={(e) =>
+                    formatPriceFields(
+                      e.target.value,
+                      setLowValue,
+                      setLowValueError
+                    )
+                  }
                   startAdornment={
                     <InputAdornment position="start">$</InputAdornment>
                   }
                 />
+                {lowValueError && (
+                  <Typography variant="caption" color="error">
+                    {lowValueError}
+                  </Typography>
+                )}
               </FormControl>
-
+            </Grid>
+            <Grid item xs={12}>
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 fullWidth
+                disabled={highValueError || lowValueError ? true : false}
                 sx={{
                   height: 56,
                   textTransform: 'none',
