@@ -1,55 +1,35 @@
+'use client';
 import { DonorResponse } from '@/types/persons';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material/';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 interface DonorViewProps {
   donors: DonorResponse[];
 }
 
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'name', headerName: 'Name', width: 150 },
+  { field: 'address', headerName: 'Address', width: 300 },
+  { field: 'city', headerName: 'City', width: 300 },
+  { field: 'state', headerName: 'State', width: 100 },
+  { field: 'zip', headerName: 'Zipcode', width: 150 },
+  { field: 'email', headerName: 'Email', width: 250 },
+];
+
 export default function DonorView({ donors }: DonorViewProps) {
+  const rows = donors.map((donor, index) => ({
+    id: index + 1,
+    name: `${donor.firstName} ${donor.lastName}`,
+    address: donor.address,
+    city: donor.city,
+    state: donor.state,
+    zip: donor.zip,
+    email: donor.email,
+  }));
+
   return (
-    <TableContainer>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Name</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Address</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
-              City
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
-              State
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
-              Zipcode
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', m: 1 }} align="center">
-              Email
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {donors &&
-            donors.map((donor) => (
-              <TableRow key={donor._id}>
-                <TableCell component="th" scope="row">
-                  {donor.firstName} {donor.lastName}
-                </TableCell>
-                <TableCell>{donor.address}</TableCell>
-                <TableCell align="center">{donor.city}</TableCell>
-                <TableCell align="center">{donor.state}</TableCell>
-                <TableCell align="center">{donor.zip}</TableCell>
-                <TableCell align="center">{donor.email}</TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div style={{ height: 650, width: '100%' }}>
+      <DataGrid rows={rows} columns={columns} checkboxSelection />
+    </div>
   );
 }
