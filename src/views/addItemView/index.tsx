@@ -1,6 +1,16 @@
 'use client';
 import TopBar from '@/components/top-bar';
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 
 export default function AddItemView() {
@@ -100,36 +110,39 @@ export default function AddItemView() {
               {/* Consider using Select component here for dropdown */}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                id="highValue"
-                label="High Value"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={highValue}
-                onChange={(e) =>
-                  setHighValue(
-                    Number(e.target.value) < 0 ? '0' : e.target.value
-                  )
-                }
-              />
+              <FormControl fullWidth sx={{ m: 1 }}>
+                <InputLabel htmlFor="highValue">High Value</InputLabel>
+                <OutlinedInput
+                  label="High Value"
+                  id="highValue"
+                  type="number"
+                  value={highValue}
+                  onChange={(e) => setHighValue(e.target.value)}
+                  onBlur={(e) =>
+                    setHighValue(Number(e.target.value).toFixed(2))
+                  }
+                  startAdornment={
+                    <InputAdornment position="start">$</InputAdornment>
+                  }
+                />
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                id="lowValue"
-                label="Low Value"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={lowValue}
-                onChange={(e) =>
-                  setLowValue(Number(e.target.value) < 0 ? '0' : e.target.value)
-                }
-              />
-            </Grid>
-            <Grid item xs={12}>
+              <FormControl fullWidth sx={{ m: 1 }}>
+                <InputLabel htmlFor="lowValue">Low Value</InputLabel>
+                <OutlinedInput
+                  label="Low Value"
+                  id="lowValue"
+                  type="number"
+                  value={lowValue}
+                  onChange={(e) => setLowValue(e.target.value)}
+                  onBlur={(e) => setLowValue(Number(e.target.value).toFixed(2))}
+                  startAdornment={
+                    <InputAdornment position="start">$</InputAdornment>
+                  }
+                />
+              </FormControl>
+
               <Button
                 type="submit"
                 variant="contained"
