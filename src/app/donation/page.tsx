@@ -39,7 +39,47 @@ export default function DonationsForm() {
     setUser('');
     setPrevDonated(false);
   };
+  const handleAddDonor = async () => {
+    // If donor has previously donated, don't add them to the database
+    if (prevDonated) return;
 
+    const nameParts = dropdownDonorName.split(' ');
+    const donor = {
+      firstName: nameParts[0],
+      lastName: nameParts[1] || '',
+      email: donorEmail,
+      address: donorAddress,
+      state: donorState,
+      city: donorCity,
+      zip: Number(donorZip),
+    };
+
+    try {
+      // fetch request to add donor
+      const response = await fetch('../api/donors', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(donor),
+      });
+
+      if (response.ok) {
+        console.log('Donor added successfully');
+        setDropdownDonarName('');
+        setDonorEmail('');
+        setDonorPhone('');
+        setDonorAddress('');
+        setDonorCity('');
+        setDonorState('');
+        setDonorZip('');
+      } else {
+        console.log('Error adding donor, status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   return (
     <>
       {' '}
@@ -121,7 +161,7 @@ export default function DonationsForm() {
             className={styles.addDonationButton}
             variant="contained"
             color="success"
-            onClick={handleAddDonation}
+            onClick={() => [handleAddDonor(), handleAddDonation()]}
           >
             Add Donation
           </Button>
