@@ -1,5 +1,4 @@
 'use client';
-import TopBar from '@/components/top-bar';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
@@ -48,7 +47,6 @@ export default function AddItemView() {
 
   return (
     <>
-      <TopBar />
       <Box
         sx={{
           display: 'flex',
