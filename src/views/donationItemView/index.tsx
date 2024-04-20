@@ -7,6 +7,7 @@ interface DonationItemProps {
 }
 
 const columns: GridColDef[] = [
+  //set the name and width of each column
   { field: 'name', headerName: 'Product', width: 300 },
   { field: 'category', headerName: 'Category', width: 300 },
   { field: 'quantity', headerName: 'Quantity', width: 100 },
@@ -28,6 +29,7 @@ export default function DonationItemView({ donationItems }: DonationItemProps) {
   }));
 
   return (
+    //return with no height to allow the table to expand
     <div style={{ width: '100%' }}>
       <DataGrid rows={rows} columns={columns} disableRowSelectionOnClick />
     </div>
