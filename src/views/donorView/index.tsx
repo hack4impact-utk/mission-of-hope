@@ -1,6 +1,7 @@
 'use client';
 import { DonorResponse } from '@/types/persons';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import useSearch from '@/hooks/useSearch';
 
 interface DonorViewProps {
   donors: DonorResponse[];
@@ -17,7 +18,9 @@ const columns: GridColDef[] = [
 ];
 
 export default function DonorView({ donors }: DonorViewProps) {
-  const rows = donors.map((donor, index) => ({
+  const query = useSearch();
+
+  let rows = donors.map((donor, index) => ({
     id: index + 1,
     name: `${donor.firstName} ${donor.lastName}`,
     address: donor.address,
@@ -26,6 +29,12 @@ export default function DonorView({ donors }: DonorViewProps) {
     zip: donor.zip,
     email: donor.email,
   }));
+
+  if (query.length > 0) {
+    rows = rows.filter((volunteer) =>
+      volunteer.name.toLowerCase().includes(query.toLowerCase())
+    );
+  }
 
   return (
     <div style={{ height: 650, width: '100%' }}>
