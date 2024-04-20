@@ -1,6 +1,6 @@
 'use client';
 import AutofillDonorEmail from '@/components/AutofillDonorEmail';
-// import AutofillItem from '@/components/AutofillItemCategory';
+import AutofillItem from '@/components/AutofillItemCategory';
 
 import { ItemResponse } from '@/types/items';
 import { DonorResponse } from '@/types/persons';
@@ -24,8 +24,8 @@ interface AddDonationViewProps {
 
 export default function AddDonationView({
   donorOptions,
-} // itemOptions,
-: AddDonationViewProps) {
+  itemOptions,
+}: AddDonationViewProps) {
   const [donorData, setDonorData] = useState({
     donorName: '',
     donorEmail: '',
@@ -56,14 +56,13 @@ export default function AddDonationView({
     });
   };
 
-  // const handleItemSelect = (selectedItem: ItemResponse) => {
-  //   setDonorData({
-  //     ...donorData,
-  //     donatedItem: selectedItem.name,
-  //     // donorAddress: selectedDonor.address,
-  //     // donorCity: selectedDonor.city,
-  //   });
-  // };
+  const handleItemSelect = (selectedItem: ItemResponse) => {
+    setDonorData({
+      ...donorData,
+      donatedItem: selectedItem.name,
+      category: selectedItem.category,
+    });
+  };
 
   const handleAddDonation = () => {
     alert('Donation added successfully!');
@@ -184,18 +183,9 @@ export default function AddDonationView({
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          {/* <AutofillItem
+          <AutofillItem
             ItemOptions={itemOptions}
             onItemSelect={handleItemSelect}
-          /> */}
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Donated Item"
-            value={donorData.donatedItem}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donorData, donatedItem: e.target.value });
-            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
