@@ -7,9 +7,5 @@ export default async function DonationItemPage() {
     JSON.stringify(await getAllDonationItems())
   );
 
-  return (
-    <>
-      <DonationItemView rows={rows} />
-    </>
-  );
+  return <DonationItemView rows={rows} />;
 }
