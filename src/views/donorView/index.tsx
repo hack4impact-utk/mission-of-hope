@@ -29,7 +29,7 @@ export default function DonorView({ donors }: DonorViewProps) {
 
   return (
     <div style={{ height: 650, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} checkboxSelection />
+      <DataGrid rows={rows} columns={columns} disableRowSelectionOnClick />
     </div>
   );
 }
