@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
-import '../server/actions/donations';
+import Button from '@mui/material/Button';
 
 export default function Home() {
   return (
     <>
       <div
+        className="text-weight"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -19,43 +19,61 @@ export default function Home() {
           src="https://missionofhope.org/wp-content/uploads/2023/04/cropped-MOH-Logo-768x393.png"
           width="180"
           height="100"
-          style={{ marginRight: '100px' }} // Add spacing between the image and links
+          style={{ marginRight: '50px' }} // Add spacing between the image and links
         />
 
-        <div
-          style={{ display: 'flex', justifyContent: 'center', gap: '100px' }}
-        >
-          <Link href="./Home" style={{ color: 'black', fontSize: '40px' }}>
-            Home
-          </Link>
-          <Link href="./Donor" style={{ color: 'black', fontSize: '40px' }}>
-            Resources
-          </Link>
-          <Link href="./User" style={{ color: 'black', fontSize: '40px' }}>
-            User
-          </Link>
-          <Link
-            href="./donationItem"
-            style={{ color: 'black', fontSize: '40px' }}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '50px' }}>
+          <Button
+            href="./Home"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
           >
-            Inventory
-          </Link>
+            Home
+          </Button>
+          <Button
+            href="./donationItem"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            Resources
+          </Button>
+          <Button
+            href="./User"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            User
+          </Button>
+          <Button
+            href="./Item"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            Inventory Management
+          </Button>
+          <Button
+            href="./Item"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            Acknowledgment
+          </Button>
         </div>
-      </div>
-      <div
-        style={{
-          width: '550px',
-          backgroundColor: '#f4f4f4',
-          marginLeft: '380px',
-          marginTop: '150px',
-        }}
-      >
-        <a
-          style={{ color: 'black', justifyContent: 'center', fontSize: '80px' }}
-        >
-          {' '}
-          Mission of Hope{' '}
-        </a>
       </div>
     </>
   );
