@@ -1,7 +1,8 @@
 'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { DonorResponse } from '@/types/persons';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import useSearch from '@/hooks/useSearch';
 
 interface DonorViewProps {
   donors: DonorResponse[];
@@ -18,9 +19,7 @@ const columns: GridColDef[] = [
 ];
 
 export default function DonorView({ donors }: DonorViewProps) {
-  const query = useSearch();
-
-  let rows = donors.map((donor, index) => ({
+  const rows = donors.map((donor, index) => ({
     id: index + 1,
     name: `${donor.firstName} ${donor.lastName}`,
     address: donor.address,
@@ -30,15 +29,22 @@ export default function DonorView({ donors }: DonorViewProps) {
     email: donor.email,
   }));
 
-  if (query.length > 0) {
-    rows = rows.filter((volunteer) =>
-      volunteer.name.toLowerCase().includes(query.toLowerCase())
-    );
-  }
-
   return (
-    <div style={{ height: 650, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} disableRowSelectionOnClick />
-    </div>
+    <Box sx={{ width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+            quickFilterProps: { debounceMs: 500 }, // Optional: Configuring debounce
+          },
+        }}
+      />
+    </Box>
   );
 }

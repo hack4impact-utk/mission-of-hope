@@ -1,7 +1,6 @@
 import { getAllDonors } from '@/server/actions/donors';
 import { DonorResponse } from '@/types/persons';
 import DonorView from '@/views/donorView';
-import SearchBar from '@/components/searchBar';
 
 export default async function DonorPage() {
   const donors: DonorResponse[] = JSON.parse(
@@ -9,7 +8,6 @@ export default async function DonorPage() {
   );
   return (
     <>
-      <SearchBar />
       <DonorView donors={donors} />
     </>
   );
