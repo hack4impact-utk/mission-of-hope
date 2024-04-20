@@ -24,7 +24,7 @@ export default function Home() {
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: '50px' }}>
           <Button
-            href="./Home"
+            href="./"
             style={{
               color: '#ff8a65',
               fontSize: '25px',
