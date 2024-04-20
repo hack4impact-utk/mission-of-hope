@@ -8,12 +8,11 @@ interface DonationItemProps {
 
 const columns: GridColDef[] = [
   //set the name and width of each column
-  { field: 'name', headerName: 'Product', width: 300 },
-  { field: 'category', headerName: 'Category', width: 300 },
-  { field: 'quantity', headerName: 'Quantity', width: 100 },
-  { field: 'evaluation', headerName: 'Evaluation', width: 100 },
-  { field: 'barcode', headerName: 'Barcode (if food)', width: 300 },
-  { field: 'price', headerName: 'Price', width: 200 },
+  { field: 'name', headerName: 'Product', width: 350 },
+  { field: 'category', headerName: 'Category', width: 350 },
+  { field: 'quantity', headerName: 'Quantity', width: 200 },
+  { field: 'evaluation', headerName: 'Evaluation', width: 150 },
+  { field: 'barcode', headerName: 'Barcode (if food)', width: 200 },
 ];
 
 export default function DonationItemView({ donationItems }: DonationItemProps) {
@@ -25,7 +24,6 @@ export default function DonationItemView({ donationItems }: DonationItemProps) {
     quantity: item.quantity,
     evaluation: item.value.evaluation,
     barcode: item.barcode,
-    price: item.value.price,
   }));
 
   return (
