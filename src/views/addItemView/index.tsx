@@ -1,5 +1,15 @@
 'use client';
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 
 export default function AddItemView() {
@@ -7,9 +17,29 @@ export default function AddItemView() {
   const [category, setCategory] = useState('');
   const [highValue, setHighValue] = useState('');
   const [lowValue, setLowValue] = useState('');
+  const [highValueError, setHighValueError] = useState('');
+  const [lowValueError, setLowValueError] = useState('');
+
+  const formatPriceFields = (
+    value: string,
+    setValue: (value: string) => void,
+    setError: (error: string) => void
+  ): void => {
+    // Validate high and low values
+    if (Number(value) < 0 || isNaN(Number(value))) {
+      setError('value must be a positive number');
+      return;
+    } else {
+      setError('');
+    }
+
+    const formattedValue = Number(value).toFixed(2);
+    setValue(formattedValue);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     // Validate form fields
     const requestData = {
       name: itemName,
@@ -98,34 +128,60 @@ export default function AddItemView() {
               {/* Consider using Select component here for dropdown */}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                id="highValue"
-                label="High Value"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={highValue}
-                onChange={(e) =>
-                  setHighValue(
-                    Number(e.target.value) < 0 ? '0' : e.target.value
-                  )
-                }
-              />
+              <FormControl fullWidth>
+                <InputLabel htmlFor="highValue">High Value</InputLabel>
+                <OutlinedInput
+                  error={!!highValueError}
+                  label="High Value"
+                  id="highValue"
+                  type="number"
+                  value={highValue}
+                  onChange={(e) => setHighValue(e.target.value)}
+                  onBlur={(e) =>
+                    formatPriceFields(
+                      e.target.value,
+                      setHighValue,
+                      setHighValueError
+                    )
+                  }
+                  startAdornment={
+                    <InputAdornment position="start">$</InputAdornment>
+                  }
+                />
+                {highValueError && (
+                  <Typography variant="caption" color="error">
+                    {highValueError}
+                  </Typography>
+                )}
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                id="lowValue"
-                label="Low Value"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={lowValue}
-                onChange={(e) =>
-                  setLowValue(Number(e.target.value) < 0 ? '0' : e.target.value)
-                }
-              />
+              <FormControl fullWidth>
+                <InputLabel htmlFor="lowValue">Low Value</InputLabel>
+                <OutlinedInput
+                  error={!!lowValueError}
+                  label="Low Value"
+                  id="lowValue"
+                  type="number"
+                  value={lowValue}
+                  onChange={(e) => setLowValue(e.target.value)}
+                  onBlur={(e) =>
+                    formatPriceFields(
+                      e.target.value,
+                      setLowValue,
+                      setLowValueError
+                    )
+                  }
+                  startAdornment={
+                    <InputAdornment position="start">$</InputAdornment>
+                  }
+                />
+                {lowValueError && (
+                  <Typography variant="caption" color="error">
+                    {lowValueError}
+                  </Typography>
+                )}
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <Button
@@ -133,6 +189,7 @@ export default function AddItemView() {
                 variant="contained"
                 color="primary"
                 fullWidth
+                disabled={highValueError || lowValueError ? true : false}
                 sx={{
                   height: 56,
                   textTransform: 'none',
