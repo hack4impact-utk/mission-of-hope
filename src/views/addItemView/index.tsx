@@ -78,7 +78,6 @@ export default function AddItemView() {
 
   return (
     <>
-      <TopBar />
       <Box
         sx={{
           display: 'flex',
