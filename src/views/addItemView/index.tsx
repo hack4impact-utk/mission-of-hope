@@ -1,5 +1,4 @@
 'use client';
-import TopBar from '@/components/top-bar';
 import {
   Box,
   Button,
@@ -129,7 +128,7 @@ export default function AddItemView() {
               {/* Consider using Select component here for dropdown */}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth sx={{ m: 1 }}>
+              <FormControl fullWidth>
                 <InputLabel htmlFor="highValue">High Value</InputLabel>
                 <OutlinedInput
                   error={!!highValueError}
@@ -157,7 +156,7 @@ export default function AddItemView() {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth sx={{ m: 1 }}>
+              <FormControl fullWidth>
                 <InputLabel htmlFor="lowValue">Low Value</InputLabel>
                 <OutlinedInput
                   error={!!lowValueError}
