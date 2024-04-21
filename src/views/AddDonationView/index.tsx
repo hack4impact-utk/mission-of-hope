@@ -9,7 +9,6 @@ import {
   InputAdornment,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   TextField,
   Typography,
@@ -103,13 +102,6 @@ export default function AddDonationView({
       city: donationData.donorCity,
       zip: Number(donationData.donorZip),
     };
-    const donationItem = {
-      item: {
-        name: donationData.donatedItem,
-        category: donationData.category,
-        high: donationData.newOrUsed,
-      },
-    };
 
     try {
       // fetch request to add donor
@@ -121,41 +113,25 @@ export default function AddDonationView({
         body: JSON.stringify(donor),
       });
 
-      console.log(donorRes.body);
-      const donationItemRes = await fetch('/api/donationItem', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(donationItem),
-      });
-
-      if (donationItemRes.ok) {
-        if (donorRes.ok) {
-          console.log('Donor added successfully');
-          donationData.donationDate = '';
-          donationData.donorEmail = '';
-          donationData.category = '';
-          donationData.donatedItem = '';
-          donationData.quantity = '';
-          donationData.alertQuantity = '';
-          donationData.newOrUsed = '';
-          donationData.price = '';
-          donationData.prevDonated = false;
-          donationData.user = '';
-          donationData.donorName = '';
-          donationData.donorAddress = '';
-          donationData.donorCity = '';
-          donationData.donorState = '';
-          donationData.donorZip = '';
-        } else {
-          console.log('Error adding donor, status:', donorRes.status);
-        }
+      if (donorRes.ok) {
+        console.log('Donor added successfully');
+        donationData.donationDate = '';
+        donationData.donorEmail = '';
+        donationData.category = '';
+        donationData.donatedItem = '';
+        donationData.quantity = '';
+        donationData.alertQuantity = '';
+        donationData.newOrUsed = '';
+        donationData.price = '';
+        donationData.prevDonated = false;
+        donationData.user = '';
+        donationData.donorName = '';
+        donationData.donorAddress = '';
+        donationData.donorCity = '';
+        donationData.donorState = '';
+        donationData.donorZip = '';
       } else {
-        console.log(
-          'Error adding donation Item, status:',
-          donationItemRes.status
-        );
+        console.log('Error adding donor, status:', donorRes.status);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -262,33 +238,29 @@ export default function AddDonationView({
           />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="highValue">High Value</InputLabel>
-            <OutlinedInput
-              error={!!priceError}
-              label="Price"
-              type="number"
-              id="outlined-required"
-              value={donationData.price}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setDonorData({ ...donationData, price: e.target.value });
-              }}
-              onBlur={(e) =>
-                setDonorData({
-                  ...donationData,
-                  price: getPriceFormatted(e.target.value, setPriceError),
-                })
-              }
-              startAdornment={
+          <TextField
+            error={!!priceError}
+            id="price"
+            label="Price"
+            type="number"
+            defaultValue="0.00"
+            value={donationData.price}
+            helperText={priceError}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setDonorData({ ...donationData, price: e.target.value });
+            }}
+            onBlur={(e) =>
+              setDonorData({
+                ...donationData,
+                price: getPriceFormatted(e.target.value, setPriceError),
+              })
+            }
+            InputProps={{
+              startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
-              }
-            />
-            {priceError && (
-              <Typography variant="caption" color="error">
-                {priceError}
-              </Typography>
-            )}
-          </FormControl>
+              ),
+            }}
+          />
         </Grid>
         <Grid item xs={8} sm={12}>
           <TextField
