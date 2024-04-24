@@ -1,35 +1,69 @@
 'use client';
+import React from 'react';
+import { Box, Chip } from '@mui/material';
+import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { DonationItemResponse } from '@/types/donation';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-//
+
 interface DonationItemProps {
   donationItems: DonationItemResponse[];
 }
 
 const columns: GridColDef[] = [
-  //set the name and width of each column
-  { field: 'name', headerName: 'Product', width: 350 },
-  { field: 'category', headerName: 'Category', width: 350 },
-  { field: 'quantity', headerName: 'Quantity', width: 200 },
-  { field: 'evaluation', headerName: 'Evaluation', width: 150 },
-  { field: 'barcode', headerName: 'Barcode (if food)', width: 200 },
+  { field: 'product', headerName: 'Product', width: 300 },
+  { field: 'category', headerName: 'Category', width: 300 },
+  { field: 'quantity', headerName: 'Quantity', width: 100 },
+  {
+    field: 'evaluation',
+    headerName: 'Evaluation',
+    width: 200,
+  },
+  {
+    field: 'barcode',
+    headerName: 'Barcode (if food)',
+    width: 200,
+    renderCell: (params) => {
+      return params.value ? (
+        <Chip
+          label={params.value}
+          sx={{
+            bgcolor: '#37954173',
+            border: 'solid',
+            borderColor: '#ABABAB',
+          }}
+        />
+      ) : null;
+    },
+  },
+  { field: 'price', headerName: 'Price', width: 200 },
 ];
 
 export default function DonationItemView({ donationItems }: DonationItemProps) {
-  // Map over the donationItems to create rows for the DataGrid
-  const rows = donationItems.map((item, index) => ({
-    id: index + 1,
-    name: item.item.name,
-    category: item.item.category,
-    quantity: item.quantity,
-    evaluation: item.value.evaluation,
-    barcode: item.barcode,
+  const formattedRows = donationItems.map((row) => ({
+    id: row._id,
+    product: row.item.name,
+    category: row.item.category,
+    quantity: row.quantity,
+    evaluation: row.value.evaluation,
+    barcode: row.barcode,
+    price: `$${row.value.price}`,
   }));
 
   return (
-    //return with no height to allow the table to expand
-    <div style={{ width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} disableRowSelectionOnClick />
-    </div>
+    <Box sx={{ width: '100%' }}>
+      <DataGrid
+        rows={formattedRows}
+        columns={columns}
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+            quickFilterProps: { debounceMs: 500 },
+          },
+        }}
+      />
+    </Box>
   );
 }
