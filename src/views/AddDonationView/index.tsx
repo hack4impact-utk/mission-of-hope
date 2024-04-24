@@ -243,7 +243,6 @@ export default function AddDonationView({
             id="price"
             label="Price"
             type="number"
-            defaultValue="0.00"
             value={donationData.price}
             helperText={priceError}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
