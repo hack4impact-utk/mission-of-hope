@@ -9,6 +9,7 @@ interface DonationItemProps {
 }
 
 const columns: GridColDef[] = [
+  //declared the columns for the data grid and their stylings
   { field: 'product', headerName: 'Product', width: 300 },
   { field: 'category', headerName: 'Category', width: 300 },
   { field: 'quantity', headerName: 'Quantity', width: 100 },
@@ -23,7 +24,7 @@ const columns: GridColDef[] = [
     width: 200,
     renderCell: (params) => {
       return params.value ? (
-        <Chip
+        <Chip // kept the same styling from og
           label={params.value}
           sx={{
             bgcolor: '#37954173',
@@ -38,6 +39,7 @@ const columns: GridColDef[] = [
 ];
 
 export default function DonationItemView({ donationItems }: DonationItemProps) {
+  //map the donation items to the rows
   const formattedRows = donationItems.map((row) => ({
     id: row._id,
     product: row.item.name,
@@ -56,11 +58,11 @@ export default function DonationItemView({ donationItems }: DonationItemProps) {
         disableColumnFilter
         disableColumnSelector
         disableDensitySelector
-        slots={{ toolbar: GridToolbar }}
+        slots={{ toolbar: GridToolbar }} // added the toolbar to the grid
         slotProps={{
           toolbar: {
             showQuickFilter: true,
-            quickFilterProps: { debounceMs: 500 },
+            quickFilterProps: { debounceMs: 500 }, // each search query will be delayed by 500ms
           },
         }}
       />
