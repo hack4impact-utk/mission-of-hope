@@ -37,6 +37,7 @@ export const zDonationBase = z.object({
   items: z.array(zObjectId),
   entryDate: z.coerce.date(),
   donor: zObjectId,
+  receipt: z.number(),
 });
 
 export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });
