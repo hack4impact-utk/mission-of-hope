@@ -1,6 +1,7 @@
 'use client';
 import AutofillDonorEmail from '@/components/AutofillDonorEmail';
 import AutofillItem from '@/components/AutofillItemCategory';
+// import AutofillCategory from '@/components/AutofillCategory';
 
 import { ItemResponse } from '@/types/items';
 import { DonorResponse } from '@/types/persons';
@@ -63,6 +64,14 @@ export default function AddDonationView({
       category: selectedItem.category,
     });
   };
+
+  // const handleCategorySelect = (selectedItems: ItemResponse[]) => {
+  //   setDonorData({
+  //     ...donorData,
+  //     // donatedItem: selectedItems.name,
+  //     category: selectedItems[0].category,
+  //   });
+  // };
 
   const handleAddDonation = () => {
     alert('Donation added successfully!');
@@ -172,6 +181,10 @@ export default function AddDonationView({
           />
         </Grid>
         <Grid item xs={12}>
+          {/* <AutofillCategory
+            ItemOptions={itemOptions}
+            onCategorySelect={handleCategorySelect}
+        /> */}
           <TextField
             fullWidth
             id="outlined-required"
