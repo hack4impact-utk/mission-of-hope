@@ -28,4 +28,4 @@ const ReceiptSchema = new Schema(
 export interface ReceiptDocument extends Omit<ReceiptEntity, '_id'>, Document {}
 
 export default (models.Receipt as Model<ReceiptDocument>) ||
-  model<ReceiptDocument>('Recipt', ReceiptSchema);
+  model<ReceiptDocument>('Receipt', ReceiptSchema);
