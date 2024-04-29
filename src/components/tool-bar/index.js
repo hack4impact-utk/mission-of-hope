@@ -70,8 +70,9 @@ export default function QuillToolBar() {
       <span className="ql-formats">
         <button className="ql-clean" type="button" />
         <select className="ql-insert">
-          <option value="[DONOR]">Donor Name</option>
-          <option value="[DONATEDITEM]">Donated Item</option>
+          <option value="[FDONOR]">Donor First Name</option>
+          <option value="[LDONOR]">Donor Last Name</option>
+          <option value="[DATE]">Date</option>
         </select>
       </span>
     </div>
