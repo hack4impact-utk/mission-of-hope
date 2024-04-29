@@ -2,13 +2,14 @@
 import { Box, Card, Tab, Tabs, TextField } from '@mui/material';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
 import { useState } from 'react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import EmailParserCard from '@/components/email-card';
 import QuillToolBar, { modules, formats } from '@/components/tool-bar';
 import '@/components/tool-bar/style.css';
 import React from 'react';
 import { DonationResponse, DonationItemResponse } from '@/types/donation';
+import { useMemo } from 'react';
+import dynamic from 'next/dynamic';
 
 interface mailMergeProps {
   exampleDonation: DonationResponse;
@@ -19,6 +20,10 @@ export default function EmailEditor({
   exampleDonation,
   exampleDonationItems,
 }: mailMergeProps) {
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
   const [body, setBody] = useState('');
   const [subject, setSubject] = useState('');
   const [value, setValue] = React.useState(0);
