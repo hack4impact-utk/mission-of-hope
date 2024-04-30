@@ -53,7 +53,9 @@ export default function SignInView() {
           Sign in with your Google Account
         </Typography>
         <AccountCircleIcon sx={{ color: '#FFFFFF', fontSize: '8rem' }} />
-        <GoogleButton onClick={() => signIn()}></GoogleButton>
+        <GoogleButton
+          onClick={() => signIn('google', { callbackUrl: '/' })}
+        ></GoogleButton>
       </Card>
     </Box>
   );
