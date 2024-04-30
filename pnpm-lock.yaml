@@ -17,9 +17,15 @@ dependencies:
   '@mui/material':
     specifier: ^5.14.6
     version: 5.14.6(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
+  '@next-auth/mongodb-adapter':
+    specifier: ^1.1.3
+    version: 1.1.3(mongodb@5.9.2)(next-auth@4.24.7)
   bson:
     specifier: ^6.2.0
     version: 6.2.0
+  mongodb:
+    specifier: ^5.9.1
+    version: 5.9.2
   mongoose:
     specifier: ^7.4.5
     version: 7.4.5
@@ -884,6 +890,14 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  /@mongodb-js/saslprep@1.1.5:
+    resolution: {integrity: sha512-XLNOMH66KhJzUJNwT/qlMnS4WsNDWD5ASdyaSH3EtK+F4r/CFGa3jT4GNi4mfOitGvWXtdLgQJkQjxSVrio+jA==}
+    requiresBuild: true
+    dependencies:
+      sparse-bitfield: 3.0.3
+    dev: false
+    optional: true
+
   /@mui/base@5.0.0-beta.12(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-tZjjXNAyUpwSDT1uRliZMhRQkWYzELJ8Qi61EuOMRpi36HIwnK2T7Nr4RI423Sv8G2EEikDAZj7je33eNd73NQ==}
     engines: {node: '>=12.0.0'}
@@ -1058,6 +1072,16 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 18.2.0
+    dev: false
+
+  /@next-auth/mongodb-adapter@1.1.3(mongodb@5.9.2)(next-auth@4.24.7):
+    resolution: {integrity: sha512-nH/may8hntYBlcuxepSsR2b95w6SRnP+c/FFt3KKjdTScNjhrN0zZdlT90nisjG/3gK+MvzMbz/F4Rwpgr9RMA==}
+    peerDependencies:
+      mongodb: ^5 || ^4
+      next-auth: ^4
+    dependencies:
+      mongodb: 5.9.2
+      next-auth: 4.24.7(next@13.4.19)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@next/env@13.4.19:
@@ -1921,6 +1945,11 @@ packages:
 
   /bson@5.4.0:
     resolution: {integrity: sha512-WRZ5SQI5GfUuKnPTNmAYPiKIof3ORXAF4IRU5UcgmivNIon01rWQlw5RUH954dpu8yGL8T59YShVddIPaU/gFA==}
+    engines: {node: '>=14.20.1'}
+    dev: false
+
+  /bson@5.5.1:
+    resolution: {integrity: sha512-ix0EwukN2EpC0SRWIj/7B5+A6uQMQy6KMREI9qQqvgpkV2frH63T0UDVd1SYedL6dNCmDBYB3QtXi4ISk9YT+g==}
     engines: {node: '>=14.20.1'}
     dev: false
 
@@ -4331,6 +4360,34 @@ packages:
       socks: 2.7.1
     optionalDependencies:
       saslprep: 1.0.3
+    dev: false
+
+  /mongodb@5.9.2:
+    resolution: {integrity: sha512-H60HecKO4Bc+7dhOv4sJlgvenK4fQNqqUIlXxZYQNbfEWSALGAwGoyJd/0Qwk4TttFXUOHJ2ZJQe/52ScaUwtQ==}
+    engines: {node: '>=14.20.1'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.188.0
+      '@mongodb-js/zstd': ^1.0.0
+      kerberos: ^1.0.0 || ^2.0.0
+      mongodb-client-encryption: '>=2.3.0 <3'
+      snappy: ^7.2.2
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+    dependencies:
+      bson: 5.5.1
+      mongodb-connection-string-url: 2.6.0
+      socks: 2.7.1
+    optionalDependencies:
+      '@mongodb-js/saslprep': 1.1.5
     dev: false
 
   /mongoose@7.4.5:
