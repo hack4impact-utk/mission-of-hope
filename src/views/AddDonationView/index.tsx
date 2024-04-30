@@ -86,12 +86,7 @@ export default function AddDonationView({
     donationData.price = '';
     donationData.prevDonated = false;
     donationData.user = '';
-    donorFormData.firstName = '';
-    donorFormData.lastName = '';
-    donorFormData.address = '';
-    donorFormData.city = '';
-    donorFormData.state = '';
-    donorFormData.zip = null;
+    setDonorFormData({} as DonorFormData);
   };
 
   const handleAddDonor = async () => {
@@ -133,12 +128,7 @@ export default function AddDonationView({
         donationData.price = '';
         donationData.prevDonated = false;
         donationData.user = '';
-        donorFormData.firstName = '';
-        donorFormData.lastName = '';
-        donorFormData.address = '';
-        donorFormData.city = '';
-        donorFormData.state = '';
-        donorFormData.zip = null;
+        setDonorFormData({} as DonorFormData);
       } else {
         console.log('Error adding donor, status:', donorRes.status);
       }
