@@ -1,5 +1,7 @@
 'use client';
 import AutofillDonorEmail from '@/components/AutofillDonorEmail';
+import DonorForm from '@/components/donorForm';
+import { DonorFormData } from '@/types/forms/donor';
 import { DonorResponse } from '@/types/persons';
 import {
   Box,
@@ -56,6 +58,9 @@ export default function AddDonationView({
     donorZip: '',
   });
   const [priceError, setPriceError] = useState('');
+  const [donorFormData, setDonorFormData] = useState<DonorFormData>(
+    {} as DonorFormData
+  );
 
   const handleDonorSelect = (selectedDonor: DonorResponse) => {
     setDonorData({
@@ -81,27 +86,30 @@ export default function AddDonationView({
     donationData.price = '';
     donationData.prevDonated = false;
     donationData.user = '';
-    donationData.donorName = '';
-    donationData.donorAddress = '';
-    donationData.donorCity = '';
-    donationData.donorState = '';
-    donationData.donorZip = '';
+    donorFormData.firstName = '';
+    donorFormData.lastName = '';
+    donorFormData.address = '';
+    donorFormData.city = '';
+    donorFormData.state = '';
+    donorFormData.zip = null;
   };
 
   const handleAddDonor = async () => {
     // If donor has previously donated, don't add them to the database
     if (donationData.prevDonated) return;
 
-    const nameParts = donationData.donorName.split(' ');
-    const donor = {
-      firstName: nameParts[0],
-      lastName: nameParts[1] || '',
-      email: donationData.donorEmail,
-      address: donationData.donorAddress,
-      state: donationData.donorState,
-      city: donationData.donorCity,
-      zip: Number(donationData.donorZip),
-    };
+    // ADD ERROR PARSING
+
+    // const nameParts = donationData.donorName.split(' ');
+    // const donor = {
+    //   firstName: nameParts[0],
+    //   lastName: nameParts[1] || '',
+    //   email: donationData.donorEmail,
+    //   address: donationData.donorAddress,
+    //   state: donationData.donorState,
+    //   city: donationData.donorCity,
+    //   zip: Number(donationData.donorZip),
+    // };
 
     try {
       // fetch request to add donor
@@ -110,7 +118,7 @@ export default function AddDonationView({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(donor),
+        body: JSON.stringify(donorFormData),
       });
 
       if (donorRes.ok) {
@@ -125,11 +133,12 @@ export default function AddDonationView({
         donationData.price = '';
         donationData.prevDonated = false;
         donationData.user = '';
-        donationData.donorName = '';
-        donationData.donorAddress = '';
-        donationData.donorCity = '';
-        donationData.donorState = '';
-        donationData.donorZip = '';
+        donorFormData.firstName = '';
+        donorFormData.lastName = '';
+        donorFormData.address = '';
+        donorFormData.city = '';
+        donorFormData.state = '';
+        donorFormData.zip = null;
       } else {
         console.log('Error adding donor, status:', donorRes.status);
       }
@@ -302,6 +311,10 @@ export default function AddDonationView({
             </Select>
           </FormControl>
         </Grid>
+        <DonorForm
+          donorData={donorFormData}
+          onChange={setDonorFormData}
+        ></DonorForm>
         <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
