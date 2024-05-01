@@ -32,23 +32,28 @@ export default function DonorIdView(props: donorProps) {
 
   return (
     <>
-      <Grid container spacing={2} display={'flex'} justifyContent={'center'}>
-        <Grid item xs={12} sm={8}></Grid>
-        <Grid item xs={2} sm={12}>
+      <Grid container spacing={2}>
+        {' '}
+        {/* display={'flex'} justifyContent={'center'}> */}
+        <Grid item xs={2} sm={0}>
+          l
+        </Grid>
+        <Grid item xs={8} sm={8}>
           <Box
             sx={{
               border: '1px solid #00000030',
               borderRadius: '10px',
               boxShadow: '0px 4px 4px 0px #00000040',
             }}
+            // width={"60%"}
             p={2}
             m={2}
           >
-            <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
-              Edit Donor
-            </Typography>
-            <Divider></Divider>
-            <Grid container spacing={2} sx={{ mt: 4, pl: 2, pr: 2 }}>
+            <Grid container spacing={2} sx={{ pl: 2, pr: 2 }}>
+              <Grid item xs={12} sm={12}>
+                <Typography variant="h4">Edit Donor</Typography>
+                <Divider></Divider>
+              </Grid>
               <Grid item xs={12} sm={12}>
                 <FormGroup>
                   <FormControlLabel
@@ -81,7 +86,9 @@ export default function DonorIdView(props: donorProps) {
               ></DonorForm>
             </Grid>
           </Box>
-          <Grid item xs={12} sm={8}></Grid>
+          <Grid item xs={2} sm={0}>
+            l
+          </Grid>
         </Grid>
       </Grid>
     </>
