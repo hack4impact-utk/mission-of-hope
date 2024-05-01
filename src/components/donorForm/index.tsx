@@ -1,20 +1,27 @@
+'use client';
 import { DonorFormData } from '@/types/forms/donor';
 import { Grid, TextField } from '@mui/material';
+import { useEffect } from 'react';
 
 interface donorProps {
   donorData: DonorFormData;
+  disabled: boolean;
   onChange: (DonorData: DonorFormData) => void;
 }
 
 export default function DonorForm(props: donorProps) {
+  useEffect(() => {
+    console.log(props.donorData.firstName);
+  }, [props.donorData]);
   return (
     <>
       <Grid item xs={12} sm={6}>
         <TextField
           fullWidth
           id="outlined-required"
-          label="Donor Name"
-          value={props.donorData.firstName}
+          label="First Name"
+          disabled={props.disabled}
+          value={props.donorData.firstName ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, firstName: e.target.value });
           }}
@@ -24,8 +31,9 @@ export default function DonorForm(props: donorProps) {
         <TextField
           fullWidth
           id="outlined-required"
-          label="Donor Name"
-          value={props.donorData.lastName}
+          label="Last Name"
+          disabled={props.disabled}
+          value={props.donorData.lastName ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, lastName: e.target.value });
           }}
@@ -36,7 +44,8 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="Address"
-          value={props.donorData.address}
+          disabled={props.disabled}
+          value={props.donorData.address ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, address: e.target.value });
           }}
@@ -47,7 +56,8 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="City"
-          value={props.donorData.city}
+          disabled={props.disabled}
+          value={props.donorData.city ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, city: e.target.value });
           }}
@@ -58,7 +68,8 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="State"
-          value={props.donorData.state}
+          disabled={props.disabled}
+          value={props.donorData.state ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, state: e.target.value });
           }}
@@ -69,13 +80,14 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="Zip"
-          value={props.donorData.zip}
+          disabled={props.disabled}
+          value={props.donorData.zip ?? ''}
           type="number"
           inputMode="numeric"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            ({
+            props.onChange({
               ...props.donorData,
-              zip: e.target.value,
+              zip: Number(e.target.value),
             });
           }}
         />

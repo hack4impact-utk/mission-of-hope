@@ -10,7 +10,6 @@ export const zDonorFormData = z.object({
   city: z.string().min(1, { message: 'Required' }),
   state: z.string().min(1, { message: 'Required' }),
   zip: z.number().positive().min(1, { message: 'Required' }),
-  // zipString: z.string().min(1, { message: 'Required' }),
 });
 
 export interface DonorFormData extends z.infer<typeof zDonorFormData> {}
