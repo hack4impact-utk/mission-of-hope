@@ -44,7 +44,7 @@ export default function Home() {
             Resources
           </Button>
           <Button
-            href="./User"
+            href="./user"
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -54,7 +54,7 @@ export default function Home() {
             User
           </Button>
           <Button
-            href="./Item"
+            href="./donationItem"
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -62,16 +62,6 @@ export default function Home() {
             }}
           >
             Inventory Management
-          </Button>
-          <Button
-            href="./Item"
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Acknowledgment
           </Button>
         </div>
       </div>
