@@ -1,3 +1,5 @@
+import Navbar from '@/components/nav-bar';
+import { Box } from '@mui/material';
 import TopBar from '@/components/top-bar';
 
 export const metadata = {
@@ -14,7 +16,16 @@ export default function RootLayout({
     <html lang="en">
       <body style={{ margin: 0 }}>
         <TopBar></TopBar>
-        {children}
+        <Box
+          component="section"
+          className="layout"
+          sx={{ display: 'flex', py: 1, px: 0 }}
+        >
+          <Navbar />
+          <Box component="main" sx={{ flexGrow: 1 }}>
+            {children}
+          </Box>
+        </Box>
       </body>
     </html>
   );
