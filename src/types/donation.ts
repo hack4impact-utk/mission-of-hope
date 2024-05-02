@@ -2,6 +2,7 @@ import zBase from './base';
 import { z } from 'zod';
 import zObjectId from './objectId';
 import { zItemResponse } from './items';
+import { zDonorResponse, zUserResponse } from './persons';
 
 export const evaluationEnum = ['Hight', 'Low', 'New'] as const;
 
@@ -43,7 +44,12 @@ export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });
 
 export const zCreateDonationRequest = zDonationBase;
 
-export const zDonationResponse = zDonationEntity;
+//export const zDonationResponse = zDonationEntity;
+export const zDonationResponse = zDonationEntity.extend({
+  user: zUserResponse,
+  donor: zDonorResponse,
+  items: zDonationItemResponse,
+});
 
 export interface DonationEntity extends z.infer<typeof zDonationEntity> {}
 

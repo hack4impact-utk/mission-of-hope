@@ -7,8 +7,11 @@ import {
 } from '@/types/donation';
 import UserSchema from '@/server/models/users';
 import DonorSchema from '@/server/models/donors';
+import DonationItemSchema from '@/server/models/donationItem';
+
 UserSchema;
 DonorSchema;
+DonationItemSchema;
 
 export async function createDonation(
   donation: CreateDonationRequest
@@ -27,6 +30,7 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
     const response: DonationResponse[] = await DonationSchema.find().populate([
       'user',
       'donor',
+      'items',
     ]);
 
     return response;
