@@ -48,6 +48,7 @@ export const zCreateDonationRequest = zDonationBase;
 export const zDonationResponse = zDonationEntity.extend({
   user: zUserResponse,
   donor: zDonorResponse,
+  //items: z.array(zDonationItemResponse),
   items: zDonationItemResponse,
 });
 
