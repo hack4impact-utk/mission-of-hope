@@ -1,4 +1,5 @@
 import ClientSessionProvider from '@/components/ClientSessionProvider';
+import TopBar from '@/components/top-bar';
 
 export const metadata = {
   title: 'Next.js',
@@ -12,7 +13,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ margin: 0 }}>
+        <TopBar></TopBar>
         <ClientSessionProvider>{children}</ClientSessionProvider>
       </body>
     </html>
