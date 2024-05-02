@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 
 import { AppBar, Link } from '@mui/material';
@@ -10,7 +9,7 @@ const TopBar: React.FC = () => {
         width: '100%',
         height: '10vh',
         backgroundColor: '#379541cc',
-        position: 'absolute',
+        position: 'sticky',
         top: 0,
         left: 0,
         right: 0,

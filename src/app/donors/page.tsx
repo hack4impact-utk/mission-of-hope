@@ -6,5 +6,9 @@ export default async function DonorPage() {
   const donors: DonorResponse[] = JSON.parse(
     JSON.stringify(await getAllDonors())
   );
-  return <DonorView donors={donors} />;
+  return (
+    <>
+      <DonorView donors={donors} />
+    </>
+  );
 }

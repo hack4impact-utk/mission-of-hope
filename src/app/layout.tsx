@@ -1,5 +1,6 @@
 import Navbar from '@/components/nav-bar';
 import { Box } from '@mui/material';
+import TopBar from '@/components/top-bar';
 
 export const metadata = {
   title: 'Next.js',
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ margin: 0 }}>
+        <TopBar></TopBar>
         <Box
           component="section"
           className="layout"
