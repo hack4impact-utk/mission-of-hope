@@ -1,17 +1,22 @@
 import { ItemResponse } from '@/types/items';
 import { Autocomplete, TextField } from '@mui/material';
-import { useState } from 'react';
 
 interface Item {
-  ItemOptions: ItemResponse[];
+  itemOptions: ItemResponse[];
   onItemSelect: (item: ItemResponse) => void;
+  category: string;
 }
 
 export default function AutofillItem(props: Item) {
-  const [itemOptions] = useState<ItemResponse[]>(props.ItemOptions);
+  const filteredItems = props.itemOptions.filter((item) => {
+    if (!props.category) {
+      return true;
+    }
+    return item.category === props.category;
+  });
 
   function onItemChange(value: string) {
-    const itemMatch = itemOptions.find(
+    const itemMatch = props.itemOptions.find(
       (item) => item.name.toLowerCase() === value.toLowerCase()
     );
     if (itemMatch) {
@@ -25,8 +30,8 @@ export default function AutofillItem(props: Item) {
       freeSolo
       autoComplete
       value={''}
-      options={itemOptions}
-      isOptionEqualToValue={(option, value) => option._id === value._id}
+      options={filteredItems}
+      isOptionEqualToValue={(option, value) => option.name == value.name}
       getOptionLabel={(item) => (typeof item === 'string' ? item : item.name)}
       renderOption={(props, option) => {
         return (
@@ -41,9 +46,6 @@ export default function AutofillItem(props: Item) {
           label="Donated Item"
           id="outlined-required"
           value={''}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            onItemChange(e.target.value);
-          }}
           type="string"
         />
       )}

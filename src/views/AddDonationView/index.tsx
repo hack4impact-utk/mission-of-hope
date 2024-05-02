@@ -1,7 +1,7 @@
 'use client';
-import AutofillDonorEmail from '@/components/AutofillDonorEmail';
-import AutofillItem from '@/components/AutofillItemCategory';
-// import AutofillCategory from '@/components/AutofillCategory';
+import AutofillDonorEmail from '@/components/donation-form/AutofillDonorEmail';
+import AutofillItem from '@/components/donation-form/AutofillItem';
+import AutofillCategory from '@/components/donation-form/AutofillCategory';
 
 import { ItemResponse } from '@/types/items';
 import { DonorResponse } from '@/types/persons';
@@ -65,13 +65,14 @@ export default function AddDonationView({
     });
   };
 
-  // const handleCategorySelect = (selectedItems: ItemResponse[]) => {
-  //   setDonorData({
-  //     ...donorData,
-  //     // donatedItem: selectedItems.name,
-  //     category: selectedItems[0].category,
-  //   });
-  // };
+  const handleCategorySelect = (categoryString: string) => {
+    console.log('categoey string calle dwith', categoryString);
+    setDonorData({
+      ...donorData,
+      // donatedItem: selectedItems.name,
+      category: categoryString,
+    });
+  };
 
   const handleAddDonation = () => {
     alert('Donation added successfully!');
@@ -181,24 +182,17 @@ export default function AddDonationView({
           />
         </Grid>
         <Grid item xs={12}>
-          {/* <AutofillCategory
+          <AutofillCategory
             ItemOptions={itemOptions}
             onCategorySelect={handleCategorySelect}
-        /> */}
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Category"
             value={donorData.category}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donorData, category: e.target.value });
-            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <AutofillItem
-            ItemOptions={itemOptions}
+            itemOptions={itemOptions}
             onItemSelect={handleItemSelect}
+            category={donorData.category}
           />
         </Grid>
         <Grid item xs={12} sm={6}>

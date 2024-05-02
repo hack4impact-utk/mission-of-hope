@@ -41,9 +41,6 @@ export default function AutofillDonorEmail(props: Donor) {
           label="Email Address"
           id="outlined-required"
           value={''}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            onEmailChange(e.target.value);
-          }}
           type="email"
         />
       )}
