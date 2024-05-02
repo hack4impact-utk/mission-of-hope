@@ -4,6 +4,7 @@ import { DonorFormData } from '@/types/forms/donor';
 import { DonorResponse } from '@/types/persons';
 import {
   Box,
+  Button,
   Divider,
   FormControlLabel,
   FormGroup,
@@ -82,9 +83,34 @@ export default function DonorIdView(props: donorProps) {
                 onChange={setDonorFormData}
                 disabled={!editSwitch}
               ></DonorForm>
+              <Grid item xs={3} sm={6}></Grid>
+              <Grid item xs={3} sm={3}>
+                <Button
+                  sx={{
+                    backgroundColor: '#666666cc',
+                  }}
+                  fullWidth
+                  disabled={!editSwitch}
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item xs={3} sm={3}>
+                <Button
+                  sx={{
+                    backgroundColor: '#379541cc',
+                  }}
+                  fullWidth
+                  disabled={!editSwitch}
+                  variant="contained"
+                >
+                  Save
+                </Button>
+              </Grid>
             </Grid>
           </Box>
-          <Grid item xs={2} sm={0}></Grid>
+          {/* <Grid item xs={2} sm={0}></Grid> */}
         </Grid>
       </Grid>
     </>
