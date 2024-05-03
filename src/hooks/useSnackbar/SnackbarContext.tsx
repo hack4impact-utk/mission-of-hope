@@ -53,7 +53,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         sx={{ mt: 8 }}
       >
         <Alert
