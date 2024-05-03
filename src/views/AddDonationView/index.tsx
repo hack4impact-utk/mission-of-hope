@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import useSnackbar from '@/hooks/useSnackbar';
 
 function getPriceFormatted(
   value: string,
@@ -69,8 +70,10 @@ export default function AddDonationView({
     });
   };
 
+  const { showSnackbar } = useSnackbar();
   const handleAddDonation = () => {
-    alert('Donation added successfully!');
+    showSnackbar('Donation added successfully.', 'success');
+
     donationData.donationDate = '';
     donationData.donorEmail = '';
     donationData.category = '';

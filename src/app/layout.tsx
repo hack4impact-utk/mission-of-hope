@@ -1,6 +1,7 @@
 import Navbar from '@/components/nav-bar';
 import { Box } from '@mui/material';
 import TopBar from '@/components/top-bar';
+import Providers from '@/components/Providers';
 
 export const metadata = {
   title: 'Next.js',
@@ -15,17 +16,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ margin: 0 }}>
-        <TopBar></TopBar>
-        <Box
-          component="section"
-          className="layout"
-          sx={{ display: 'flex', py: 1, px: 0 }}
-        >
-          <Navbar />
-          <Box component="main" sx={{ flexGrow: 1 }}>
-            {children}
+        <Providers>
+          <TopBar></TopBar>
+          <Box
+            component="section"
+            className="layout"
+            sx={{ display: 'flex', py: 1, px: 0 }}
+          >
+            <Navbar />
+            <Box component="main" sx={{ flexGrow: 1 }}>
+              {children}
+            </Box>
           </Box>
-        </Box>
+        </Providers>
       </body>
     </html>
   );
