@@ -69,25 +69,52 @@ export default function AddDonationView({
     });
   };
 
-  const handleAddDonation = () => {
-    alert('Donation added successfully!');
-    donationData.donationDate = '';
-    donationData.donorEmail = '';
-    donationData.category = '';
-    donationData.donatedItem = '';
-    donationData.quantity = '';
-    donationData.alertQuantity = '';
-    donationData.newOrUsed = '';
-    donationData.price = '';
-    donationData.prevDonated = false;
-    donationData.user = '';
-    donationData.donorName = '';
-    donationData.donorAddress = '';
-    donationData.donorCity = '';
-    donationData.donorState = '';
-    donationData.donorZip = '';
-  };
+  const handleAddDonation = async () => {
+    const donation = {
+      donationDate: donationData.donationDate,
+      category: donationData.category,
+      donatedItem: donationData.donatedItem,
+      quantity: Number(donationData.quantity),
+      alertQuantity: Number(donationData.alertQuantity),
+      newOrUsed: donationData.newOrUsed,
+      price: Number(donationData.price),
+      user: donationData.user,
+      donorName: donationData.donorName,
+      donorEmail: donationData.donorEmail,
+    };
+    try {
+      const donationRes = await fetch('/api/donations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(donation),
+      });
 
+      if (donationRes.ok) {
+        console.log('Donation added successfully');
+        donationData.donationDate = '';
+        donationData.donorEmail = '';
+        donationData.category = '';
+        donationData.donatedItem = '';
+        donationData.quantity = '';
+        donationData.alertQuantity = '';
+        donationData.newOrUsed = '';
+        donationData.price = '';
+        donationData.prevDonated = false;
+        donationData.user = '';
+        donationData.donorName = '';
+        donationData.donorAddress = '';
+        donationData.donorCity = '';
+        donationData.donorState = '';
+        donationData.donorZip = '';
+      } else {
+        console.log('Error adding donation, status:', donationRes.status);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   const handleAddDonor = async () => {
     // If donor has previously donated, don't add them to the database
     if (donationData.prevDonated) return;
