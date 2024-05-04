@@ -227,15 +227,23 @@ export default function AddDonationView({
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="High or Low Value"
-            value={donationData.alertQuantity}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, alertQuantity: e.target.value });
-            }}
-          />
+          <FormControl fullWidth>
+            <InputLabel>High or Low Value</InputLabel>
+            <Select
+              value={donationData.alertQuantity}
+              onChange={(e) => {
+                setDonorData({
+                  ...donationData,
+                  alertQuantity: e.target.value,
+                });
+              }}
+              label="High or Low Value"
+              id="high-or-low-value"
+            >
+              <MenuItem value="high">High</MenuItem>
+              <MenuItem value="low">Low</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
