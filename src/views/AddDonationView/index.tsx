@@ -94,20 +94,13 @@ export default function AddDonationView({
       if (donationRes.ok) {
         console.log('Donation added successfully');
         donationData.donationDate = '';
-        donationData.donorEmail = '';
         donationData.category = '';
         donationData.donatedItem = '';
         donationData.quantity = '';
         donationData.alertQuantity = '';
         donationData.newOrUsed = '';
         donationData.price = '';
-        donationData.prevDonated = false;
         donationData.user = '';
-        donationData.donorName = '';
-        donationData.donorAddress = '';
-        donationData.donorCity = '';
-        donationData.donorState = '';
-        donationData.donorZip = '';
       } else {
         console.log('Error adding donation, status:', donationRes.status);
       }
@@ -142,16 +135,8 @@ export default function AddDonationView({
 
       if (donorRes.ok) {
         console.log('Donor added successfully');
-        donationData.donationDate = '';
         donationData.donorEmail = '';
-        donationData.category = '';
-        donationData.donatedItem = '';
-        donationData.quantity = '';
-        donationData.alertQuantity = '';
-        donationData.newOrUsed = '';
-        donationData.price = '';
         donationData.prevDonated = false;
-        donationData.user = '';
         donationData.donorName = '';
         donationData.donorAddress = '';
         donationData.donorCity = '';
