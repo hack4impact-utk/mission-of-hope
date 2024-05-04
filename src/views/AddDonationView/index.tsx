@@ -228,8 +228,11 @@ export default function AddDonationView({
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
-            <InputLabel>High or Low Value</InputLabel>
+            <InputLabel id="high-or-low-value-label">
+              High or Low Value
+            </InputLabel>
             <Select
+              labelId="high-or-low-value-label"
               value={donationData.alertQuantity}
               onChange={(e) => {
                 setDonorData({
@@ -239,6 +242,7 @@ export default function AddDonationView({
               }}
               label="High or Low Value"
               id="high-or-low-value"
+              disabled={donationData.newOrUsed === 'new'}
             >
               <MenuItem value="high">High</MenuItem>
               <MenuItem value="low">Low</MenuItem>
@@ -267,6 +271,7 @@ export default function AddDonationView({
                 <InputAdornment position="start">$</InputAdornment>
               ),
             }}
+            disabled={donationData.newOrUsed === 'used'}
           />
         </Grid>
         <Grid item xs={8} sm={12}>
