@@ -213,7 +213,7 @@ export default function AddDonationView({
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
             <InputLabel>New or Used</InputLabel>
-            <Select
+            <Select // Change to dropdown
               value={donationData.newOrUsed}
               onChange={(e) => {
                 setDonorData({ ...donationData, newOrUsed: e.target.value });
@@ -242,7 +242,7 @@ export default function AddDonationView({
               }}
               label="High or Low Value"
               id="high-or-low-value"
-              disabled={donationData.newOrUsed === 'new'}
+              disabled={donationData.newOrUsed === 'new'} // Disable if new
             >
               <MenuItem value="high">High</MenuItem>
               <MenuItem value="low">Low</MenuItem>
@@ -271,7 +271,7 @@ export default function AddDonationView({
                 <InputAdornment position="start">$</InputAdornment>
               ),
             }}
-            disabled={donationData.newOrUsed === 'used'}
+            disabled={donationData.newOrUsed === 'used'} // Disable if used
           />
         </Grid>
         <Grid item xs={8} sm={12}>
@@ -299,7 +299,7 @@ export default function AddDonationView({
         <Grid item xs={12} sm={8}>
           <FormControl fullWidth>
             <InputLabel>Has this donor previously donated?</InputLabel>
-            <Select
+            <Select // Change to dropdown
               value={donationData.prevDonated ? 'yes' : 'no'}
               onChange={(e) => {
                 setDonorData({
