@@ -8,7 +8,6 @@ interface TabPanelProps {
 
 export function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
-  console.log(children);
 
   return (
     <div

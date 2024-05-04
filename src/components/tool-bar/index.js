@@ -9,9 +9,7 @@ export const quillRef = () => {
 };
 
 function insertDonor(value) {
-  console.log(value);
   if (value) {
-    console.log(this);
     const cursorPos = this.quill.getSelection().index;
     this.quill.insertText(cursorPos, value);
     this.quill.setSelection(cursorPos + value.length);
