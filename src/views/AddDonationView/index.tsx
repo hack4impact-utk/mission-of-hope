@@ -2,7 +2,7 @@
 import AutofillDonorEmail from '@/components/AutofillDonorEmail';
 import DonorForm from '@/components/donorForm';
 import { DonorFormData } from '@/types/forms/donor';
-import { DonorResponse } from '@/types/persons';
+import { CreateDonorRequest, DonorResponse } from '@/types/persons';
 import {
   Box,
   Button,
@@ -103,16 +103,15 @@ export default function AddDonationView({
 
     // ADD ERROR PARSING
 
-    // const nameParts = donationData.donorName.split(' ');
-    // const donor = {
-    //   firstName: nameParts[0],
-    //   lastName: nameParts[1] || '',
-    //   email: donationData.donorEmail,
-    //   address: donationData.donorAddress,
-    //   state: donationData.donorState,
-    //   city: donationData.donorCity,
-    //   zip: Number(donationData.donorZip),
-    // };
+    const donor: CreateDonorRequest = {
+      firstName: donorFormData.firstName,
+      lastName: donorFormData.firstName,
+      email: donorFormData.email,
+      address: donorFormData.address,
+      state: donorFormData.state,
+      city: donorFormData.city,
+      zip: donorFormData.zip,
+    };
 
     try {
       // fetch request to add donor
@@ -121,7 +120,7 @@ export default function AddDonationView({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(donorFormData),
+        body: JSON.stringify(donor),
       });
 
       if (donorRes.ok) {
