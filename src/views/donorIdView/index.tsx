@@ -36,8 +36,8 @@ export default function DonorIdView(props: donorProps) {
       <Grid container spacing={2}>
         {' '}
         {/* display={'flex'} justifyContent={'center'}> */}
-        <Grid item xs={2} sm={0}></Grid>
-        <Grid item xs={8} sm={8}>
+        <Grid item xs={0} md={2} sm={1}></Grid>
+        <Grid item xs={12} md={8} sm={10}>
           <Box
             sx={{
               border: '1px solid #00000030',
@@ -110,6 +110,7 @@ export default function DonorIdView(props: donorProps) {
               </Grid>
             </Grid>
           </Box>
+          <Grid item xs={0} md={2} sm={1}></Grid>
           {/* <Grid item xs={2} sm={0}></Grid> */}
         </Grid>
       </Grid>
