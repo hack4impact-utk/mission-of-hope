@@ -16,17 +16,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ margin: 0 }}>
-        <Providers>
-          <TopBar></TopBar>
-          <Box
-            component="section"
-            className="layout"
-            sx={{ display: 'flex', py: 1, px: 0 }}
-          >
-            <Navbar />
-            <Box component="main" sx={{ flexGrow: 1 }}>
-              {children}
-            </Box>
+        <Box
+          component="section"
+          className="layout"
+          sx={{ display: 'flex', py: 1, px: 0, p: 0, m: 0 }}
+        >
+          <Navbar />
+          <Box component="main" sx={{ flexGrow: 1, p: 0, m: 0 }}>
+            <TopBar></TopBar>
+            {children}
           </Box>
         </Providers>
       </body>
