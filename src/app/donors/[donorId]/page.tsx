@@ -11,5 +11,5 @@ export default async function DonorEditPage({
     JSON.stringify(await getDonorById(params.donorId))
   );
 
-  return <DonorIdView donor={donor}></DonorIdView>;
+  return <DonorIdView id={params.donorId} donor={donor}></DonorIdView>;
 }
