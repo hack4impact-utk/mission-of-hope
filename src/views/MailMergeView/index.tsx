@@ -21,7 +21,7 @@ export default function MailMergeView({
   };
 
   return (
-    <Box sx={{ width: '100%', m: 1 }}>
+    <Box sx={{ m: 1 }}>
       <Box sx={{ borderBottom: 0, borderColor: 'divider' }}>
         <Tabs
           centered={true}

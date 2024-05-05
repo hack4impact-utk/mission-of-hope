@@ -1,5 +1,5 @@
 'use client';
-import { Box, Card, Tab, Tabs, TextField } from '@mui/material';
+import { Box, Card, Tab, Tabs, TextField, ThemeProvider } from '@mui/material';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
 import { useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
@@ -10,6 +10,7 @@ import React from 'react';
 import { DonationResponse, DonationItemResponse } from '@/types/donation';
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
+import mohColors from '@/utils/moh-theme';
 
 interface mailMergeProps {
   exampleDonation: DonationResponse;
@@ -40,83 +41,93 @@ export default function EmailEditor({
     setValue(newValue);
   };
 
-  const indicatorProps = {
-    '& .MuiTabs-indicatorSpan': {
-      maxWidth: 40,
-      width: '100%',
-      backgroundColor: '#635ee7',
-    },
-  };
-
   return (
     <>
-      <Box sx={{ width: '100%', m: 1 }}>
-        <Box sx={{ borderBottom: 0, borderColor: 'divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            TabIndicatorProps={{ children: <span {...indicatorProps} /> }}
-            indicatorColor="secondary"
-            textColor="secondary"
-          >
-            <Tab
-              label="Write"
-              {...ap(0)}
-              sx={{
-                mr: 1,
-                border: 1,
-                borderBottom: 0,
-                borderTopLeftRadius: 5,
-                borderTopRightRadius: 5,
+      <ThemeProvider theme={mohColors}>
+        <Box sx={{ width: '100%', m: 1 }}>
+          <Box sx={{ borderBottom: 0, borderColor: 'divider' }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              // TabIndicatorProps={{ children: <span {...indicatorProps} /> }}
+              TabIndicatorProps={{
+                sx: { backgroundColor: mohColors.palette.moh.main },
               }}
-            />
-            <Tab
-              label="Preview"
-              {...ap(1)}
+              indicatorColor="primary"
+              textColor="primary"
               sx={{
-                mr: 1,
-                border: 1,
-                borderBottom: 0,
-                borderTopLeftRadius: 5,
-                borderTopRightRadius: 5,
+                '& button:hover': {
+                  backgroundColor: mohColors.palette.moh.light,
+                },
+                '& button:active': {
+                  backgroundColor: mohColors.palette.moh.dark,
+                  color: mohColors.palette.moh.contrastText,
+                },
+                '& Button.Mui-selected': {
+                  borderColor: mohColors.palette.moh.main,
+                  color: mohColors.palette.moh.dark,
+                },
               }}
-            />
-          </Tabs>
-        </Box>
-        <CustomTabPanel value={value} index={0}>
-          <Card sx={{ p: 2 }}>
-            {/* Text field for subject */}
-            <TextField
-              label="Subject Line"
-              value={subject}
-              onChange={handleSubjectChange}
-              fullWidth
-            />
-            <Card sx={{ mt: 1 }}>
-              <div className="text-editor">
-                <QuillToolBar />
-                <ReactQuill
-                  theme="snow"
-                  value={body}
-                  onChange={handleBodyChange}
-                  style={{ height: '18rem' }} // Increase the height here
-                  modules={modules}
-                  formats={formats}
-                />
-              </div>
+            >
+              <Tab
+                label="Write"
+                {...ap(0)}
+                sx={{
+                  mr: 1,
+                  border: 1,
+                  borderBottom: 0,
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
+                }}
+              />
+              <Tab
+                label="Preview"
+                {...ap(1)}
+                sx={{
+                  mr: 1,
+                  border: 1,
+                  borderBottom: 0,
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
+                }}
+              />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={value} index={0}>
+            <Card sx={{ p: 2 }}>
+              {/* Text field for subject */}
+              <TextField
+                label="Subject Line"
+                value={subject}
+                onChange={handleSubjectChange}
+                fullWidth
+              />
+              <Card sx={{ mt: 1 }}>
+                <div className="text-editor">
+                  <QuillToolBar />
+                  <ReactQuill
+                    theme="snow"
+                    value={body}
+                    onChange={handleBodyChange}
+                    style={{ height: '18rem' }} // Increase the height here
+                    modules={modules}
+                    formats={formats}
+                  />
+                </div>
+              </Card>
             </Card>
-          </Card>
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <EmailParserCard
-            subjectLine={subject}
-            body={body}
-            donation={exampleDonation}
-            donationItems={exampleDonationItems}
-          ></EmailParserCard>
-        </CustomTabPanel>
-      </Box>
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <EmailParserCard
+              subjectLine={subject}
+              body={body}
+              donation={exampleDonation}
+              donationItems={exampleDonationItems}
+            ></EmailParserCard>
+          </CustomTabPanel>
+        </Box>
+      </ThemeProvider>
     </>
   );
 }
