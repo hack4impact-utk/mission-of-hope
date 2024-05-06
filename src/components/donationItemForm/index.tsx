@@ -14,6 +14,7 @@ import { useState } from 'react';
 interface donationItemProps {
   donationData: DonationFormData;
   setDonationData: (donation: DonationFormData) => void;
+  disabled: boolean;
 }
 
 function getPriceFormatted(
@@ -41,6 +42,7 @@ export default function DonationItemForm(props: donationItemProps) {
           fullWidth
           id="outlined-required"
           label="Category"
+          disabled={props.disabled}
           value={props.donationData.category}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.setDonationData({
@@ -55,6 +57,7 @@ export default function DonationItemForm(props: donationItemProps) {
           fullWidth
           id="outlined-required"
           label="Donated Item"
+          disabled={props.disabled}
           value={props.donationData.donatedItemName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.setDonationData({
@@ -70,6 +73,7 @@ export default function DonationItemForm(props: donationItemProps) {
           id="outlined-required"
           label="Quantity"
           type="number"
+          disabled={props.disabled}
           value={props.donationData.quantity}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.setDonationData({
@@ -80,7 +84,7 @@ export default function DonationItemForm(props: donationItemProps) {
         />
       </Grid>
       <Grid item xs={4} sm={4} md={4}>
-        <FormControl fullWidth>
+        <FormControl fullWidth disabled={props.disabled}>
           <InputLabel>New or Used</InputLabel>
           <Select // Change to dropdown
             value={props.donationData.newOrUsed}
@@ -114,7 +118,7 @@ export default function DonationItemForm(props: donationItemProps) {
             }}
             label="High or Low Value"
             id="high-or-low-value"
-            disabled={props.donationData.newOrUsed !== 'used'} // Disable if new
+            disabled={props.donationData.newOrUsed !== 'used' || props.disabled} // Disable if new
           >
             <MenuItem value="high">High</MenuItem>
             <MenuItem value="low">Low</MenuItem>
@@ -145,7 +149,7 @@ export default function DonationItemForm(props: donationItemProps) {
           InputProps={{
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
-          disabled={props.donationData.newOrUsed !== 'new'} // Disable if used
+          disabled={props.donationData.newOrUsed !== 'new' || props.disabled} // Disable if used
         />
       </Grid>
     </>

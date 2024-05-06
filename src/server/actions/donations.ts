@@ -33,3 +33,19 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
     throw error;
   }
 }
+
+export async function getDonationById(
+  id: string
+): Promise<DonationResponse | null> {
+  try {
+    await dbConnect();
+
+    const response: DonationResponse | null = await DonationSchema.findById(
+      id
+    ).populate(['user', 'donor']);
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

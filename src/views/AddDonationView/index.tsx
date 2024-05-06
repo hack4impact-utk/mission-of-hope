@@ -176,6 +176,7 @@ export default function AddDonationView({
           <DonationItemForm
             donationData={donationFormData}
             setDonationData={setDonationFormData}
+            disabled={false}
           ></DonationItemForm>
 
           <Grid item sm={4}>

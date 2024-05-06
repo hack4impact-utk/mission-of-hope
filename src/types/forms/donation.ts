@@ -8,7 +8,7 @@ export const zDonationFormData = z.object({
   donorCity: z.string().min(1, { message: 'Required' }),
   donorState: z.string().min(1, { message: 'Required' }),
   donorzip: z.number().positive().min(1, { message: 'Required' }),
-  donationDate: z.date(),
+  donationDate: z.coerce.date(),
   category: z.string().min(1, { message: 'Required' }),
   donatedItemName: z.string().min(1, { message: 'Required' }),
   quantity: z.number().positive().min(1, { message: 'Required' }),
