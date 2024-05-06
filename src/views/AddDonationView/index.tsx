@@ -224,7 +224,7 @@ export default function AddDonationView({
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
             <InputLabel>New or Used</InputLabel>
-            <Select
+            <Select // Change to dropdown
               value={donationData.newOrUsed}
               onChange={(e) => {
                 setDonationData({ ...donationData, newOrUsed: e.target.value });
@@ -238,18 +238,27 @@ export default function AddDonationView({
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="High or Low Value"
-            value={donationData.alertQuantity}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonationData({
-                ...donationData,
-                alertQuantity: e.target.value,
-              });
-            }}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="high-or-low-value-label">
+              High or Low Value
+            </InputLabel>
+            <Select
+              labelId="high-or-low-value-label"
+              value={donationData.alertQuantity}
+              onChange={(e) => {
+                setDonorData({
+                  ...donationData,
+                  alertQuantity: e.target.value,
+                });
+              }}
+              label="High or Low Value"
+              id="high-or-low-value"
+              disabled={donationData.newOrUsed === 'new'} // Disable if new
+            >
+              <MenuItem value="high">High</MenuItem>
+              <MenuItem value="low">Low</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
@@ -273,6 +282,7 @@ export default function AddDonationView({
                 <InputAdornment position="start">$</InputAdornment>
               ),
             }}
+            disabled={donationData.newOrUsed === 'used'} // Disable if used
           />
         </Grid>
         <Grid item xs={8} sm={12}>
@@ -300,7 +310,7 @@ export default function AddDonationView({
         <Grid item xs={12} sm={8}>
           <FormControl fullWidth>
             <InputLabel>Has this donor previously donated?</InputLabel>
-            <Select
+            <Select // Change to dropdown
               value={donationData.prevDonated ? 'yes' : 'no'}
               onChange={(e) => {
                 setDonationData({
