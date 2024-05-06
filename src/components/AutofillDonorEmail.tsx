@@ -1,10 +1,13 @@
+import { DonorFormData } from '@/types/forms/donor';
 import { DonorResponse } from '@/types/persons';
 import { Autocomplete, TextField } from '@mui/material';
 import { useState } from 'react';
 
 interface Donor {
   DonorOptions: DonorResponse[];
+  DonorForm: DonorFormData;
   onDonorSelect: (donor: DonorResponse) => void;
+  onChange: (donor: DonorFormData) => void;
 }
 
 export default function AutofillDonorEmail(props: Donor) {
@@ -14,6 +17,7 @@ export default function AutofillDonorEmail(props: Donor) {
     const donorMatch = donorOptions.find(
       (don) => don.email.toLowerCase() === value.toLowerCase()
     );
+    props.onChange({ ...props.DonorForm, email: value });
     if (donorMatch) {
       // Pass selected donor details back to parent component
       props.onDonorSelect(donorMatch);
@@ -24,7 +28,7 @@ export default function AutofillDonorEmail(props: Donor) {
     <Autocomplete
       freeSolo
       autoComplete
-      value={''}
+      value={props.DonorForm.email ?? ''}
       options={donorOptions}
       isOptionEqualToValue={(option, value) => option._id === value._id}
       getOptionLabel={(don) => (typeof don === 'string' ? don : don.email)}
