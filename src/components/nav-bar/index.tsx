@@ -5,26 +5,19 @@ import { Box } from '@mui/material';
 export default function Navbar() {
   return (
     <>
-      <Box>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: 'white',
-            padding: '10px',
-          }}
-        >
+      <Box height={'100vh'}>
+        <Box display={'flex'} justifyContent={'center'} p={2}>
           <img
             className="rounded-md"
             alt="logo"
             src="https://missionofhope.org/wp-content/uploads/2023/04/cropped-MOH-Logo-768x393.png"
             width="180"
             height="100"
-            style={{ marginRight: '25px' }} // Add spacing between the image and links
+            // style={{ marginRight: '25px' }} // Add spacing between the image and links
           />
-        </div>
+        </Box>
 
-        <div style={{ marginLeft: '50px', display: 'flex' }}>
+        <Box display={'flex'} justifyContent={'center'}>
           <Button
             href="./"
             style={{
@@ -35,9 +28,9 @@ export default function Navbar() {
           >
             Home
           </Button>
-        </div>
+        </Box>
 
-        <div style={{ marginLeft: '10px', display: 'flex' }}>
+        <Box display={'flex'} justifyContent={'center'}>
           <Button
             href="/donation"
             style={{
@@ -48,9 +41,35 @@ export default function Navbar() {
           >
             Add Donation
           </Button>
-        </div>
+        </Box>
 
-        <div style={{ marginLeft: '45px', display: 'flex' }}>
+        <Box display={'flex'} justifyContent={'center'}>
+          <Button
+            href="/donation"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            View Donations
+          </Button>
+        </Box>
+
+        <Box display={'flex'} justifyContent={'center'}>
+          <Button
+            href="/donors"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            View Donors
+          </Button>
+        </Box>
+
+        <Box display={'flex'} justifyContent={'center'}>
           <Button
             href="/donationItem"
             style={{
@@ -59,11 +78,24 @@ export default function Navbar() {
               textTransform: 'none',
             }}
           >
-            History
+            Inventory
           </Button>
-        </div>
+        </Box>
 
-        <div style={{ marginLeft: '45px', display: 'flex' }}>
+        <Box display={'flex'} justifyContent={'center'}>
+          <Button
+            href="/item/add"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            Add Evaluation
+          </Button>
+        </Box>
+
+        <Box display={'flex'} justifyContent={'center'}>
           <Button
             href="./"
             style={{
@@ -74,7 +106,7 @@ export default function Navbar() {
           >
             Trends
           </Button>
-        </div>
+        </Box>
       </Box>
       <Divider orientation="vertical" flexItem />
     </>
