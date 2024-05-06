@@ -3,6 +3,7 @@ import DonorForm from '@/components/donorForm';
 import { DonorFormData } from '@/types/forms/donor';
 import { DonorResponse } from '@/types/persons';
 import mohColors from '@/utils/moh-theme';
+import { ArrowBack } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -94,6 +95,16 @@ export default function DonorIdView(props: donorProps) {
           {' '}
           <Grid item xs={0} md={2} sm={1}></Grid>
           <Grid item xs={12} md={8} sm={10}>
+            <Box p={2} pb={0}>
+              <Button
+                variant="contained"
+                color="moh"
+                startIcon={<ArrowBack></ArrowBack>}
+                onClick={() => (window.location.href = `/donors/`)}
+              >
+                View Donors
+              </Button>
+            </Box>
             <Box
               sx={{
                 border: '1px solid #00000030',
