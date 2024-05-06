@@ -13,8 +13,10 @@ export const zDonationFormData = z.object({
   donatedItemName: z.string().min(1, { message: 'Required' }),
   quantity: z.number().positive().min(1, { message: 'Required' }),
   newOrUsed: z.string().min(1, { message: 'Required' }),
+  highOrLow: z.string().min(1, { message: 'Required' }),
   price: z.number().positive().min(1, { message: 'Required' }),
   user: z.string().min(1, { message: 'Required' }),
+  prevDonated: z.boolean(),
 });
 
 export interface DonationFormData extends z.infer<typeof zDonationFormData> {}
