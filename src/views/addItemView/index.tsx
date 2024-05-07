@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import useSnackbar from '@/hooks/useSnackbar';
 
 export default function AddItemView() {
   const [itemName, setItemName] = useState('');
@@ -40,6 +41,8 @@ export default function AddItemView() {
     setValue(formattedValue);
   };
 
+  const { showSnackbar } = useSnackbar();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -63,7 +66,8 @@ export default function AddItemView() {
       // Check if response is successful
       if (response.ok) {
         // Handle successful response
-        alert('Item added successfully');
+        showSnackbar('Item added successfully.', 'success');
+
         // Reset form fields
         setItemName('');
         setCategory('');

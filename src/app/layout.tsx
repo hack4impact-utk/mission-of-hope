@@ -1,6 +1,7 @@
 import Navbar from '@/components/nav-bar';
 import { Box } from '@mui/material';
 import TopBar from '@/components/top-bar';
+import Providers from '@/components/Providers';
 
 export const metadata = {
   title: 'Next.js',
@@ -25,7 +26,7 @@ export default function RootLayout({
             <TopBar></TopBar>
             {children}
           </Box>
-        </Box>
+        </Providers>
       </body>
     </html>
   );
