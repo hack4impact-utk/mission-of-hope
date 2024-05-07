@@ -3,7 +3,6 @@ import SnackbarContext, { MuiSeverity } from './SnackbarContext';
 
 export default function useSnackbar() {
   const ctx = useContext(SnackbarContext);
-  console.log(ctx);
 
   // Ensure we are inside a SnackbarProvider (so we can access the context)
   if (!ctx) {
