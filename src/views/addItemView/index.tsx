@@ -1,7 +1,10 @@
 'use client';
+import mohColors from '@/utils/moh-theme';
+import { ThemeProvider } from '@emotion/react';
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   Grid,
   InputAdornment,
@@ -76,133 +79,125 @@ export default function AddItemView() {
   };
 
   return (
-    <>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 100,
-          pl: 7,
-          mt: '10vh',
-        }}
-      >
-        <Typography variant="h4" sx={{ pl: 5 }}>
-          Add Item
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          width: '100%',
-          border: '1px solid rgba(118, 118, 118, 0.5)',
-          position: 'absolute',
-          left: 0,
-          right: 0,
-        }}
-      >
-        {/* vector as seen on figma */}
-      </Box>
-      <Box sx={{ p: 5, m: 7, boxShadow: 4 }}>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={3} justifyContent="flex-start">
-            <Grid item xs={12}>
-              <TextField
-                required
-                label="Item Name"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                label="Category"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
-              {/* Consider using Select component here for dropdown */}
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="highValue">High Value</InputLabel>
-                <OutlinedInput
-                  error={!!highValueError}
-                  label="High Value"
-                  id="highValue"
-                  type="number"
-                  value={highValue}
-                  onChange={(e) => setHighValue(e.target.value)}
-                  onBlur={(e) =>
-                    formatPriceFields(
-                      e.target.value,
-                      setHighValue,
-                      setHighValueError
-                    )
-                  }
-                  startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
-                  }
+    <ThemeProvider theme={mohColors}>
+      <Box display={'flex'} justifyContent={'center'}>
+        <Box
+          sx={{
+            padding: '20px',
+            margin: '20px',
+            border: '1px solid #00000030',
+            borderRadius: '10px',
+            width: '80%',
+            maxWidth: '50vw',
+            boxShadow: '0px 4px 4px 0px #00000040',
+          }}
+        >
+          <Typography variant="h4" sx={{ p: 1 }}>
+            Add Item
+          </Typography>
+          <Divider></Divider>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3} justifyContent="flex-start">
+              <Grid mt={2} item xs={12}>
+                <TextField
+                  required
+                  label="Item Name"
+                  variant="outlined"
+                  fullWidth
+                  // margin="normal"
+                  value={itemName}
+                  onChange={(e) => setItemName(e.target.value)}
                 />
-                {highValueError && (
-                  <Typography variant="caption" color="error">
-                    {highValueError}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="lowValue">Low Value</InputLabel>
-                <OutlinedInput
-                  error={!!lowValueError}
-                  label="Low Value"
-                  id="lowValue"
-                  type="number"
-                  value={lowValue}
-                  onChange={(e) => setLowValue(e.target.value)}
-                  onBlur={(e) =>
-                    formatPriceFields(
-                      e.target.value,
-                      setLowValue,
-                      setLowValueError
-                    )
-                  }
-                  startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
-                  }
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  label="Category"
+                  variant="outlined"
+                  fullWidth
+                  // margin="normal"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                 />
-                {lowValueError && (
-                  <Typography variant="caption" color="error">
-                    {lowValueError}
-                  </Typography>
-                )}
-              </FormControl>
+                {/* Consider using Select component here for dropdown */}
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="highValue">High Value</InputLabel>
+                  <OutlinedInput
+                    error={!!highValueError}
+                    label="High Value"
+                    id="highValue"
+                    type="number"
+                    value={highValue}
+                    onChange={(e) => setHighValue(e.target.value)}
+                    onBlur={(e) =>
+                      formatPriceFields(
+                        e.target.value,
+                        setHighValue,
+                        setHighValueError
+                      )
+                    }
+                    startAdornment={
+                      <InputAdornment position="start">$</InputAdornment>
+                    }
+                  />
+                  {highValueError && (
+                    <Typography variant="caption" color="error">
+                      {highValueError}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="lowValue">Low Value</InputLabel>
+                  <OutlinedInput
+                    error={!!lowValueError}
+                    label="Low Value"
+                    id="lowValue"
+                    type="number"
+                    value={lowValue}
+                    onChange={(e) => setLowValue(e.target.value)}
+                    onBlur={(e) =>
+                      formatPriceFields(
+                        e.target.value,
+                        setLowValue,
+                        setLowValueError
+                      )
+                    }
+                    startAdornment={
+                      <InputAdornment position="start">$</InputAdornment>
+                    }
+                  />
+                  {lowValueError && (
+                    <Typography variant="caption" color="error">
+                      {lowValueError}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="moh"
+                  fullWidth
+                  disabled={highValueError || lowValueError ? true : false}
+                  sx={{
+                    height: 56,
+                    textTransform: 'none',
+                    fontSize: 'large',
+                    backgroundColor: 'rgba(55, 149, 65, 0.8)',
+                  }}
+                >
+                  Add Item
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                disabled={highValueError || lowValueError ? true : false}
-                sx={{
-                  height: 56,
-                  textTransform: 'none',
-                  fontSize: 'large',
-                  backgroundColor: 'rgba(55, 149, 65, 0.8)',
-                }}
-              >
-                Add Item
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+          </form>
+        </Box>
       </Box>
-    </>
+    </ThemeProvider>
   );
 }

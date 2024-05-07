@@ -36,9 +36,14 @@ export const zCreateDonorRequest = zDonorBase;
 
 export const zDonorResponse = zDonorEntity;
 
+export const zUpdateDonorRequest = zCreateDonorRequest.partial();
+
 export interface DonorEntity extends z.infer<typeof zDonorEntity> {}
 
 export interface CreateDonorRequest
   extends z.infer<typeof zCreateDonorRequest> {}
 
 export interface DonorResponse extends z.infer<typeof zDonorResponse> {}
+
+export interface UpdateDonorRequest
+  extends z.infer<typeof zUpdateDonorRequest> {}
