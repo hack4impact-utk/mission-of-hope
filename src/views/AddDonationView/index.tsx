@@ -249,7 +249,7 @@ export default function AddDonationView({
               labelId="high-or-low-value-label"
               value={donationData.alertQuantity}
               onChange={(e) => {
-                setDonorData({
+                setDonationData({
                   ...donationData,
                   alertQuantity: e.target.value,
                 });
