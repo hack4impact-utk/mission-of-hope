@@ -1,6 +1,7 @@
 import {
   CreateDonorRequest,
-  DonorResponse, //deleted a duplicate DonorResponse
+  DonorResponse,
+  UpdateDonorRequest, //deleted a duplicate DonorResponse
 } from '@/types/persons';
 import dbConnect from '@/utils/db-connect';
 import DonorSchema from '../models/donors';
@@ -32,6 +33,27 @@ export async function getDonorById(id: string): Promise<DonorResponse | null> {
   try {
     // Find the Donor by id and populate the item field
     const donor: DonorResponse | null = await DonorSchema.findById(id);
+
+    return donor;
+  } catch (error) {
+    // Catch any errors and throw them
+    throw error;
+  }
+}
+
+export async function updateDonor(
+  id: string,
+  updatedData: UpdateDonorRequest
+): Promise<DonorResponse | null> {
+  await dbConnect();
+
+  try {
+    // Find the donor by id and update it with new data
+    const donor: DonorResponse | null = await DonorSchema.findByIdAndUpdate(
+      id,
+      { $set: updatedData },
+      { new: true } // This option returns the modified document
+    );
 
     return donor;
   } catch (error) {
