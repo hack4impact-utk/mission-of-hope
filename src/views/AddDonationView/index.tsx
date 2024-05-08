@@ -1,5 +1,6 @@
 'use client';
 import AutofillDonorEmail from '@/components/AutofillDonorEmail';
+import DonorForm from '@/components/donorForm';
 import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
 import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
@@ -8,6 +9,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   Grid,
   InputAdornment,
   InputLabel,
@@ -17,6 +19,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import useSnackbar from '@/hooks/useSnackbar';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
@@ -43,30 +46,18 @@ export default function AddDonationView({
 }: AddDonationViewProps) {
   const [donationData, setDonationData] = useState<DonationFormData>({
     donationDate: new Date(),
-    category: '',
-    donatedItemName: '',
-    quantity: 0,
-    newOrUsed: '',
-    price: 0,
-    user: '',
   } as DonationFormData);
-  const [donorFormData, setDonorFormData] = useState<DonorFormData>({
-    firstName: '',
-    lastName: '',
-    address: '',
-    city: '',
-    email: '',
-    state: '',
-    zip: 0,
-  } as DonorFormData);
+  const [donorFormData, setDonorFormData] = useState<DonorFormData>(
+    {} as DonorFormData
+  );
   const [prevDonated, setPrevDonated] = useState(false);
-  const [highOrLow, setHighOrLow] = useState('');
 
   const { validate: validateDonation } = useValidation(zDonationFormData);
   const { validate: validateDonor } = useValidation(zDonorFormData);
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string> | undefined
   >(undefined);
+  const { showSnackbar } = useSnackbar();
 
   const handleDonorSelect = (selectedDonor: DonorResponse) => {
     setDonorFormData({
@@ -79,6 +70,7 @@ export default function AddDonationView({
       state: selectedDonor.state ?? '',
       zip: selectedDonor.zip ?? 0,
     });
+    setPrevDonated(true);
   };
 
   const handleAddDonation = () => {
@@ -88,17 +80,11 @@ export default function AddDonationView({
       return;
     }
     setValidationErrors(undefined);
-    alert('Donation added successfully!');
+    showSnackbar('Donation added successfully.', 'success');
     setDonationData({
       donationDate: new Date(),
-      category: '',
-      donatedItemName: '',
-      quantity: 0,
-      newOrUsed: '',
-      price: 0,
-      user: '',
     } as DonationFormData);
-    setHighOrLow('');
+    setDonorFormData({} as DonorFormData);
   };
 
   const handleAddDonor = async () => {
@@ -133,15 +119,7 @@ export default function AddDonationView({
 
       if (donorRes.ok) {
         console.log('Donor added successfully');
-        setDonorFormData({
-          firstName: '',
-          lastName: '',
-          address: '',
-          city: '',
-          email: '',
-          state: '',
-          zip: 0,
-        } as DonorFormData);
+        setDonorFormData({} as DonorFormData);
       } else {
         console.log('Error adding donor, status:', donorRes.status);
       }
@@ -245,7 +223,7 @@ export default function AddDonationView({
           <FormControl fullWidth>
             <InputLabel>New or Used</InputLabel>
             <Select
-              value={donationData.newOrUsed ?? 'new'}
+              value={donationData.newOrUsed}
               onChange={(e) => {
                 setDonationData({ ...donationData, newOrUsed: e.target.value });
               }}
@@ -256,18 +234,36 @@ export default function AddDonationView({
               <MenuItem value="new">New</MenuItem>
               <MenuItem value="used">Used</MenuItem>
             </Select>
+            <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="High or Low Value"
-            value={highOrLow ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setHighOrLow(e.target.value);
-            }}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="high-or-low-value-label">
+              High or Low Value
+            </InputLabel>
+            <Select
+              labelId="high-or-low-value-label"
+              value={donationData.highOrLow ?? ''}
+              onChange={(e) => {
+                setDonationData({
+                  ...donationData,
+                  highOrLow: e.target.value,
+                });
+              }}
+              label="High or Low Value"
+              id="high-or-low-value"
+              disabled={donationData.newOrUsed === 'new'} // Disable if new
+              error={!!validationErrors?.highOrLow}
+            >
+              <MenuItem value="high">High</MenuItem>
+              <MenuItem value="low">Low</MenuItem>
+            </Select>
+            <FormHelperText>{validationErrors?.highOrLow}</FormHelperText>
+          </FormControl>
+          {/* onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+               setHighOrLow(e.target.value);
+            }}*/}
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
@@ -292,6 +288,7 @@ export default function AddDonationView({
                 <InputAdornment position="start">$</InputAdornment>
               ),
             }}
+            disabled={donationData.newOrUsed === 'used'} // Disable if used
             error={!!validationErrors?.price}
             helperText={validationErrors?.price}
           />
@@ -336,97 +333,11 @@ export default function AddDonationView({
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Donor First Name"
-            value={donorFormData.firstName || ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorFormData({
-                ...donorFormData,
-                firstName: e.target.value,
-              });
-            }}
-            error={!!validationErrors?.firstName}
-            helperText={validationErrors?.firstName}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Donor Last Name"
-            value={donorFormData.lastName ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorFormData({
-                ...donorFormData,
-                lastName: e.target.value,
-              });
-            }}
-            error={!!validationErrors?.lastName}
-            helperText={validationErrors?.lastName}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Address"
-            value={donorFormData.address ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorFormData({
-                ...donorFormData,
-                address: e.target.value,
-              });
-            }}
-            error={!!validationErrors?.address}
-            helperText={validationErrors?.address}
-          />
-        </Grid>
-        <Grid item xs={12} sm={5}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="City"
-            value={donorFormData.city ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorFormData({ ...donorFormData, city: e.target.value });
-            }}
-            error={!!validationErrors?.city}
-            helperText={validationErrors?.city}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="State"
-            value={donorFormData.state ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorFormData({ ...donorFormData, state: e.target.value });
-            }}
-            error={!!validationErrors?.state}
-            helperText={validationErrors?.state}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Zip"
-            value={donorFormData.zip ?? ''}
-            type="number"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorFormData({
-                ...donorFormData,
-                zip: Number(e.target.value),
-              });
-            }}
-            error={!!validationErrors?.zip}
-            helperText={validationErrors?.zip}
-          />
-        </Grid>
+        <DonorForm
+          donorData={donorFormData}
+          disabled={prevDonated}
+          onChange={setDonorFormData}
+        />
       </Grid>
     </Box>
   );
