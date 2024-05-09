@@ -5,12 +5,15 @@ import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { DonorResponse } from '@/types/persons';
 import { Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import useSearch from '@/hooks/useSearch';
 
 interface DonorViewProps {
   donors: DonorResponse[];
 }
 
 export default function DonorView({ donors }: DonorViewProps) {
+  const { searchQuery, setSearchQuery } = useSearch();
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', maxWidth: 30, flex: 0.5 },
     { field: 'name', headerName: 'Name', maxWidth: 150, flex: 0.5 },
@@ -31,7 +34,7 @@ export default function DonorView({ donors }: DonorViewProps) {
           <IconButton
             color="primary"
             size="small"
-            onClick={() => (window.location.href = `/donors/${params.value}`)} // Adjust the path as needed
+            onClick={() => (window.location.href = `/donors/${params.value}`)}
           >
             <EditIcon></EditIcon>
           </IconButton>
@@ -40,16 +43,22 @@ export default function DonorView({ donors }: DonorViewProps) {
     },
   ];
 
-  const rows = donors.map((donor, index) => ({
-    id: index + 1,
-    name: `${donor.firstName} ${donor.lastName}`,
-    address: donor.address,
-    city: donor.city,
-    state: donor.state,
-    zip: donor.zip,
-    email: donor.email,
-    edit: donor._id,
-  }));
+  const rows = donors
+    .map((donor, index) => ({
+      id: index + 1,
+      name: `${donor.firstName} ${donor.lastName}`,
+      address: donor.address,
+      city: donor.city,
+      state: donor.state,
+      zip: donor.zip,
+      email: donor.email,
+      edit: donor._id,
+    }))
+    .filter((row) =>
+      Object.values(row).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
 
   return (
     <Container>
@@ -69,7 +78,13 @@ export default function DonorView({ donors }: DonorViewProps) {
           slotProps={{
             toolbar: {
               showQuickFilter: true,
-              quickFilterProps: { debounceMs: 500 }, // Optional: Configuring debounce
+              quickFilterProps: {
+                debounceMs: 500,
+                value: searchQuery,
+                onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearchQuery(event.target.value);
+                },
+              },
             },
           }}
         />
