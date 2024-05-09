@@ -13,19 +13,12 @@ import { useState } from 'react';
 interface itemFormProps {
   itemForm: ItemFormData;
   onChange: (itemForm: ItemFormData) => void;
+  disabled: boolean;
 }
 
 export default function ItemForm(props: itemFormProps) {
   const [highValueError, setHighValueError] = useState('');
   const [lowValueError, setLowValueError] = useState('');
-
-  function handleValue(number: string, value: string) {
-    if (value === 'high') {
-      props.onChange({ ...props.itemForm, high: Number(number) });
-    } else if (value === 'low') {
-      props.onChange({ ...props.itemForm, low: Number(number) });
-    }
-  }
 
   const formatPriceFields = (
     value: string,
@@ -43,7 +36,6 @@ export default function ItemForm(props: itemFormProps) {
 
     const formattedValue = Number(value).toFixed(2);
     onChange(formattedValue);
-    return formattedValue;
   };
 
   return (
@@ -54,7 +46,7 @@ export default function ItemForm(props: itemFormProps) {
           label="Item Name"
           variant="outlined"
           fullWidth
-          // margin="normal"
+          disabled={props.disabled}
           value={props.itemForm.name}
           onChange={(e) =>
             props.onChange({ ...props.itemForm, name: e.target.value })
@@ -67,7 +59,7 @@ export default function ItemForm(props: itemFormProps) {
           label="Category"
           variant="outlined"
           fullWidth
-          // margin="normal"
+          disabled={props.disabled}
           value={props.itemForm.category}
           onChange={(e) =>
             props.onChange({ ...props.itemForm, category: e.target.value })
@@ -76,25 +68,26 @@ export default function ItemForm(props: itemFormProps) {
         {/* Consider using Select component here for dropdown */}
       </Grid>
       <Grid item xs={12} sm={6}>
-        <FormControl fullWidth>
+        <FormControl fullWidth disabled={props.disabled}>
           <InputLabel htmlFor="highValue">High Value</InputLabel>
           <OutlinedInput
             error={!!highValueError}
             label="High Value"
             id="highValue"
             type="number"
-            value={props.itemForm.high}
+            value={props.itemForm.highString}
             onChange={(e) =>
               props.onChange({
                 ...props.itemForm,
                 high: Number(e.target.value),
+                highString: e.target.value,
               })
             }
             onBlur={(e) => {
               return formatPriceFields(
                 e.target.value,
                 (value) => {
-                  handleValue(value, 'high');
+                  props.onChange({ ...props.itemForm, highString: value });
                 },
                 setHighValueError
               );
@@ -109,26 +102,29 @@ export default function ItemForm(props: itemFormProps) {
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={6}>
-        <FormControl fullWidth>
+        <FormControl fullWidth disabled={props.disabled}>
           <InputLabel htmlFor="lowValue">Low Value</InputLabel>
           <OutlinedInput
             // error={!!lowValueError}
             label="Low Value"
             id="lowValue"
             type="number"
-            value={props.itemForm.low}
-            onChange={(e) =>
-              props.onChange({ ...props.itemForm, low: Number(e.target.value) })
-            }
-            onBlur={(e) =>
+            value={props.itemForm.lowString}
+            onChange={(e) => {
+              props.onChange({
+                ...props.itemForm,
+                low: Number(e.target.value),
+                lowString: e.target.value,
+              });
+            }}
+            onBlur={(e) => {
               formatPriceFields(
                 e.target.value,
-                (value) => {
-                  handleValue(value, 'low');
-                },
+                (value) =>
+                  props.onChange({ ...props.itemForm, lowString: value }),
                 setLowValueError
-              )
-            }
+              );
+            }}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
           />
           {lowValueError && (

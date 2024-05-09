@@ -5,6 +5,8 @@ export const zItemFormData = z.object({
   category: z.string().min(1, { message: 'Required' }),
   high: z.number().positive().min(1, { message: 'Required' }),
   low: z.number().positive().min(1, { message: 'Required' }),
+  highString: z.string().min(1, { message: 'Required' }),
+  lowString: z.string().min(1, { message: 'Required' }),
 });
 
 export interface ItemFormData extends z.infer<typeof zItemFormData> {}

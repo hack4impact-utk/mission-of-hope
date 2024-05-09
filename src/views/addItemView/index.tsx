@@ -74,6 +74,7 @@ export default function AddItemView() {
               <ItemForm
                 itemForm={itemFormData}
                 onChange={setItemFormData}
+                disabled={false}
               ></ItemForm>
               <Grid item xs={12}>
                 <Button
