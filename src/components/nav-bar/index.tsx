@@ -94,6 +94,18 @@ export default function Navbar() {
             Add Evaluation
           </Button>
         </Box>
+        <Box display={'flex'} justifyContent={'center'}>
+          <Button
+            href="/item"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            View Evaluations
+          </Button>
+        </Box>
 
         <Box display={'flex'} justifyContent={'center'}>
           <Button
