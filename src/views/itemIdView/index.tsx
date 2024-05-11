@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { ItemResponse, UpdateItemRequest } from '@/types/items';
+import useSnackbar from '@/hooks/useSnackbar';
 
 interface itemProps {
   id: string;
@@ -29,6 +30,7 @@ declare module '@mui/material/Button' {
 }
 
 export default function ItemIdView(props: itemProps) {
+  const { showSnackbar } = useSnackbar();
   const [editSwitch, setEditSwitch] = useState<boolean>(false);
   const [itemForm, setItemForm] = useState<ItemFormData>({
     name: props.item.name,
@@ -58,7 +60,7 @@ export default function ItemIdView(props: itemProps) {
 
   const handleUpdate = async () => {
     if (!props.item._id) {
-      console.error('Item ID is missing');
+      showSnackbar(`Item ID is missing`, 'error');
       return;
     }
 
@@ -93,10 +95,11 @@ export default function ItemIdView(props: itemProps) {
       }
 
       const updatedItem = await response.json();
+      showSnackbar('Item updated successfully.', 'success');
       setItemFormWithItem(updatedItem);
       setEditSwitch(false); // Optionally turn off edit mode
     } catch (error) {
-      console.error('Error updating item:', error);
+      showSnackbar(`Error updating item:, ${error}`, 'error');
     }
   };
 
