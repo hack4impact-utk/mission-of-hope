@@ -78,7 +78,7 @@ export default function ItemView({ items }: itemViewProps) {
     <Container>
       <Box sx={{ maxWidth: '70vw', height: '78vh' }}>
         <Box p={3}>
-          <Typography variant="h4">item List</Typography>
+          <Typography variant="h4">Evaluation List</Typography>
         </Box>
         <DataGrid
           rows={rows}
