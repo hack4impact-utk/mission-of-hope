@@ -62,11 +62,11 @@ export default function DonorView({ donors }: DonorViewProps) {
 
   return (
     <Container>
-      <SearchField />
       <Box sx={{ maxWidth: '70vw', height: '78vh' }}>
         <Box p={3}>
           <Typography variant="h4">Donor List</Typography>
         </Box>
+        <SearchField />
         <DataGrid
           rows={rows}
           columns={columns}
@@ -78,7 +78,6 @@ export default function DonorView({ donors }: DonorViewProps) {
           slots={{ toolbar: GridToolbar }}
           slotProps={{
             toolbar: {
-              showQuickFilter: true,
               quickFilterProps: { debounceMs: 500 }, // Optional: Configuring debounce
             },
           }}

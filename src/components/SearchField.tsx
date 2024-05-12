@@ -41,6 +41,7 @@ export default function SearchField() {
       onChange={handleSearchChange}
       variant="outlined"
       fullWidth
+      sx={{ mb: 1 }} // Add padding
     />
   );
 }
