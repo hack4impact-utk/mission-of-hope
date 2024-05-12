@@ -91,34 +91,33 @@ export default function DonorView({ donors, donations }: DonorViewProps) {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4" sx={{ mr: 2 }}>
-          Donor List
-        </Typography>
-        <Select
-          value={selectedMonth}
-          onChange={handleMonthChange}
-          variant="outlined"
-          displayEmpty
-          inputProps={{ 'aria-label': 'Select month' }}
-        >
-          <MenuItem value="">All Months</MenuItem>
-          {/* Generate month options */}
-          {[...Array(12).keys()].map((month) => (
-            <MenuItem key={month} value={month + 1}>
-              {new Date(2000, month).toLocaleString('default', {
-                month: 'long',
-              })}
-            </MenuItem>
-          ))}
-        </Select>
-      </Box>
-      <Box sx={{ maxWidth: '80vw', height: '78vh' }}>
+      <Box sx={{ maxWidth: '73vw', height: '78vh' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, pl: 0 }}>
+          <Typography variant="h4" sx={{ mr: 2 }}>
+            Donor List
+          </Typography>
+          <Select
+            value={selectedMonth}
+            onChange={handleMonthChange}
+            variant="outlined"
+            displayEmpty
+            inputProps={{ 'aria-label': 'Select month' }}
+          >
+            <MenuItem value="">All Months</MenuItem>
+            {/* Generate month options */}
+            {[...Array(12).keys()].map((month) => (
+              <MenuItem key={month} value={month + 1}>
+                {new Date(2000, month).toLocaleString('default', {
+                  month: 'long',
+                })}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
         <DataGrid
           rows={rows}
           columns={columns}
           disableColumnFilter
-          disableColumnSelector
           disableDensitySelector
           initialState={{
             pagination: { paginationModel: { pageSize: 25 } },
