@@ -44,10 +44,10 @@ export default function AddItemView() {
         setItemFormData({} as ItemFormData);
       } else {
         // Handle error response
-        console.error('Failed to add item');
+        showSnackbar('Failed to add item', 'error');
       }
     } catch (error) {
-      console.error('Error:', error);
+      showSnackbar(`Error: ${error}`, 'error');
     }
   };
 

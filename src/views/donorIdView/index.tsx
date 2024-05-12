@@ -1,5 +1,6 @@
 'use client';
 import DonorForm from '@/components/donorForm';
+import useSnackbar from '@/hooks/useSnackbar';
 import { DonorFormData } from '@/types/forms/donor';
 import { DonorResponse } from '@/types/persons';
 import mohColors from '@/utils/moh-theme';
@@ -30,6 +31,7 @@ declare module '@mui/material/Button' {
 }
 
 export default function DonorIdView(props: donorProps) {
+  const { showSnackbar } = useSnackbar();
   const [editSwitch, setEditSwitch] = useState<boolean>(false);
   const [donorForm, setDonorFormData] = useState<DonorFormData>({
     firstName: props.donor.firstName ?? '',
@@ -79,12 +81,13 @@ export default function DonorIdView(props: donorProps) {
       }
 
       const updatedDonor = await response.json();
+      showSnackbar('Donor updated successfully.', 'success');
       setDonorFormFromDonor(updatedDonor);
       setEditSwitch(false); // Optionally turn off edit mode
       // console.log('Donor updated successfully:', updatedDonor);
       // Optionally update local state or trigger other UI updates
     } catch (error) {
-      console.error('Error updating donor:', error);
+      showSnackbar(`Error updating donor: ${error}`, 'error');
     }
   };
 
@@ -143,6 +146,9 @@ export default function DonorIdView(props: donorProps) {
                     label="Last Name"
                     disabled={!editSwitch}
                     value={donorForm.email ?? ''}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setDonorFormData({ ...donorForm, email: e.target.value });
+                    }}
                   ></TextField>
                 </Grid>
                 <DonorForm

@@ -76,6 +76,7 @@ export default function AddDonationView({
   const handleAddDonation = () => {
     const errors = validateDonation(donationData);
     if (errors) {
+      showSnackbar('Cannot add donation', 'error');
       setValidationErrors(errors);
       return;
     }
@@ -121,10 +122,10 @@ export default function AddDonationView({
         console.log('Donor added successfully');
         setDonorFormData({} as DonorFormData);
       } else {
-        console.log('Error adding donor, status:', donorRes.status);
+        showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
       }
     } catch (error) {
-      console.error('Error:', error);
+      showSnackbar(`Error:'${error}`, 'error');
     }
   };
 
