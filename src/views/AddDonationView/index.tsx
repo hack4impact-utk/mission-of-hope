@@ -123,11 +123,9 @@ export default function AddDonationView({
         setDonorFormData({} as DonorFormData);
       } else {
         showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
-        console.log();
       }
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
-      console.error();
     }
   };
 
