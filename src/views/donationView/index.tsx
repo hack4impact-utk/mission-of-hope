@@ -22,7 +22,7 @@ export default function DonationView({ donations }: DonationViewProps) {
     donor: `${donation.donor.firstName} ${donation.donor.lastName}`,
     item: donation.items.item.name,
     item_cat: donation.items.item.category,
-    quant: 100,
+    quant: donation.items.quantity,
     high_low: donation.items.item.high,
     user_name: donation.user._id,
     date: donation.createdAt,
