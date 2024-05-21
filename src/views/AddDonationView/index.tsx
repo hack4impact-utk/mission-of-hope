@@ -1,5 +1,5 @@
 'use client';
-import AutofillDonorEmail from '@/components/AutofillDonorEmail';
+import AutofillDonorEmail from '@/components/donation-form/AutofillDonorEmail';
 import DonorForm from '@/components/donorForm';
 import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
@@ -20,9 +20,13 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
+import { ItemResponse } from '@/types/items';
+import AutofillItem from '@/components/donation-form/AutofillItem';
+import AutofillCategory from '@/components/donation-form/AutofillCategory';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
+  itemOptions: ItemResponse[];
 }
 
 /*
@@ -43,6 +47,7 @@ function getPriceFormatted(value: string): number {
 
 export default function AddDonationView({
   donorOptions,
+  itemOptions,
 }: AddDonationViewProps) {
   const [donationData, setDonationData] = useState<DonationFormData>({
     donationDate: new Date(),
@@ -71,6 +76,21 @@ export default function AddDonationView({
       zip: selectedDonor.zip ?? 0,
     });
     setPrevDonated(true);
+  };
+
+  const handleItemSelect = (selectedItem: ItemResponse) => {
+    setDonationData({
+      ...donationData,
+      donatedItemName: selectedItem.name,
+    });
+  };
+
+  const handleCategorySelect = (categoryString: string) => {
+    console.log('categoey string calle dwith', categoryString);
+    setDonationData({
+      ...donationData,
+      category: categoryString,
+    });
   };
 
   const handleAddDonation = () => {
@@ -175,32 +195,21 @@ export default function AddDonationView({
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Category"
-            value={donationData.category ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonationData({ ...donationData, category: e.target.value });
-            }}
-            error={!!validationErrors?.category}
-            helperText={validationErrors?.category}
+          <AutofillCategory
+            ItemOptions={itemOptions}
+            onCategorySelect={handleCategorySelect}
+            value={donationData.donatedItemName}
+            // error={!!validationErrors?.category}
+            // helperText={validationErrors?.category}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Donated Item"
-            value={donationData.donatedItemName ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonationData({
-                ...donationData,
-                donatedItemName: e.target.value,
-              });
-            }}
-            error={!!validationErrors?.donatedItemName}
-            helperText={validationErrors?.donatedItemName}
+          <AutofillItem
+            ItemOptions={itemOptions}
+            onItemSelect={handleItemSelect}
+            category={donationData.category}
+            // error={!!validationErrors?.donatedItemName}
+            // helperText={validationErrors?.donatedItemName}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
