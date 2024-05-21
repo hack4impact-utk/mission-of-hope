@@ -1,5 +1,5 @@
 'use client';
-import AutofillDonorEmail from '@/components/AutofillDonorEmail';
+import AutofillDonorEmail from '@/components/donation-form/AutofillDonorEmail';
 import DonorForm from '@/components/donorForm';
 import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
@@ -72,6 +72,23 @@ export default function AddDonationView({
     });
     setPrevDonated(true);
   };
+
+  // const handleItemSelect = (selectedItem: ItemResponse) => {
+  //   setDonorData({
+  //     ...donorData,
+  //     donatedItem: selectedItem.name,
+  //     // category: selectedItem.category,
+  //   });
+  // };
+
+  // const handleCategorySelect = (categoryString: string) => {
+  //   console.log('categoey string calle dwith', categoryString);
+  //   setDonorData({
+  //     ...donorData,
+  //     // donatedItem: selectedItems.name,
+  //     category: categoryString,
+  //   });
+  // };
 
   const handleAddDonation = () => {
     const errors = validateDonation(donationData);
