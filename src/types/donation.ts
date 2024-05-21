@@ -47,6 +47,7 @@ export const zCreateDonationRequest = zDonationBase;
 export const zDonationResponse = zDonationEntity.extend({
   user: zUserResponse,
   donor: zDonorResponse,
+  items: z.array(zDonationItemResponse),
 });
 
 export interface DonationEntity extends z.infer<typeof zDonationEntity> {}
