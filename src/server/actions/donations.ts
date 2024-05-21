@@ -26,8 +26,6 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
   try {
     await dbConnect();
 
-    console.log('Donation Call');
-    //require("@/server/models/donationItem");
     const response: DonationResponse[] = await DonationSchema.find().populate([
       'user',
       'donor',

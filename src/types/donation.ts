@@ -44,7 +44,6 @@ export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });
 
 export const zCreateDonationRequest = zDonationBase;
 
-//export const zDonationResponse = zDonationEntity;
 export const zDonationResponse = zDonationEntity.extend({
   user: zUserResponse,
   donor: zDonorResponse,
