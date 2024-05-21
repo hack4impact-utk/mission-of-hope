@@ -8,11 +8,8 @@ interface DonationViewProps {
 
 const columns: GridColDef[] = [
   { field: 'donor', headerName: 'Donor Name', width: 250 },
-  { field: 'item', headerName: 'Item Name', width: 250 },
-  { field: 'item_cat', headerName: 'Item Category', width: 150 },
-  { field: 'quant', headerName: 'Quantity', width: 100 },
-  { field: 'high_low', headerName: 'High Low Value', width: 200 },
-  { field: 'user_name', headerName: 'User Name/ID', width: 150 },
+  { field: 'quantity', headerName: 'Donation Quantity', width: 200 },
+  { field: 'user_name', headerName: 'User Name/ID', width: 300 },
   { field: 'date', headerName: 'Date', width: 250 },
 ];
 
@@ -20,12 +17,9 @@ export default function DonationView({ donations }: DonationViewProps) {
   const rows = donations.map((donation, index) => ({
     id: index + 1,
     donor: `${donation.donor.firstName} ${donation.donor.lastName}`,
-    item: donation.items.item.name,
-    item_cat: donation.items.item.category,
-    quant: donation.items.quantity,
-    high_low: donation.items.item.high,
-    user_name: donation.user._id,
-    date: donation.createdAt,
+    quantity: donation.items.length,
+    user_name: donation.user.email,
+    date: donation.entryDate,
   }));
 
   return (
