@@ -2,13 +2,13 @@ import { ItemResponse } from '@/types/items';
 import { Autocomplete, TextField } from '@mui/material';
 
 interface Item {
-  itemOptions: ItemResponse[];
+  ItemOptions: ItemResponse[];
   onItemSelect: (item: ItemResponse) => void;
   category: string;
 }
 
 export default function AutofillItem(props: Item) {
-  const filteredItems = props.itemOptions.filter((item) => {
+  const filteredItems = props.ItemOptions.filter((item) => {
     if (!props.category) {
       return true;
     }
@@ -16,7 +16,7 @@ export default function AutofillItem(props: Item) {
   });
 
   function onItemChange(value: string) {
-    const itemMatch = props.itemOptions.find(
+    const itemMatch = props.ItemOptions.find(
       (item) => item.name.toLowerCase() === value.toLowerCase()
     );
     if (itemMatch) {

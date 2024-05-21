@@ -10,6 +10,12 @@ interface Item {
 
 export default function AutofillCategory(props: Item) {
   const [itemOptions] = useState<ItemResponse[]>(props.ItemOptions);
+  const filteredItems = props.ItemOptions.filter((item) => {
+    if (!props.value) {
+      return true;
+    }
+    return item.name === props.value;
+  });
 
   function onCategoryChange(value: string) {
     const categoryMatches = itemOptions.filter(
@@ -21,16 +27,15 @@ export default function AutofillCategory(props: Item) {
       props.onCategorySelect(value);
     }
   }
-
-  console.log('rudra: ', props.value);
+  //
 
   return (
     <>
       <Autocomplete
         freeSolo
         autoComplete
-        value={props.value}
-        options={itemOptions}
+        value={''}
+        options={filteredItems}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         getOptionLabel={(item) =>
           typeof item === 'string' ? item : item.category

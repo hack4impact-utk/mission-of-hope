@@ -61,7 +61,7 @@ export default function AddDonationView({
     setDonorData({
       ...donorData,
       donatedItem: selectedItem.name,
-      category: selectedItem.category,
+      // category: selectedItem.category,
     });
   };
 
@@ -185,12 +185,12 @@ export default function AddDonationView({
           <AutofillCategory
             ItemOptions={itemOptions}
             onCategorySelect={handleCategorySelect}
-            value={donorData.category}
+            value={donorData.donatedItem}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <AutofillItem
-            itemOptions={itemOptions}
+            ItemOptions={itemOptions}
             onItemSelect={handleItemSelect}
             category={donorData.category}
           />
