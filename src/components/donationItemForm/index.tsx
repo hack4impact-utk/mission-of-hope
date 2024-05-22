@@ -1,21 +1,160 @@
 'use client';
 
-import { Typography } from '@mui/material';
+import {
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
+import AutofillCategory from '../donation-form/AutofillCategory';
+import AutofillItem from '../donation-form/AutofillItem';
+import { ItemResponse } from '@/types/items';
+import { DonationItemFormData } from '@/types/forms/donationItem';
 
-// function getPriceFormatted(value: string): number {
-//     const numberValue = Number(value);
-//     // Validate high and low values
-//     if (numberValue < 0 || isNaN(numberValue)) {
-//       return numberValue;
-//     }
+function getPriceFormatted(value: string): number {
+  const numberValue = Number(value);
+  // Validate high and low values
+  if (numberValue < 0 || isNaN(numberValue)) {
+    return numberValue;
+  }
 
-//     const formattedValue = Number(numberValue.toFixed(2));
-//     return formattedValue;
-//   }
+  const formattedValue = Number(numberValue.toFixed(2));
+  return formattedValue;
+}
 
-export default function DonationItemForm() {
+interface DonationItemFormProps {
+  itemOptions: ItemResponse[];
+  donationItemData: DonationItemFormData;
+  onChange: (donationItemDatas: DonationItemFormData) => void;
+  // validationErrors: Record<string, string> | undefined;
+}
+
+export default function DonationItemForm({
+  itemOptions,
+  donationItemData,
+  onChange,
+}: DonationItemFormProps) {
+  const handleItemSelect = (selectedItem: ItemResponse) => {
+    onChange({ ...donationItemData, name: selectedItem.name });
+  };
+
+  const handleCategorySelect = (categoryString: string) => {
+    console.log('categoey string calle dwith', categoryString);
+    onChange({ ...donationItemData, category: categoryString });
+  };
+
   return (
     <>
+      <Grid item xs={12}>
+        <AutofillCategory
+          ItemOptions={itemOptions}
+          onCategorySelect={handleCategorySelect}
+          value={donationItemData.name}
+          // error={!!validationErrors?.category}
+          // helperText={validationErrors?.category}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <AutofillItem
+          ItemOptions={itemOptions}
+          onItemSelect={handleItemSelect}
+          category={donationItemData.category}
+          // error={!!validationErrors?.donatedItemName}
+          // helperText={validationErrors?.donatedItemName}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          id="outlined-required"
+          label="Quantity"
+          type="number"
+          value={donationItemData.quantity ?? ''}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange({
+              ...donationItemData,
+              quantity: Number(e.target.value),
+            });
+          }}
+          // error={!!validationErrors?.quantity}
+          // helperText={validationErrors?.quantity}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <FormControl fullWidth>
+          <InputLabel>New or Used</InputLabel>
+          <Select
+            value={donationItemData.newOrUsed}
+            onChange={(e) => {
+              onChange({ ...donationItemData, newOrUsed: e.target.value });
+            }}
+            label="New or Used"
+            id="new-or-used"
+            // error={!!validationErrors?.newOrUsed}
+          >
+            <MenuItem value="new">New</MenuItem>
+            <MenuItem value="used">Used</MenuItem>
+          </Select>
+          {/* <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText> */}
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <FormControl fullWidth>
+          <InputLabel id="high-or-low-value-label">
+            High or Low Value
+          </InputLabel>
+          <Select
+            labelId="high-or-low-value-label"
+            value={donationItemData.highOrLow ?? ''}
+            onChange={(e) => {
+              onChange({
+                ...donationItemData,
+                highOrLow: e.target.value,
+              });
+            }}
+            label="High or Low Value"
+            id="high-or-low-value"
+            disabled={donationItemData.newOrUsed === 'new'} // Disable if new
+            // error={!!validationErrors?.highOrLow}
+          >
+            <MenuItem value="high">High</MenuItem>
+            <MenuItem value="low">Low</MenuItem>
+          </Select>
+          {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
+        </FormControl>
+        {/* onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+               setHighOrLow(e.target.value);
+            }}*/}
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <TextField
+          id="price"
+          label="Price"
+          type="number"
+          value={donationItemData.price ?? ''}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange({
+              ...donationItemData,
+              price: Number(e.target.value),
+            });
+          }}
+          onBlur={(e) =>
+            onChange({
+              ...donationItemData,
+              price: getPriceFormatted(e.target.value),
+            })
+          }
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          }}
+          disabled={donationItemData.newOrUsed === 'used'} // Disable if used
+          // error={!!validationErrors?.price}
+          // helperText={validationErrors?.price}
+        />
+      </Grid>
       {/* 
   <Grid item xs={12}>
       <TextField
@@ -150,9 +289,6 @@ export default function DonationItemForm() {
             helperText={validationErrors?.user}
           />
         </Grid> */}
-      <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
-        Hello
-      </Typography>
     </>
   );
 }
