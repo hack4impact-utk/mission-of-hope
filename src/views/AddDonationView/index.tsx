@@ -1,5 +1,5 @@
 'use client';
-import AutofillDonorEmail from '@/components/AutofillDonorEmail';
+import AutofillDonorEmail from '@/components/donation-form/AutofillDonorEmail';
 import DonorForm from '@/components/donorForm';
 import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
@@ -10,7 +10,9 @@ import {
   Button,
   ButtonGroup,
   FormControl,
+  FormHelperText,
   Grid,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -19,10 +21,14 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
+import { ItemResponse } from '@/types/items';
+import AutofillItem from '@/components/donation-form/AutofillItem';
+import AutofillCategory from '@/components/donation-form/AutofillCategory';
 import DonationItemForm from '@/components/donationItemForm';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
+  itemOptions: ItemResponse[];
 }
 
 /*
@@ -30,9 +36,20 @@ interface AddDonationViewProps {
   @param {string} value - The value to format
   @returns {number} - The formatted value
 */
+function getPriceFormatted(value: string): number {
+  const numberValue = Number(value);
+  // Validate high and low values
+  if (numberValue < 0 || isNaN(numberValue)) {
+    return numberValue;
+  }
+
+  const formattedValue = Number(numberValue.toFixed(2));
+  return formattedValue;
+}
 
 export default function AddDonationView({
   donorOptions,
+  itemOptions,
 }: AddDonationViewProps) {
   const [donationData, setDonationData] = useState<DonationFormData>({
     donationDate: new Date(),
@@ -61,6 +78,21 @@ export default function AddDonationView({
       zip: selectedDonor.zip ?? 0,
     });
     setPrevDonated(true);
+  };
+
+  const handleItemSelect = (selectedItem: ItemResponse) => {
+    setDonationData({
+      ...donationData,
+      donatedItemName: selectedItem.name,
+    });
+  };
+
+  const handleCategorySelect = (categoryString: string) => {
+    console.log('categoey string calle dwith', categoryString);
+    setDonationData({
+      ...donationData,
+      category: categoryString,
+    });
   };
 
   const handleAddDonation = () => {
@@ -181,7 +213,139 @@ export default function AddDonationView({
             helperText={validationErrors?.donationDate}
           />
         </Grid>
+        <Grid item xs={12}>
+          <AutofillCategory
+            ItemOptions={itemOptions}
+            onCategorySelect={handleCategorySelect}
+            value={donationData.donatedItemName}
+            // error={!!validationErrors?.category}
+            // helperText={validationErrors?.category}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <AutofillItem
+            ItemOptions={itemOptions}
+            onItemSelect={handleItemSelect}
+            category={donationData.category}
+            // error={!!validationErrors?.donatedItemName}
+            // helperText={validationErrors?.donatedItemName}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            id="outlined-required"
+            label="Quantity"
+            type="number"
+            value={donationData.quantity ?? ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setDonationData({
+                ...donationData,
+                quantity: Number(e.target.value),
+              });
+            }}
+            error={!!validationErrors?.quantity}
+            helperText={validationErrors?.quantity}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth>
+            <InputLabel>New or Used</InputLabel>
+            <Select
+              value={donationData.newOrUsed}
+              onChange={(e) => {
+                setDonationData({ ...donationData, newOrUsed: e.target.value });
+              }}
+              label="New or Used"
+              id="new-or-used"
+              error={!!validationErrors?.newOrUsed}
+            >
+              <MenuItem value="new">New</MenuItem>
+              <MenuItem value="used">Used</MenuItem>
+            </Select>
+            <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth>
+            <InputLabel id="high-or-low-value-label">
+              High or Low Value
+            </InputLabel>
+            <Select
+              labelId="high-or-low-value-label"
+              value={donationData.highOrLow ?? ''}
+              onChange={(e) => {
+                setDonationData({
+                  ...donationData,
+                  highOrLow: e.target.value,
+                });
+              }}
+              label="High or Low Value"
+              id="high-or-low-value"
+              disabled={donationData.newOrUsed === 'new'} // Disable if new
+              error={!!validationErrors?.highOrLow}
+            >
+              <MenuItem value="high">High</MenuItem>
+              <MenuItem value="low">Low</MenuItem>
+            </Select>
+            <FormHelperText>{validationErrors?.highOrLow}</FormHelperText>
+          </FormControl>
+          {/* onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+               setHighOrLow(e.target.value);
+            }}*/}
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            id="price"
+            label="Price"
+            type="number"
+            value={donationData.price ?? ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setDonationData({
+                ...donationData,
+                price: Number(e.target.value),
+              });
+            }}
+            onBlur={(e) =>
+              setDonationData({
+                ...donationData,
+                price: getPriceFormatted(e.target.value),
+              })
+            }
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">$</InputAdornment>
+              ),
+            }}
+            disabled={donationData.newOrUsed === 'used'} // Disable if used
+            error={!!validationErrors?.price}
+            helperText={validationErrors?.price}
+          />
+        </Grid>
+        <Grid item xs={8} sm={12}>
+          <TextField
+            fullWidth
+            id="outlined-required"
+            label="User"
+            value={donationData.user}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setDonationData({ ...donationData, user: e.target.value });
+            }}
+            error={!!validationErrors?.user}
+            helperText={validationErrors?.user}
+          />
+        </Grid>
 
+        <Grid item sm={4}>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ backgroundColor: '#379541cc' }}
+            onClick={() => [handleAddDonor(), handleAddDonation()]}
+          >
+            Add Donation
+          </Button>
+        </Grid>
         <Grid item xs={12} sm={8}>
           <FormControl fullWidth>
             <InputLabel>Has this donor previously donated?</InputLabel>
