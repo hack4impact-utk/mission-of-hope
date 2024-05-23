@@ -7,6 +7,7 @@ interface Item {
   onCategorySelect: (category: string) => void;
   name: string;
   value: string;
+  disabled?: boolean;
 }
 
 export default function AutofillCategory(props: Item) {
@@ -36,6 +37,7 @@ export default function AutofillCategory(props: Item) {
         autoComplete
         value={props.value ?? ''}
         options={filteredItems}
+        disabled={props.disabled}
         isOptionEqualToValue={(option, value) =>
           option.category === value.category
         }

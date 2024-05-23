@@ -209,6 +209,7 @@ export default function AddDonationView({
                     handleDonationItemFormChange(value, index)
                   }
                   key={index}
+                  disabled={false}
                   // validationErrors={}
                 />
               </>

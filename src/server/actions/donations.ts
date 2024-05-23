@@ -26,11 +26,14 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
   try {
     await dbConnect();
 
-    const response: DonationResponse[] = await DonationSchema.find().populate([
-      'user',
-      'donor',
-      'items',
-    ]);
+    const response: DonationResponse[] = await DonationSchema.find()
+      .populate(['user', 'donor', 'items'])
+      .populate({
+        path: 'items',
+        populate: {
+          path: 'item',
+        },
+      });
 
     return response;
   } catch (error) {
@@ -44,9 +47,15 @@ export async function getDonationById(
   try {
     await dbConnect();
 
-    const response: DonationResponse | null = await DonationSchema.findById(
-      id
-    ).populate(['user', 'donor']);
+    const response: DonationResponse | null = await DonationSchema.findById(id)
+      .populate(['user', 'donor', 'items'])
+      .populate({
+        path: 'items',
+        populate: {
+          path: 'item',
+          model: 'Item',
+        },
+      });
 
     return response;
   } catch (error) {

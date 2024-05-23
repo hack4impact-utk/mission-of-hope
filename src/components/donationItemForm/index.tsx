@@ -29,6 +29,7 @@ interface DonationItemFormProps {
   itemOptions: ItemResponse[];
   donationItemData: DonationItemFormData;
   onChange: (donationItemDatas: DonationItemFormData) => void;
+  disabled?: boolean;
   // validationErrors: Record<string, string> | undefined;
 }
 
@@ -36,6 +37,7 @@ export default function DonationItemForm({
   itemOptions,
   donationItemData,
   onChange,
+  disabled,
 }: DonationItemFormProps) {
   const handleItemSelect = (nameString: string) => {
     onChange({ ...donationItemData, name: nameString });
@@ -53,6 +55,7 @@ export default function DonationItemForm({
           onCategorySelect={handleCategorySelect}
           name={donationItemData.name}
           value={donationItemData.category}
+          disabled={disabled}
           // error={!!validationErrors?.category}
           // helperText={validationErrors?.category}
         />
@@ -63,6 +66,7 @@ export default function DonationItemForm({
           onItemSelect={handleItemSelect}
           category={donationItemData.category}
           value={donationItemData.name}
+          disabled={disabled}
           // error={!!validationErrors?.donatedItemName}
           // helperText={validationErrors?.donatedItemName}
         />
@@ -80,12 +84,13 @@ export default function DonationItemForm({
               quantity: Number(e.target.value),
             });
           }}
+          disabled={disabled}
           // error={!!validationErrors?.quantity}
           // helperText={validationErrors?.quantity}
         />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <FormControl fullWidth>
+        <FormControl fullWidth disabled={disabled}>
           <InputLabel>New or Used</InputLabel>
           <Select
             value={donationItemData.newOrUsed ?? ''}
@@ -96,14 +101,17 @@ export default function DonationItemForm({
             id="new-or-used"
             // error={!!validationErrors?.newOrUsed}
           >
-            <MenuItem value="new">New</MenuItem>
-            <MenuItem value="used">Used</MenuItem>
+            <MenuItem value="New">New</MenuItem>
+            <MenuItem value="Used">Used</MenuItem>
           </Select>
           {/* <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText> */}
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <FormControl fullWidth>
+        <FormControl
+          fullWidth
+          disabled={donationItemData.newOrUsed === 'New' || disabled} // Disable if new
+        >
           <InputLabel id="high-or-low-value-label">
             High or Low Value
           </InputLabel>
@@ -118,11 +126,10 @@ export default function DonationItemForm({
             }}
             label="High or Low Value"
             id="high-or-low-value"
-            disabled={donationItemData.newOrUsed === 'new'} // Disable if new
             // error={!!validationErrors?.highOrLow}
           >
-            <MenuItem value="high">High</MenuItem>
-            <MenuItem value="low">Low</MenuItem>
+            <MenuItem value="High">High</MenuItem>
+            <MenuItem value="Low">Low</MenuItem>
           </Select>
           {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
         </FormControl>
@@ -151,7 +158,7 @@ export default function DonationItemForm({
           InputProps={{
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
-          disabled={donationItemData.newOrUsed === 'used'} // Disable if used
+          disabled={donationItemData.newOrUsed === 'Used' || disabled} // Disable if used
           // error={!!validationErrors?.price}
           // helperText={validationErrors?.price}
         />

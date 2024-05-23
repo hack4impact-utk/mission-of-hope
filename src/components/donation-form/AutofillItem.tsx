@@ -7,6 +7,7 @@ interface Item {
   onItemSelect: (item: string) => void;
   category: string;
   value: string;
+  disabled?: boolean;
 }
 
 export default function AutofillItem(props: Item) {
@@ -34,6 +35,7 @@ export default function AutofillItem(props: Item) {
       autoComplete
       value={props.value ?? ''}
       options={filteredItems}
+      disabled={props.disabled}
       isOptionEqualToValue={(option, value) => option.name === value.name}
       getOptionLabel={(item) => (typeof item === 'string' ? item : item.name)}
       renderOption={(props, option) => {
