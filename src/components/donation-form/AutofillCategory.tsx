@@ -5,16 +5,17 @@ import { useState } from 'react';
 interface Item {
   ItemOptions: ItemResponse[];
   onCategorySelect: (category: string) => void;
+  name: string;
   value: string;
 }
 
 export default function AutofillCategory(props: Item) {
   const [itemOptions] = useState<ItemResponse[]>(props.ItemOptions);
-  const filteredItems = props.ItemOptions.filter((item) => {
-    if (!props.value) {
+  const filteredItems = itemOptions.filter((item) => {
+    if (!props.name) {
       return true;
     }
-    return item.name === props.value;
+    return item.name === props.name;
   });
 
   function onCategoryChange(value: string) {
@@ -22,7 +23,6 @@ export default function AutofillCategory(props: Item) {
       (item) => item.category.toLowerCase() === value.toLowerCase()
     );
     if (categoryMatches.length > 0 || value === '') {
-      console.log(categoryMatches);
       // Pass selected Item details back to parent component
       props.onCategorySelect(value);
     }
@@ -34,9 +34,11 @@ export default function AutofillCategory(props: Item) {
       <Autocomplete
         freeSolo
         autoComplete
-        value={''}
+        value={props.value ?? ''}
         options={filteredItems}
-        isOptionEqualToValue={(option, value) => option._id === value._id}
+        isOptionEqualToValue={(option, value) =>
+          option.category === value.category
+        }
         getOptionLabel={(item) =>
           typeof item === 'string' ? item : item.category
         }

@@ -1,14 +1,17 @@
 import { ItemResponse } from '@/types/items';
 import { Autocomplete, TextField } from '@mui/material';
+import { useState } from 'react';
 
 interface Item {
   ItemOptions: ItemResponse[];
-  onItemSelect: (item: ItemResponse) => void;
+  onItemSelect: (item: string) => void;
   category: string;
+  value: string;
 }
 
 export default function AutofillItem(props: Item) {
-  const filteredItems = props.ItemOptions.filter((item) => {
+  const [itemOptions] = useState<ItemResponse[]>(props.ItemOptions);
+  const filteredItems = itemOptions.filter((item) => {
     if (!props.category) {
       return true;
     }
@@ -16,12 +19,12 @@ export default function AutofillItem(props: Item) {
   });
 
   function onItemChange(value: string) {
-    const itemMatch = props.ItemOptions.find(
+    const itemMatch = itemOptions.filter(
       (item) => item.name.toLowerCase() === value.toLowerCase()
     );
-    if (itemMatch) {
+    if (itemMatch.length > 0 || value === '') {
       // Pass selected Item details back to parent component
-      props.onItemSelect(itemMatch);
+      props.onItemSelect(value);
     }
   }
 
@@ -29,9 +32,9 @@ export default function AutofillItem(props: Item) {
     <Autocomplete
       freeSolo
       autoComplete
-      value={''}
+      value={props.value ?? ''}
       options={filteredItems}
-      isOptionEqualToValue={(option, value) => option.name == value.name}
+      isOptionEqualToValue={(option, value) => option.name === value.name}
       getOptionLabel={(item) => (typeof item === 'string' ? item : item.name)}
       renderOption={(props, option) => {
         return (
@@ -50,9 +53,7 @@ export default function AutofillItem(props: Item) {
         />
       )}
       onInputChange={(_, value) => {
-        if (value) {
-          onItemChange(value);
-        }
+        onItemChange(value);
       }}
     />
   );
