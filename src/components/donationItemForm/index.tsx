@@ -47,7 +47,7 @@ export default function DonationItemForm({
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item xs={11}>
         <AutofillCategory
           ItemOptions={itemOptions}
           onCategorySelect={handleCategorySelect}

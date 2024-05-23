@@ -1,5 +1,5 @@
 'use client';
-import DonationItemForm from '@/components/donationItemForm';
+// import DonationItemForm from '@/components/donationItemForm';
 import { DonationResponse } from '@/types/donation';
 import { DonationFormData } from '@/types/forms/donation';
 import mohColors from '@/utils/moh-theme';
@@ -25,7 +25,7 @@ interface donationProps {
 
 export default function DonationIdView(props: donationProps) {
   const [editSwitch, setEditSwitch] = useState<boolean>(false);
-  const [donationForm, setDonationFormData] = useState<DonationFormData>({
+  const [donationForm /*setDonationFormData*/] = useState<DonationFormData>({
     donationDate: props.donation.entryDate,
   } as DonationFormData);
 
@@ -106,11 +106,11 @@ export default function DonationIdView(props: donationProps) {
                     }}
                   />
                 </Grid>
-                <DonationItemForm
+                {/* <DonationItemForm
                   donationData={donationForm}
                   setDonationData={setDonationFormData}
                   disabled={!editSwitch}
-                ></DonationItemForm>
+                ></DonationItemForm> */}
                 <Grid item xs={3} sm={6}></Grid>
                 <Grid item xs={3} sm={3}>
                   <Button
