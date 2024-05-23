@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ZodType } from 'zod';
+import { ZodType } from 'zod';
 
 /**
  * This hook is used to validate form data using a Zod schema.
@@ -11,22 +11,15 @@ export default function useValidation<TZod extends ZodType<any, any, any>>(
 ) {
   type Data = z.infer<TZod>;
   return {
-    validate: (data: Data): Record<keyof Data, string> | null => {
+    validate: (data: Data) => {
       // Validate the data
-      const result = zodSchema.safeParse(data);
+      const result = (zodSchema as ZodType<Data>).safeParse(data);
       if (result.success) {
         // If the data is valid, return null
         return null;
       }
 
-      // If the data is invalid, return an object with the errors for each field
-      return result.error.errors.reduce(
-        (acc, error) => ({
-          ...acc,
-          [error.path[0]]: error.message,
-        }),
-        {} as Record<keyof Data, string>
-      );
+      return result.error.format();
     },
   };
 }
