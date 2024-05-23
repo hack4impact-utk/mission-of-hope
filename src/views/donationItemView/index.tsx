@@ -1,35 +1,98 @@
 'use client';
+import React from 'react';
+import { Box, Chip, Container, IconButton, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { DonationItemResponse } from '@/types/donation';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-//
+import EditIcon from '@mui/icons-material/Edit';
+
 interface DonationItemProps {
   donationItems: DonationItemResponse[];
 }
 
 const columns: GridColDef[] = [
-  //set the name and width of each column
-  { field: 'name', headerName: 'Product', width: 350 },
-  { field: 'category', headerName: 'Category', width: 350 },
-  { field: 'quantity', headerName: 'Quantity', width: 200 },
-  { field: 'evaluation', headerName: 'Evaluation', width: 150 },
-  { field: 'barcode', headerName: 'Barcode (if food)', width: 200 },
+  //declared the columns for the data grid and their stylings
+  { field: 'product', headerName: 'Product', maxWidth: 300, flex: 0.4 },
+  { field: 'category', headerName: 'Category', maxWidth: 300, flex: 0.4 },
+  { field: 'quantity', headerName: 'Quantity', maxWidth: 80, flex: 0.5 },
+  {
+    field: 'evaluation',
+    headerName: 'Evaluation',
+    maxWidth: 80,
+    flex: 0.5,
+  },
+  {
+    field: 'barcode',
+    headerName: 'Barcode (if food)',
+    maxWidth: 200,
+    flex: 0.5,
+    renderCell: (params) => {
+      return params.value ? (
+        <Chip // kept the same styling from og
+          label={params.value}
+          sx={{
+            bgcolor: '#37954173',
+            border: 'solid',
+            borderColor: '#ABABAB',
+          }}
+        />
+      ) : null;
+    },
+  },
+  { field: 'price', headerName: 'Price', maxWidth: 100, flex: 0.5 },
+  {
+    field: 'edit',
+    headerName: 'Edit',
+    maxWidth: 80,
+    flex: 0.5,
+    sortable: false,
+    filterable: false,
+    renderCell: (params) => {
+      return (
+        <IconButton
+          color="primary"
+          size="small"
+          onClick={() => (window.location.href = `/donation/${params.value}`)}
+        >
+          <EditIcon></EditIcon>
+        </IconButton>
+      );
+    },
+  },
 ];
 
 export default function DonationItemView({ donationItems }: DonationItemProps) {
-  // Map over the donationItems to create rows for the DataGrid
-  const rows = donationItems.map((item, index) => ({
-    id: index + 1,
-    name: item.item.name,
-    category: item.item.category,
-    quantity: item.quantity,
-    evaluation: item.value.evaluation,
-    barcode: item.barcode,
+  //map the donation items to the rows
+  const formattedRows = donationItems.map((row) => ({
+    id: row._id,
+    product: row.item.name,
+    category: row.item.category,
+    quantity: row.quantity,
+    evaluation: row.value.evaluation,
+    barcode: row.barcode,
+    price: `$${row.value.price}`,
+    edit: row._id,
   }));
 
   return (
-    //return with no height to allow the table to expand
-    <div style={{ width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} disableRowSelectionOnClick />
-    </div>
+    <Container>
+      <Box sx={{ maxWidth: '73vw', height: '78vh' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, pl: 0 }}>
+          <Typography variant="h4">Inventory</Typography>
+        </Box>
+        <DataGrid
+          rows={formattedRows}
+          columns={columns}
+          disableColumnFilter
+          disableDensitySelector
+          slots={{ toolbar: GridToolbar }} // added the toolbar to the grid
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+              quickFilterProps: { debounceMs: 500 }, // each search query will be delayed by 500ms
+            },
+          }}
+        />
+      </Box>
+    </Container>
   );
 }
