@@ -37,12 +37,11 @@ export default function DonationItemForm({
   donationItemData,
   onChange,
 }: DonationItemFormProps) {
-  const handleItemSelect = (selectedItem: ItemResponse) => {
-    onChange({ ...donationItemData, name: selectedItem.name });
+  const handleItemSelect = (nameString: string) => {
+    onChange({ ...donationItemData, name: nameString });
   };
 
   const handleCategorySelect = (categoryString: string) => {
-    console.log('categoey string calle dwith', categoryString);
     onChange({ ...donationItemData, category: categoryString });
   };
 
@@ -52,7 +51,8 @@ export default function DonationItemForm({
         <AutofillCategory
           ItemOptions={itemOptions}
           onCategorySelect={handleCategorySelect}
-          value={donationItemData.name}
+          name={donationItemData.name}
+          value={donationItemData.category}
           // error={!!validationErrors?.category}
           // helperText={validationErrors?.category}
         />
@@ -62,6 +62,7 @@ export default function DonationItemForm({
           ItemOptions={itemOptions}
           onItemSelect={handleItemSelect}
           category={donationItemData.category}
+          value={donationItemData.name}
           // error={!!validationErrors?.donatedItemName}
           // helperText={validationErrors?.donatedItemName}
         />
