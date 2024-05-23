@@ -48,7 +48,7 @@ export default function DonationItemForm({
 
   return (
     <>
-      <Grid item xs={12}>
+      <Grid item xs={8}>
         <AutofillCategory
           ItemOptions={itemOptions}
           onCategorySelect={handleCategorySelect}
@@ -87,7 +87,7 @@ export default function DonationItemForm({
         <FormControl fullWidth>
           <InputLabel>New or Used</InputLabel>
           <Select
-            value={donationItemData.newOrUsed}
+            value={donationItemData.newOrUsed ?? ''}
             onChange={(e) => {
               onChange({ ...donationItemData, newOrUsed: e.target.value });
             }}

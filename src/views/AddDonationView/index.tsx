@@ -5,6 +5,8 @@ import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
 import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
 import { DonorResponse } from '@/types/persons';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
   Box,
   Button,
@@ -17,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
 import { ItemResponse } from '@/types/items';
 import DonationItemForm from '@/components/donationItemForm';
@@ -38,7 +40,7 @@ export default function AddDonationView({
   const [donorFormData, setDonorFormData] = useState<DonorFormData>(
     {} as DonorFormData
   );
-  const [donationItemFormDatas, setDonationFormDatas] = useState<
+  const [donationItemFormDatas, setDonationItemFormDatas] = useState<
     DonationItemFormData[]
   >([{} as DonationItemFormData] as DonationItemFormData[]);
   const [prevDonated, setPrevDonated] = useState(false);
@@ -72,7 +74,7 @@ export default function AddDonationView({
 
     newArr[index] = updatedDonationItem;
 
-    setDonationFormDatas(newArr);
+    setDonationItemFormDatas(newArr);
   };
 
   const handleAddDonation = () => {
@@ -191,18 +193,52 @@ export default function AddDonationView({
         </Grid>
 
         {donationItemFormDatas.map((_, index) => (
-          <DonationItemForm
-            itemOptions={itemOptions}
-            donationItemData={donationItemFormDatas[index]}
-            onChange={(value: DonationItemFormData) =>
-              handleDonationItemFormChange(value, index)
-            }
-            key={index}
-            // validationErrors={}
-          />
+          <>
+            <Grid item sm={4}>
+              <Button
+                startIcon={<RemoveIcon></RemoveIcon>}
+                variant="outlined"
+                sx={{ height: '100%' }}
+                size="medium"
+                fullWidth
+                onClick={() => {
+                  // console.log(donationItemFormDatas)
+                  donationItemFormDatas.splice(index, 1);
+                  setDonationItemFormDatas([...donationItemFormDatas]);
+                }}
+                key={index}
+              >
+                Remove
+              </Button>
+            </Grid>
+            <DonationItemForm
+              itemOptions={itemOptions}
+              donationItemData={donationItemFormDatas[index]}
+              onChange={(value: DonationItemFormData) =>
+                handleDonationItemFormChange(value, index)
+              }
+              key={index}
+              // validationErrors={}
+            />
+          </>
         ))}
-
-        <Grid item xs={8} sm={12}>
+        <Grid item sm={4}>
+          <Button
+            sx={{ height: '100%' }}
+            variant="outlined"
+            startIcon={<AddIcon></AddIcon>}
+            onClick={() =>
+              setDonationItemFormDatas([
+                ...donationItemFormDatas,
+                {} as DonationItemFormData,
+              ])
+            }
+            fullWidth
+          >
+            Add Item
+          </Button>
+        </Grid>
+        <Grid item xs={8} sm={8}>
           <TextField
             fullWidth
             id="outlined-required"
@@ -219,9 +255,9 @@ export default function AddDonationView({
         <Grid item sm={4}>
           <Button
             variant="contained"
-            size="large"
-            sx={{ backgroundColor: '#379541cc' }}
+            sx={{ backgroundColor: '#379541cc', height: '100%' }}
             onClick={() => [handleAddDonor(), handleAddDonation()]}
+            fullWidth
           >
             Add Donation
           </Button>
