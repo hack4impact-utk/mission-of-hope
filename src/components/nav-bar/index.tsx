@@ -32,7 +32,7 @@ export default function Navbar() {
 
         <Box display={'flex'} justifyContent={'center'}>
           <Button
-            href="/donation"
+            href="/donation/add"
             style={{
               color: '#ff8a65',
               fontSize: '25px',
