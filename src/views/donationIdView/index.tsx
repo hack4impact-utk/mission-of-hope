@@ -1,6 +1,11 @@
 'use client';
 import DonationItemForm from '@/components/donationItemForm';
-import { DonationResponse } from '@/types/donation';
+import useSnackbar from '@/hooks/useSnackbar';
+import {
+  DonationResponse,
+  UpdateDonationItemRequest,
+  UpdateDonationRequest,
+} from '@/types/donation';
 import { DonationFormData } from '@/types/forms/donation';
 import { DonationItemFormData } from '@/types/forms/donationItem';
 import { ItemResponse } from '@/types/items';
@@ -27,6 +32,7 @@ interface donationProps {
 }
 
 export default function DonationIdView(props: donationProps) {
+  const { showSnackbar } = useSnackbar();
   const [editSwitch, setEditSwitch] = useState<boolean>(false);
   const [donationForm, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(props.donation.entryDate),
@@ -48,6 +54,26 @@ export default function DonationIdView(props: donationProps) {
     )
   );
 
+  function setDonationFormFromDonation(donation: DonationResponse) {
+    setDonationItemFormDatas(
+      donation.items.map(
+        (item) =>
+          ({
+            name: item.item.name,
+            category: item.item.category,
+            quantity: item.quantity,
+            newOrUsed: item.value.evaluation === 'New' ? 'New' : 'Used',
+            highOrLow:
+              item.value.evaluation === 'New' ? '' : item.value.evaluation,
+            price: item.value.price,
+          }) as DonationItemFormData
+      )
+    );
+    setDonationFormData({
+      donationDate: new Date(donation.entryDate),
+    } as DonationFormData);
+  }
+
   const handleDonationItemFormChange = (
     updatedDonationItem: DonationItemFormData,
     index: number
@@ -59,15 +85,42 @@ export default function DonationIdView(props: donationProps) {
     setDonationItemFormDatas(newArr);
   };
 
-  console.log(donationItemForms);
-
   const handleUpdate = () => {
+    if (!props.donation._id) {
+      console.error('Donor ID is missing');
+      return;
+    }
+
+    try {
+      // Grab item from the autofill
+
+      const dItems: UpdateDonationItemRequest[] = donationItemForms.map(
+        (itemForm) =>
+          ({
+            quantity: itemForm.quantity,
+            value: {
+              price: itemForm.price,
+              evaluation:
+                itemForm.newOrUsed === 'Used' ? itemForm.highOrLow : 'New',
+            },
+          }) as UpdateDonationItemRequest
+      );
+      const donation: UpdateDonationRequest = {
+        entryDate: donationForm.donationDate,
+      };
+      console.log(dItems, donation);
+
+      //update the donation
+    } catch (error) {
+      showSnackbar(`Error updating donor: ${error}`, 'error');
+    }
     setEditSwitch(false);
   };
 
   const handleCancel = () => {
     // Reset the form data to initial donor data
     // setDonorFormFromDonor(props.donor);
+    setDonationFormFromDonation(props.donation);
     setEditSwitch(false); // Optionally turn off edit mode
   };
 

@@ -4,6 +4,7 @@ import {
   CreateDonationRequest,
   DonationEntity,
   DonationResponse,
+  UpdateDonationRequest,
 } from '@/types/donation';
 import UserSchema from '@/server/models/users';
 import DonorSchema from '@/server/models/donors';
@@ -59,6 +60,27 @@ export async function getDonationById(
 
     return response;
   } catch (error) {
+    throw error;
+  }
+}
+
+export async function updateDonation(
+  id: string,
+  updatedData: UpdateDonationRequest
+): Promise<DonationResponse | null> {
+  await dbConnect();
+
+  try {
+    const donation: DonationResponse | null =
+      await DonationSchema.findByIdAndUpdate(
+        id,
+        { $set: updatedData },
+        { new: true }
+      );
+
+    return donation;
+  } catch (error) {
+    // Catch any errors and throw them
     throw error;
   }
 }
