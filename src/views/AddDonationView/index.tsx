@@ -24,7 +24,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
-import { ItemResponse } from '@/types/items';
+import { CreateItemRequest, ItemResponse } from '@/types/items';
 import DonationItemForm from '@/components/donationItemForm';
 import { DonationItemFormData } from '@/types/forms/donationItem';
 import mohColors from '@/utils/moh-theme';
@@ -82,22 +82,44 @@ export default function AddDonationView({
   };
 
   const handleAddDonation = () => {
-    const errors = validateDonation(donationData);
-    if (errors) {
-      showSnackbar('Cannot add donation', 'error');
-      setValidationErrors(errors);
-      return;
-    }
-    setValidationErrors(undefined);
-    showSnackbar('Donation added successfully.', 'success');
-    setDonationFormData({
-      donationDate: new Date(),
-    } as DonationFormData);
-    setDonorFormData({} as DonorFormData);
-    setDonationFormData({} as DonationFormData);
+    addDonor();
+    addDonationItems();
+    addDonation();
   };
 
-  const handleAddDonor = async () => {
+  const addDonationItems = () => {
+    donationItemFormDatas.map((itemForm) => {
+      if (!itemForm.itemRes) {
+        addItem(itemForm);
+      }
+    });
+  };
+
+  const addItem = async (itemForm: DonationItemFormData) => {
+    const item: CreateItemRequest = {
+      name: itemForm.name,
+      category: itemForm.category,
+    };
+
+    try {
+      const itemRes = await fetch('/api/items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+      if (itemRes.ok) {
+        console.log('Item added successfully');
+      } else {
+        showSnackbar(`Error adding item, status: ${itemRes.status}`, 'error');
+      }
+    } catch (error) {
+      showSnackbar(`Error:'${error}`, 'error');
+    }
+  };
+
+  const addDonor = async () => {
     // If donor has previously donated, don't add them to the database
     if (prevDonated) return;
 
@@ -130,13 +152,26 @@ export default function AddDonationView({
       if (donorRes.ok) {
         console.log('Donor added successfully');
         setDonorFormData({} as DonorFormData);
-        setDonationFormData({} as DonationFormData);
       } else {
         showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
       }
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
     }
+  };
+
+  const addDonation = () => {
+    const errors = validateDonation(donationData);
+    if (errors) {
+      showSnackbar('Cannot add donation', 'error');
+      setValidationErrors(errors);
+      return;
+    }
+    setValidationErrors(undefined);
+    showSnackbar('Donation added successfully.', 'success');
+    setDonationFormData({
+      donationDate: new Date(),
+    } as DonationFormData);
   };
 
   return (
@@ -252,7 +287,7 @@ export default function AddDonationView({
               <Button
                 variant="contained"
                 sx={{ height: '100%' }}
-                onClick={() => [handleAddDonor(), handleAddDonation()]}
+                onClick={() => handleAddDonation()}
                 color="moh"
                 fullWidth
               >

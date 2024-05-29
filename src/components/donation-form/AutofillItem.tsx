@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 interface Item {
   ItemOptions: ItemResponse[];
-  onItemSelect: (item: string) => void;
+  onItemSelect: (item: string | ItemResponse) => void;
   category: string;
   value: string;
   disabled?: boolean;
@@ -23,8 +23,10 @@ export default function AutofillItem(props: Item) {
     const itemMatch = itemOptions.filter(
       (item) => item.name.toLowerCase() === value.toLowerCase()
     );
-    if (itemMatch.length > 0 || value === '') {
+    if (itemMatch.length > 0 && props.category) {
       // Pass selected Item details back to parent component
+      props.onItemSelect(itemMatch[0]);
+    } else {
       props.onItemSelect(value);
     }
   }
