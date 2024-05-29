@@ -13,6 +13,7 @@ import AutofillCategory from '../donation-form/AutofillCategory';
 import AutofillItem from '../donation-form/AutofillItem';
 import { ItemResponse } from '@/types/items';
 import { DonationItemFormData } from '@/types/forms/donationItem';
+import { useEffect } from 'react';
 
 function getPriceFormatted(value: string): number {
   const numberValue = Number(value);
@@ -39,12 +40,41 @@ export default function DonationItemForm({
   onChange,
   disabled,
 }: DonationItemFormProps) {
-  const handleItemSelect = (nameString: string) => {
-    onChange({ ...donationItemData, name: nameString });
+  useEffect(() => {
+    if (donationItemData.newOrUsed === 'Used') {
+      if (donationItemData.highOrLow === 'High') {
+        onChange({
+          ...donationItemData,
+          price: donationItemData.itemRes.high ?? 0,
+        });
+      }
+      if (donationItemData.highOrLow === 'Low') {
+        onChange({
+          ...donationItemData,
+          price: donationItemData.itemRes.low ?? 0,
+        });
+      }
+    }
+  });
+
+  const handleItemSelect = (name: string | ItemResponse) => {
+    if (typeof name === 'string') {
+      onChange({ ...donationItemData, name: name });
+    } else {
+      onChange({ ...donationItemData, name: name.name, itemRes: name });
+    }
   };
 
-  const handleCategorySelect = (categoryString: string) => {
-    onChange({ ...donationItemData, category: categoryString });
+  const handleCategorySelect = (category: string | ItemResponse) => {
+    if (typeof category === 'string') {
+      onChange({ ...donationItemData, category: category });
+    } else {
+      onChange({
+        ...donationItemData,
+        category: category.category,
+        itemRes: category,
+      });
+    }
   };
 
   return (

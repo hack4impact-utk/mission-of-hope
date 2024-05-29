@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 interface Item {
   ItemOptions: ItemResponse[];
-  onCategorySelect: (category: string) => void;
+  onCategorySelect: (category: string | ItemResponse) => void;
   name: string;
   value: string;
   disabled?: boolean;
@@ -23,8 +23,10 @@ export default function AutofillCategory(props: Item) {
     const categoryMatches = itemOptions.filter(
       (item) => item.category.toLowerCase() === value.toLowerCase()
     );
-    if (categoryMatches.length > 0 || value === '') {
+    if (categoryMatches.length > 0 && props.name) {
       // Pass selected Item details back to parent component
+      props.onCategorySelect(categoryMatches[0]);
+    } else {
       props.onCategorySelect(value);
     }
   }
