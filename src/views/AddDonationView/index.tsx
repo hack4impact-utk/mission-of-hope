@@ -30,6 +30,7 @@ import { DonationItemFormData } from '@/types/forms/donationItem';
 import mohColors from '@/utils/moh-theme';
 import {
   CreateDonationItemRequest,
+  CreateDonationRequest,
   DonationItemResponse,
 } from '@/types/donation';
 
@@ -86,16 +87,26 @@ export default function AddDonationView({
   };
 
   const handleAddDonation = async () => {
+    const createDonation: CreateDonationRequest = {
+      entryDate: new Date(donationData.donationDate),
+      user: '',
+      items: [],
+      donor: '',
+    };
+
     try {
       addDonor();
-      await addDonationItems();
-      addDonation();
+      createDonation.items = (await addDonationItems()).map((item) => {
+        return item._id;
+      });
+      //Get user
+      addDonation(createDonation);
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
     }
   };
 
-  const addDonationItems = async () => {
+  const addDonationItems = async (): Promise<DonationItemResponse[]> => {
     const donationItemResponces = donationItemFormDatas.map(
       async (itemForm): Promise<DonationItemResponse> => {
         if (!itemForm.itemRes) {
@@ -141,14 +152,7 @@ export default function AddDonationView({
       }
     );
 
-    for (const dItem in donationItemResponces) {
-      if (!dItem) {
-        return null;
-      }
-    }
-    return donationItemResponces.map(async (res) => {
-      return (await res)._id;
-    });
+    return Promise.all(donationItemResponces);
   };
 
   const addItem = async (
@@ -221,7 +225,7 @@ export default function AddDonationView({
     }
   };
 
-  const addDonation = () => {
+  const addDonation = (createDonation: CreateDonationRequest) => {
     const errors = validateDonation(donationData);
     if (errors) {
       showSnackbar('Cannot add donation', 'error');
@@ -229,6 +233,8 @@ export default function AddDonationView({
       return;
     }
     setValidationErrors(undefined);
+
+    console.log(createDonation);
     showSnackbar('Donation added successfully.', 'success');
     setDonationFormData({
       donationDate: new Date(),
