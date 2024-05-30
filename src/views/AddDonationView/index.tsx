@@ -240,7 +240,7 @@ export default function AddDonationView({
     setValidationErrors(undefined);
     try {
       // fetch request to add donor
-      const donationRes = await fetch('/api/donors', {
+      const donationRes = await fetch('/api/donations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
