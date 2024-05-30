@@ -140,7 +140,7 @@ export default function DonationItemForm({
       <Grid item xs={12} sm={4}>
         <FormControl
           fullWidth
-          disabled={donationItemData.newOrUsed === 'New' || disabled} // Disable if new
+          disabled={donationItemData.newOrUsed !== 'Used' || disabled} // Disable if new
         >
           <InputLabel id="high-or-low-value-label">
             High or Low Value
@@ -188,7 +188,7 @@ export default function DonationItemForm({
           InputProps={{
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
-          disabled={donationItemData.newOrUsed === 'Used' || disabled} // Disable if used
+          disabled={donationItemData.newOrUsed !== 'New' || disabled} // Disable if used
           // error={!!validationErrors?.price}
           // helperText={validationErrors?.price}
         />
