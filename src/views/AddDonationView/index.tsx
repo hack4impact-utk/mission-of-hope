@@ -28,6 +28,10 @@ import { CreateItemRequest, ItemResponse } from '@/types/items';
 import DonationItemForm from '@/components/donationItemForm';
 import { DonationItemFormData } from '@/types/forms/donationItem';
 import mohColors from '@/utils/moh-theme';
+import {
+  CreateDonationItemRequest,
+  DonationItemResponse,
+} from '@/types/donation';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
@@ -81,21 +85,75 @@ export default function AddDonationView({
     setDonationItemFormDatas(newArr);
   };
 
-  const handleAddDonation = () => {
-    addDonor();
-    addDonationItems();
-    addDonation();
+  const handleAddDonation = async () => {
+    try {
+      addDonor();
+      await addDonationItems();
+      addDonation();
+    } catch (error) {
+      showSnackbar(`Error:'${error}`, 'error');
+    }
   };
 
-  const addDonationItems = () => {
-    donationItemFormDatas.map((itemForm) => {
-      if (!itemForm.itemRes) {
-        addItem(itemForm);
+  const addDonationItems = async () => {
+    const donationItemResponces = donationItemFormDatas.map(
+      async (itemForm): Promise<DonationItemResponse> => {
+        if (!itemForm.itemRes) {
+          itemForm.itemRes = await addItem(itemForm);
+        }
+
+        const donationItem: CreateDonationItemRequest = {
+          item: itemForm.itemRes._id,
+          quantity: itemForm.quantity,
+          value: {
+            price: itemForm.price,
+            evaluation:
+              itemForm.newOrUsed === 'New'
+                ? 'New'
+                : itemForm.highOrLow === 'High'
+                ? 'High'
+                : 'Low',
+          },
+        };
+
+        try {
+          const donationItemRes = await fetch('/api/donationItems', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(donationItem),
+          });
+          if (donationItemRes.ok) {
+            console.log('Donation item added successfully');
+            return await donationItemRes.json();
+          } else {
+            showSnackbar(
+              `Error adding donation item, status: ${donationItemRes.status}`,
+              'error'
+            );
+            throw `Error adding donation item, status: ${donationItemRes.status}`;
+          }
+        } catch (error) {
+          showSnackbar(`Error:'${error}`, 'error');
+          throw `Error:'${error}`;
+        }
       }
+    );
+
+    for (const dItem in donationItemResponces) {
+      if (!dItem) {
+        return null;
+      }
+    }
+    return donationItemResponces.map(async (res) => {
+      return (await res)._id;
     });
   };
 
-  const addItem = async (itemForm: DonationItemFormData) => {
+  const addItem = async (
+    itemForm: DonationItemFormData
+  ): Promise<ItemResponse> => {
     const item: CreateItemRequest = {
       name: itemForm.name,
       category: itemForm.category,
@@ -111,11 +169,14 @@ export default function AddDonationView({
       });
       if (itemRes.ok) {
         console.log('Item added successfully');
+        return await itemRes.json();
       } else {
         showSnackbar(`Error adding item, status: ${itemRes.status}`, 'error');
+        throw `Error adding item, status: ${itemRes.status}`;
       }
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
+      throw `Error:'${error}`;
     }
   };
 
