@@ -1,12 +1,22 @@
 'use client';
-import React from 'react';
-import { Box, Chip, Container, IconButton, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Box,
+  Chip,
+  Container,
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { DonationItemResponse } from '@/types/donation';
+import { DonationResponse } from '@/types/donation';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface DonationItemProps {
-  donationItems: DonationItemResponse[];
+  donations: DonationResponse[];
 }
 
 const columns: GridColDef[] = [
@@ -60,9 +70,31 @@ const columns: GridColDef[] = [
   },
 ];
 
-export default function DonationItemView({ donationItems }: DonationItemProps) {
+export default function DonationItemView({ donations }: DonationItemProps) {
   //map the donation items to the rows
-  const formattedRows = donationItems.map((row) => ({
+  const [selectedMonth, setSelectedMonth] = useState<string>(
+    (new Date().getMonth() + 1).toString() // Default to current month
+  );
+
+  // Function to handle month selection change
+  const handleMonthChange = (event: SelectChangeEvent<string>) => {
+    setSelectedMonth(event.target.value as string);
+  };
+
+  const filteredDonations = selectedMonth
+    ? donations.filter(
+        (donation) =>
+          parseInt(
+            donation.entryDate.toString().split('T')[0].split('-')[1]
+          ) === parseInt(selectedMonth)
+      )
+    : donations;
+
+  const uniqueDonationItems = Array.from(
+    new Set(filteredDonations.map((donation) => donation.items).flat(1))
+  );
+
+  const formattedRows = uniqueDonationItems.map((row) => ({
     id: row._id,
     product: row.item.name,
     category: row.item.category,
@@ -76,9 +108,36 @@ export default function DonationItemView({ donationItems }: DonationItemProps) {
   return (
     <Container>
       <Box sx={{ maxWidth: '73vw', height: '78vh' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, pl: 0 }}>
-          <Typography variant="h4">Inventory</Typography>
-        </Box>
+        <Grid
+          container
+          spacing={2}
+          sx={{ alignContent: 'center', width: '100%', p: 2, pl: 0, pr: 0 }}
+        >
+          <Grid item xs={4}>
+            <Typography variant="h4">Inventory</Typography>
+          </Grid>
+          <Grid item xs={4}></Grid>
+          <Grid item xs={4}>
+            <Select
+              fullWidth
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              variant="outlined"
+              displayEmpty
+              inputProps={{ 'aria-label': 'Select month' }}
+            >
+              <MenuItem value="">All Months</MenuItem>
+              {/* Generate month options */}
+              {[...Array(12).keys()].map((month) => (
+                <MenuItem key={month} value={month + 1}>
+                  {new Date(2000, month).toLocaleString('default', {
+                    month: 'long',
+                  })}
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+        </Grid>
         <DataGrid
           rows={formattedRows}
           columns={columns}

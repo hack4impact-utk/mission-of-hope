@@ -1,11 +1,11 @@
-import { getAllDonationItems } from '@/server/actions/donationItem';
-import { DonationItemResponse } from '@/types/donation';
+import { getAllDonations } from '@/server/actions/donations';
+import { DonationResponse } from '@/types/donation';
 import DonationItemView from '@/views/donationItemView';
 
 export default async function DonationItemPage() {
-  const donationItems: DonationItemResponse[] = JSON.parse(
-    JSON.stringify(await getAllDonationItems())
+  const donations: DonationResponse[] = JSON.parse(
+    JSON.stringify(await getAllDonations())
   );
 
-  return <DonationItemView donationItems={donationItems} />;
+  return <DonationItemView donations={donations} />;
 }
