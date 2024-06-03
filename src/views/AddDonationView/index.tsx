@@ -90,7 +90,7 @@ export default function AddDonationView({
   const handleAddDonation = async () => {
     const createDonation: CreateDonationRequest = {
       entryDate: new Date(donationData.donationDate),
-      user: '',
+      user: donationData.user,
       items: [],
       donor: '',
     };
@@ -102,6 +102,12 @@ export default function AddDonationView({
       });
       //Get user
       await addDonation(createDonation);
+
+      setDonorFormData({} as DonorFormData);
+      setDonationItemFormDatas([{} as DonationItemFormData]);
+      setDonationFormData({
+        donationDate: new Date(),
+      } as DonationFormData);
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
     }
@@ -153,7 +159,6 @@ export default function AddDonationView({
       }
     );
 
-    setDonationItemFormDatas([{} as DonationItemFormData]);
     return Promise.all(donationItemResponces);
   };
 
@@ -188,7 +193,9 @@ export default function AddDonationView({
 
   const addDonor = async (): Promise<DonorResponse> => {
     // If donor has previously donated, don't add them to the database
-    if (prevDonated) return donorFormData as DonorResponse;
+    if (prevDonated) {
+      return donorFormData as DonorResponse;
+    }
 
     const donor: CreateDonorRequest = {
       firstName: donorFormData.firstName,
@@ -218,7 +225,6 @@ export default function AddDonationView({
 
       if (donorRes.ok) {
         console.log('Donor added successfully');
-        setDonorFormData({} as DonorFormData);
         return await donorRes.json();
       } else {
         showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
@@ -233,9 +239,8 @@ export default function AddDonationView({
   const addDonation = async (createDonation: CreateDonationRequest) => {
     const errors = validateDonation(donationData);
     if (errors) {
-      showSnackbar('Cannot add donation', 'error');
       setValidationErrors(errors);
-      return;
+      throw 'Cannot add donation';
     }
     setValidationErrors(undefined);
     try {
@@ -251,9 +256,6 @@ export default function AddDonationView({
       if (donationRes.ok) {
         console.log(createDonation);
         showSnackbar('Donation added successfully.', 'success');
-        setDonationFormData({
-          donationDate: new Date(),
-        } as DonationFormData);
       } else {
         throw `Error adding donor, status: ${donationRes.status}`;
       }
