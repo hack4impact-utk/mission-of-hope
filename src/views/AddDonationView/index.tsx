@@ -4,7 +4,7 @@ import DonorForm from '@/components/donorForm';
 import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
 import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
-import { DonorResponse } from '@/types/persons';
+import { CreateDonorRequest, DonorResponse } from '@/types/persons';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
@@ -30,6 +30,7 @@ import { DonationItemFormData } from '@/types/forms/donationItem';
 import mohColors from '@/utils/moh-theme';
 import {
   CreateDonationItemRequest,
+  CreateDonationRequest,
   DonationItemResponse,
 } from '@/types/donation';
 
@@ -63,6 +64,7 @@ export default function AddDonationView({
   const handleDonorSelect = (selectedDonor: DonorResponse) => {
     setDonorFormData({
       ...donorFormData,
+      _id: selectedDonor._id,
       firstName: selectedDonor.firstName ?? '',
       lastName: selectedDonor.lastName ?? '',
       address: selectedDonor.address ?? '',
@@ -86,16 +88,32 @@ export default function AddDonationView({
   };
 
   const handleAddDonation = async () => {
+    const createDonation: CreateDonationRequest = {
+      entryDate: new Date(donationData.donationDate),
+      user: donationData.user,
+      items: [],
+      donor: '',
+    };
+
     try {
-      addDonor();
-      await addDonationItems();
-      addDonation();
+      createDonation.donor = (await addDonor())._id;
+      createDonation.items = (await addDonationItems()).map((item) => {
+        return item._id;
+      });
+      //Get user
+      await addDonation(createDonation);
+
+      setDonorFormData({} as DonorFormData);
+      setDonationItemFormDatas([{} as DonationItemFormData]);
+      setDonationFormData({
+        donationDate: new Date(),
+      } as DonationFormData);
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
     }
   };
 
-  const addDonationItems = async () => {
+  const addDonationItems = async (): Promise<DonationItemResponse[]> => {
     const donationItemResponces = donationItemFormDatas.map(
       async (itemForm): Promise<DonationItemResponse> => {
         if (!itemForm.itemRes) {
@@ -141,14 +159,7 @@ export default function AddDonationView({
       }
     );
 
-    for (const dItem in donationItemResponces) {
-      if (!dItem) {
-        return null;
-      }
-    }
-    return donationItemResponces.map(async (res) => {
-      return (await res)._id;
-    });
+    return Promise.all(donationItemResponces);
   };
 
   const addItem = async (
@@ -180,11 +191,13 @@ export default function AddDonationView({
     }
   };
 
-  const addDonor = async () => {
+  const addDonor = async (): Promise<DonorResponse> => {
     // If donor has previously donated, don't add them to the database
-    if (prevDonated) return;
+    if (prevDonated) {
+      return donorFormData as DonorResponse;
+    }
 
-    const donor = {
+    const donor: CreateDonorRequest = {
       firstName: donorFormData.firstName,
       lastName: donorFormData.lastName,
       email: donorFormData.email,
@@ -197,7 +210,7 @@ export default function AddDonationView({
     const errors = validateDonor(donorFormData);
     if (errors) {
       setValidationErrors(errors);
-      return;
+      throw `Error adding donor`;
     }
     setValidationErrors(undefined);
     try {
@@ -212,27 +225,43 @@ export default function AddDonationView({
 
       if (donorRes.ok) {
         console.log('Donor added successfully');
-        setDonorFormData({} as DonorFormData);
+        return await donorRes.json();
       } else {
         showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
+        throw `Error adding donor, status: ${donorRes.status}`;
       }
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
+      throw `Error:'${error}`;
     }
   };
 
-  const addDonation = () => {
+  const addDonation = async (createDonation: CreateDonationRequest) => {
     const errors = validateDonation(donationData);
     if (errors) {
-      showSnackbar('Cannot add donation', 'error');
       setValidationErrors(errors);
-      return;
+      throw 'Cannot add donation';
     }
     setValidationErrors(undefined);
-    showSnackbar('Donation added successfully.', 'success');
-    setDonationFormData({
-      donationDate: new Date(),
-    } as DonationFormData);
+    try {
+      // fetch request to add donor
+      const donationRes = await fetch('/api/donations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createDonation),
+      });
+
+      if (donationRes.ok) {
+        console.log(createDonation);
+        showSnackbar('Donation added successfully.', 'success');
+      } else {
+        throw `Error adding donor, status: ${donationRes.status}`;
+      }
+    } catch (error) {
+      throw `Error:'${error}`;
+    }
   };
 
   return (

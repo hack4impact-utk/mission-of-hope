@@ -34,6 +34,7 @@ export default function DonorIdView(props: donorProps) {
   const { showSnackbar } = useSnackbar();
   const [editSwitch, setEditSwitch] = useState<boolean>(false);
   const [donorForm, setDonorFormData] = useState<DonorFormData>({
+    _id: props.id,
     firstName: props.donor.firstName ?? '',
     lastName: props.donor.lastName,
     email: props.donor.email,
@@ -45,6 +46,7 @@ export default function DonorIdView(props: donorProps) {
 
   function setDonorFormFromDonor(donor: DonorResponse) {
     setDonorFormData({
+      _id: props.id,
       firstName: donor.firstName ?? '',
       lastName: donor.lastName,
       email: donor.email,

@@ -3,6 +3,7 @@ import { z } from 'zod';
 // Zip number and zip string are seperated to help with error checking and
 // form valideation
 export const zDonorFormData = z.object({
+  _id: z.string(),
   firstName: z.string().min(1, { message: 'Required' }),
   lastName: z.string().min(1, { message: 'Required' }),
   email: z.string().email().min(1, { message: 'Required' }),
