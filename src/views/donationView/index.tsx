@@ -91,10 +91,10 @@ export default function DonationView({ donations }: DonationViewProps) {
           spacing={2}
           sx={{ alignContent: 'center', width: '100%', p: 2, pl: 0, pr: 0 }}
         >
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Typography variant="h4">Donation List</Typography>
           </Grid>
-          <Grid item xs={4}></Grid>
+          <Grid item xs={2}></Grid>
           <Grid item xs={4}>
             <Select
               fullWidth
