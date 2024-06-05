@@ -3,6 +3,7 @@ import {
   CreateDonationItemRequest,
   DonationItemEntity,
   DonationItemResponse,
+  UpdateDonationItemRequest,
 } from '@/types/donation';
 import dbConnect from '@/utils/db-connect';
 import ItemSchema from '@/server/models/items';
@@ -42,4 +43,25 @@ export async function createDonationItem(
 
   const response = await DonationItemSchema.create(donationItem);
   return response;
+}
+
+export async function updateDonationItem(
+  id: string,
+  updatedData: UpdateDonationItemRequest
+): Promise<DonationItemResponse | null> {
+  await dbConnect();
+
+  try {
+    const donationItem: DonationItemResponse | null =
+      await DonationItemSchema.findByIdAndUpdate(
+        id,
+        { $set: updatedData },
+        { new: true }
+      );
+
+    return donationItem;
+  } catch (error) {
+    // Catch any errors and throw them
+    throw error;
+  }
 }

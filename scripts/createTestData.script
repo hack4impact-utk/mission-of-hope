@@ -389,25 +389,25 @@ for (let i = 1; i <= 10; i++) {
 db.donations.insertMany([
    {
         "user": userId1,
-        "items": [itemId1],
+        "items": [donationItemId1],
         "entryDate": "2024-01-31",
         "donor": donorID1
     },
     {
         "user": userId1,
-        "items": [itemId2, itemId4],
+        "items": [donationItemId2, donationItemId4],
         "entryDate": "2024-02-01",
         "donor": donorID2
     },
     {
         "user": userId2,
-        "items": [itemId4, itemId5, itemId6],
+        "items": [donationItemId4, donationItemId5, donationItemId6],
         "entryDate": "2024-02-02",
         "donor": donorID3
     },
     {
         "user": userId3,
-        "items": [itemId7, itemId8, itemId9, itemId10],
+        "items": [donationItemId7, donationItemId8, donationItemId9, donationItemId10],
         "entryDate": "2024-02-03",
         "donor": donorID4
     }
