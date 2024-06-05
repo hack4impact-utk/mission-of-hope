@@ -36,6 +36,7 @@ export default function DonationIdView(props: donationProps) {
   const [editSwitch, setEditSwitch] = useState<boolean>(false);
   const [donationForm, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(props.donation.entryDate),
+    receipt: props.donation.receipt ?? '',
   } as DonationFormData);
   const [donationItemForms, setDonationItemFormDatas] = useState<
     DonationItemFormData[]
@@ -43,6 +44,7 @@ export default function DonationIdView(props: donationProps) {
     props.donation.items.map(
       (item) =>
         ({
+          itemRes: item.item,
           name: item.item.name,
           category: item.item.category,
           quantity: item.quantity,
@@ -59,6 +61,7 @@ export default function DonationIdView(props: donationProps) {
       donation.items.map(
         (item) =>
           ({
+            itemRes: item.item,
             name: item.item.name,
             category: item.item.category,
             quantity: item.quantity,
@@ -207,6 +210,16 @@ export default function DonationIdView(props: donationProps) {
                       key={index}
                     ></DonationItemForm>
                   ))}
+                  <Grid item xs={8} sm={8}>
+                    <TextField
+                      fullWidth
+                      id="outlined-required"
+                      label="Receipt"
+                      disabled={true}
+                      value={donationForm.receipt}
+                    />
+                  </Grid>
+
                   <Grid item xs={3} sm={6}></Grid>
                   <Grid item xs={3} sm={3}>
                     <Button

@@ -51,7 +51,6 @@ export async function getDonationById(
         path: 'items',
         populate: {
           path: 'item',
-          model: 'Items',
         },
       });
 

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const zDonationFormData = z.object({
   donationDate: z.coerce.date(),
-  user: z.string().min(1, { message: 'Required' }),
+  receipt: z.string().min(1, { message: 'Required' }),
   prevDonated: z.boolean(),
 });
 
