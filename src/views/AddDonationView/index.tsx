@@ -33,6 +33,7 @@ import {
   CreateDonationRequest,
   DonationItemResponse,
 } from '@/types/donation';
+import GenerateReceiptButton from '@/components/generateReceiptButton';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
@@ -372,6 +373,26 @@ export default function AddDonationView({
                       receipt: e.target.value,
                     });
                   }
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <GenerateReceiptButton
+                      onChange={async (Res: Response) => {
+                        if (Res.ok) {
+                          const receipt = await Res.json();
+                          setDonationFormData({
+                            ...donationData,
+                            receipt: receipt.value,
+                          });
+                        } else {
+                          showSnackbar(
+                            `Error adding donation item, status: ${Res.status}`,
+                            'error'
+                          );
+                        }
+                      }}
+                    />
+                  ),
                 }}
                 error={!!validationErrors?.receipt}
                 helperText={validationErrors?.receipt}
