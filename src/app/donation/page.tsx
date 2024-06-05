@@ -1,7 +1,12 @@
-import { getAllDonors } from '@/server/actions/donors';
-import AddDonationView from '@/views/AddDonationView';
+import { getAllDonations } from '@/server/actions/donations';
+import DonationView from '@/views/donationView';
 
 export default async function DonationsForm() {
-  const donors = JSON.parse(JSON.stringify(await getAllDonors()));
-  return <AddDonationView donorOptions={donors} />;
+  const donations = JSON.parse(JSON.stringify(await getAllDonations()));
+
+  return (
+    <>
+      <DonationView donations={donations} />
+    </>
+  );
 }

@@ -1,108 +1,218 @@
 'use client';
-import AutofillDonorEmail from '@/components/AutofillDonorEmail';
-import { DonorResponse } from '@/types/persons';
+import AutofillDonorEmail from '@/components/donation-form/AutofillDonorEmail';
+import DonorForm from '@/components/donorForm';
+import useValidation from '@/hooks/useValidation';
+import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
+import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
+import { CreateDonorRequest, DonorResponse } from '@/types/persons';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   Grid,
-  InputAdornment,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   TextField,
+  ThemeProvider,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
-
-function getPriceFormatted(
-  value: string,
-  setError: (error: string) => void
-): string {
-  // Validate high and low values
-  if (Number(value) < 0 || isNaN(Number(value))) {
-    setError('value must be a positive number');
-    return value;
-  } else {
-    setError('');
-  }
-
-  const formattedValue = Number(value).toFixed(2);
-  return formattedValue.toString();
-}
+import React, { useState } from 'react';
+import useSnackbar from '@/hooks/useSnackbar';
+import { CreateItemRequest, ItemResponse } from '@/types/items';
+import DonationItemForm from '@/components/donationItemForm';
+import { DonationItemFormData } from '@/types/forms/donationItem';
+import mohColors from '@/utils/moh-theme';
+import {
+  CreateDonationItemRequest,
+  CreateDonationRequest,
+  DonationItemResponse,
+} from '@/types/donation';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
+  itemOptions: ItemResponse[];
 }
 
 export default function AddDonationView({
   donorOptions,
+  itemOptions,
 }: AddDonationViewProps) {
-  const [donationData, setDonorData] = useState({
-    donorName: '',
-    donorEmail: '',
-    donationDate: '',
-    category: '',
-    donatedItem: '',
-    quantity: '',
-    alertQuantity: '',
-    newOrUsed: '',
-    price: '',
-    prevDonated: false,
-    user: '',
-    donorAddress: '',
-    donorCity: '',
-    donorState: '',
-    donorZip: '',
-  });
-  const [priceError, setPriceError] = useState('');
+  const [donationData, setDonationFormData] = useState<DonationFormData>({
+    donationDate: new Date(),
+  } as DonationFormData);
+  const [donorFormData, setDonorFormData] = useState<DonorFormData>(
+    {} as DonorFormData
+  );
+  const [donationItemFormDatas, setDonationItemFormDatas] = useState<
+    DonationItemFormData[]
+  >([{} as DonationItemFormData] as DonationItemFormData[]);
+  const [prevDonated, setPrevDonated] = useState(false);
+
+  const { validate: validateDonation } = useValidation(zDonationFormData);
+  const { validate: validateDonor } = useValidation(zDonorFormData);
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string> | undefined
+  >(undefined);
+  const { showSnackbar } = useSnackbar();
 
   const handleDonorSelect = (selectedDonor: DonorResponse) => {
-    setDonorData({
-      ...donationData,
-      donorName: `${selectedDonor.firstName} ${selectedDonor.lastName}`,
-      donorAddress: selectedDonor.address,
-      donorCity: selectedDonor.city,
-      donorEmail: selectedDonor.email,
-      donorState: selectedDonor.state,
-      donorZip: selectedDonor.zip.toString(),
+    setDonorFormData({
+      ...donorFormData,
+      _id: selectedDonor._id,
+      firstName: selectedDonor.firstName ?? '',
+      lastName: selectedDonor.lastName ?? '',
+      address: selectedDonor.address ?? '',
+      city: selectedDonor.city ?? '',
+      email: selectedDonor.email ?? '',
+      state: selectedDonor.state ?? '',
+      zip: selectedDonor.zip ?? 0,
     });
+    setPrevDonated(true);
   };
 
-  const handleAddDonation = () => {
-    alert('Donation added successfully!');
-    donationData.donationDate = '';
-    donationData.donorEmail = '';
-    donationData.category = '';
-    donationData.donatedItem = '';
-    donationData.quantity = '';
-    donationData.alertQuantity = '';
-    donationData.newOrUsed = '';
-    donationData.price = '';
-    donationData.prevDonated = false;
-    donationData.user = '';
-    donationData.donorName = '';
-    donationData.donorAddress = '';
-    donationData.donorCity = '';
-    donationData.donorState = '';
-    donationData.donorZip = '';
+  const handleDonationItemFormChange = (
+    updatedDonationItem: DonationItemFormData,
+    index: number
+  ) => {
+    const newArr = [...donationItemFormDatas];
+
+    newArr[index] = updatedDonationItem;
+
+    setDonationItemFormDatas(newArr);
   };
 
-  const handleAddDonor = async () => {
-    // If donor has previously donated, don't add them to the database
-    if (donationData.prevDonated) return;
-
-    const nameParts = donationData.donorName.split(' ');
-    const donor = {
-      firstName: nameParts[0],
-      lastName: nameParts[1] || '',
-      email: donationData.donorEmail,
-      address: donationData.donorAddress,
-      state: donationData.donorState,
-      city: donationData.donorCity,
-      zip: Number(donationData.donorZip),
+  const handleAddDonation = async () => {
+    const createDonation: CreateDonationRequest = {
+      entryDate: new Date(donationData.donationDate),
+      user: donationData.user,
+      items: [],
+      donor: '',
     };
 
+    try {
+      createDonation.donor = (await addDonor())._id;
+      createDonation.items = (await addDonationItems()).map((item) => {
+        return item._id;
+      });
+      //Get user
+      await addDonation(createDonation);
+
+      setDonorFormData({} as DonorFormData);
+      setDonationItemFormDatas([{} as DonationItemFormData]);
+      setDonationFormData({
+        donationDate: new Date(),
+      } as DonationFormData);
+    } catch (error) {
+      showSnackbar(`Error:'${error}`, 'error');
+    }
+  };
+
+  const addDonationItems = async (): Promise<DonationItemResponse[]> => {
+    const donationItemResponces = donationItemFormDatas.map(
+      async (itemForm): Promise<DonationItemResponse> => {
+        if (!itemForm.itemRes) {
+          itemForm.itemRes = await addItem(itemForm);
+        }
+
+        const donationItem: CreateDonationItemRequest = {
+          item: itemForm.itemRes._id,
+          quantity: itemForm.quantity,
+          value: {
+            price: itemForm.price,
+            evaluation:
+              itemForm.newOrUsed === 'New'
+                ? 'New'
+                : itemForm.highOrLow === 'High'
+                ? 'High'
+                : 'Low',
+          },
+        };
+
+        try {
+          const donationItemRes = await fetch('/api/donationItems', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(donationItem),
+          });
+          if (donationItemRes.ok) {
+            console.log('Donation item added successfully');
+            return await donationItemRes.json();
+          } else {
+            showSnackbar(
+              `Error adding donation item, status: ${donationItemRes.status}`,
+              'error'
+            );
+            throw `Error adding donation item, status: ${donationItemRes.status}`;
+          }
+        } catch (error) {
+          showSnackbar(`Error:'${error}`, 'error');
+          throw `Error:'${error}`;
+        }
+      }
+    );
+
+    return Promise.all(donationItemResponces);
+  };
+
+  const addItem = async (
+    itemForm: DonationItemFormData
+  ): Promise<ItemResponse> => {
+    const item: CreateItemRequest = {
+      name: itemForm.name,
+      category: itemForm.category,
+    };
+
+    try {
+      const itemRes = await fetch('/api/items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+      if (itemRes.ok) {
+        console.log('Item added successfully');
+        return await itemRes.json();
+      } else {
+        showSnackbar(`Error adding item, status: ${itemRes.status}`, 'error');
+        throw `Error adding item, status: ${itemRes.status}`;
+      }
+    } catch (error) {
+      showSnackbar(`Error:'${error}`, 'error');
+      throw `Error:'${error}`;
+    }
+  };
+
+  const addDonor = async (): Promise<DonorResponse> => {
+    // If donor has previously donated, don't add them to the database
+    if (prevDonated) {
+      return donorFormData as DonorResponse;
+    }
+
+    const donor: CreateDonorRequest = {
+      firstName: donorFormData.firstName,
+      lastName: donorFormData.lastName,
+      email: donorFormData.email,
+      address: donorFormData.address,
+      state: donorFormData.state,
+      city: donorFormData.city,
+      zip: donorFormData.zip,
+    };
+
+    const errors = validateDonor(donorFormData);
+    if (errors) {
+      setValidationErrors(errors);
+      throw `Error adding donor`;
+    }
+    setValidationErrors(undefined);
     try {
       // fetch request to add donor
       const donorRes = await fetch('/api/donors', {
@@ -115,254 +225,190 @@ export default function AddDonationView({
 
       if (donorRes.ok) {
         console.log('Donor added successfully');
-        donationData.donationDate = '';
-        donationData.donorEmail = '';
-        donationData.category = '';
-        donationData.donatedItem = '';
-        donationData.quantity = '';
-        donationData.alertQuantity = '';
-        donationData.newOrUsed = '';
-        donationData.price = '';
-        donationData.prevDonated = false;
-        donationData.user = '';
-        donationData.donorName = '';
-        donationData.donorAddress = '';
-        donationData.donorCity = '';
-        donationData.donorState = '';
-        donationData.donorZip = '';
+        return await donorRes.json();
       } else {
-        console.log('Error adding donor, status:', donorRes.status);
+        showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
+        throw `Error adding donor, status: ${donorRes.status}`;
       }
     } catch (error) {
-      console.error('Error:', error);
+      showSnackbar(`Error:'${error}`, 'error');
+      throw `Error:'${error}`;
+    }
+  };
+
+  const addDonation = async (createDonation: CreateDonationRequest) => {
+    const errors = validateDonation(donationData);
+    if (errors) {
+      setValidationErrors(errors);
+      throw 'Cannot add donation';
+    }
+    setValidationErrors(undefined);
+    try {
+      // fetch request to add donor
+      const donationRes = await fetch('/api/donations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createDonation),
+      });
+
+      if (donationRes.ok) {
+        console.log(createDonation);
+        showSnackbar('Donation added successfully.', 'success');
+      } else {
+        throw `Error adding donor, status: ${donationRes.status}`;
+      }
+    } catch (error) {
+      throw `Error:'${error}`;
     }
   };
 
   return (
-    <Box
-      sx={{
-        padding: '20px',
-        margin: '20px',
-        border: '1px solid #00000030',
-        borderRadius: '10px',
-        width: '60%',
-        boxShadow: '0px 4px 4px 0px #00000040',
-      }}
-    >
-      <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
-        Add Donations
-      </Typography>
-      <hr />
-      <Grid container spacing={2} sx={{ mt: 4, pl: 2, pr: 2 }}>
-        <Grid item sm={8}>
-          <AutofillDonorEmail
-            DonorOptions={donorOptions}
-            onDonorSelect={handleDonorSelect}
-          />
-        </Grid>
-        <Grid item sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Donation Date"
-            type="date"
-            value={donationData.donationDate}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, donationDate: e.target.value });
-            }}
-            InputLabelProps={{
-              shrink: true,
-              style: { paddingRight: '10px' },
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Category"
-            value={donationData.category}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, category: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Donated Item"
-            value={donationData.donatedItem}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, donatedItem: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Quantity"
-            type="number"
-            value={donationData.quantity}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, quantity: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <FormControl fullWidth>
-            <InputLabel>New or Used</InputLabel>
-            <Select
-              value={donationData.newOrUsed}
-              onChange={(e) => {
-                setDonorData({ ...donationData, newOrUsed: e.target.value });
-              }}
-              label="New or Used"
-              id="new-or-used"
-            >
-              <MenuItem value="new">New</MenuItem>
-              <MenuItem value="used">Used</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="High or Low Value"
-            value={donationData.alertQuantity}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, alertQuantity: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            error={!!priceError}
-            id="price"
-            label="Price"
-            type="number"
-            defaultValue="0.00"
-            value={donationData.price}
-            helperText={priceError}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, price: e.target.value });
-            }}
-            onBlur={(e) =>
-              setDonorData({
-                ...donationData,
-                price: getPriceFormatted(e.target.value, setPriceError),
-              })
-            }
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item xs={8} sm={12}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="User"
-            value={donationData.user}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, user: e.target.value });
-            }}
-          />
-        </Grid>
-
-        <Grid item sm={4}>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ backgroundColor: '#379541cc' }}
-            onClick={() => [handleAddDonor(), handleAddDonation()]}
-          >
+    <ThemeProvider theme={mohColors}>
+      <Box display={'flex'} justifyContent={'center'}>
+        <Box
+          sx={{
+            padding: '20px',
+            margin: '20px',
+            border: '1px solid #00000030',
+            borderRadius: '10px',
+            width: '60vw',
+            boxShadow: '0px 4px 4px 0px #00000040',
+          }}
+        >
+          <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
             Add Donation
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <FormControl fullWidth>
-            <InputLabel>Has this donor previously donated?</InputLabel>
-            <Select
-              value={donationData.prevDonated ? 'yes' : 'no'}
-              onChange={(e) => {
-                setDonorData({
-                  ...donationData,
-                  prevDonated: e.target.value === 'yes',
-                });
-              }}
-              label="Has this donor previously donated?"
-              id="donor-donated"
-            >
-              <MenuItem value="yes">Yes</MenuItem>
-              <MenuItem value="no">No</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Donor Name"
-            value={donationData.donorName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, donorName: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Address"
-            value={donationData.donorAddress}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, donorAddress: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={5}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="City"
-            value={donationData.donorCity}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, donorCity: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="State"
-            value={donationData.donorState}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({ ...donationData, donorState: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            fullWidth
-            id="outlined-required"
-            label="Zip"
-            value={donationData.donorZip.toString()}
-            type="number"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDonorData({
-                ...donationData,
-                donorZip: e.target.value,
-              });
-            }}
-          />
-        </Grid>
-      </Grid>
-    </Box>
+          </Typography>
+          <Divider></Divider>
+          <Grid container spacing={2} sx={{ mt: 1, pl: 2, pr: 2 }}>
+            <Grid item sm={8}>
+              <AutofillDonorEmail
+                DonorOptions={donorOptions}
+                DonorForm={donorFormData}
+                onDonorSelect={handleDonorSelect}
+                onChange={setDonorFormData}
+              />
+            </Grid>
+            <Grid item sm={4}>
+              <TextField
+                fullWidth
+                id="outlined-required"
+                label="Donation Date"
+                type="date"
+                value={
+                  donationData?.donationDate?.toISOString()?.split('T')[0] || ''
+                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const date = new Date(e.target.value);
+                  setDonationFormData({ ...donationData, donationDate: date });
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                  style: { paddingRight: '10px' },
+                }}
+                error={!!validationErrors?.donationDate}
+                helperText={validationErrors?.donationDate}
+              />
+            </Grid>
+
+            {donationItemFormDatas.map((_, index) => (
+              <>
+                <Grid item sm={1} display={'flex'} alignContent={'center'}>
+                  <Tooltip title="Remove">
+                    <IconButton
+                      onClick={() => {
+                        donationItemFormDatas.splice(index, 1);
+                        setDonationItemFormDatas([...donationItemFormDatas]);
+                      }}
+                      key={index}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <DonationItemForm
+                  itemOptions={itemOptions}
+                  donationItemData={donationItemFormDatas[index]}
+                  onChange={(value: DonationItemFormData) =>
+                    handleDonationItemFormChange(value, index)
+                  }
+                  key={index}
+                  disabled={false}
+                  // validationErrors={}
+                />
+              </>
+            ))}
+            <Grid item sm={4}>
+              <Button
+                sx={{ height: '100%' }}
+                variant="outlined"
+                startIcon={<AddIcon></AddIcon>}
+                color="moh"
+                onClick={() =>
+                  setDonationItemFormDatas([
+                    ...donationItemFormDatas,
+                    {} as DonationItemFormData,
+                  ])
+                }
+                fullWidth
+              >
+                Add Item
+              </Button>
+            </Grid>
+            <Grid item xs={8} sm={8}>
+              <TextField
+                fullWidth
+                id="outlined-required"
+                label="User"
+                value={donationData.user}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDonationFormData({
+                    ...donationData,
+                    user: e.target.value,
+                  });
+                }}
+                error={!!validationErrors?.user}
+                helperText={validationErrors?.user}
+              />
+            </Grid>
+
+            <Grid item sm={4}>
+              <Button
+                variant="contained"
+                sx={{ height: '100%' }}
+                onClick={() => handleAddDonation()}
+                color="moh"
+                fullWidth
+              >
+                Add Donation
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <FormControl fullWidth>
+                <InputLabel>Has this donor previously donated?</InputLabel>
+                <Select
+                  value={prevDonated ? 'yes' : 'no'}
+                  onChange={(e) => {
+                    setPrevDonated(e.target.value === 'yes');
+                  }}
+                  label="Has this donor previously donated?"
+                  id="donor-donated"
+                >
+                  <MenuItem value="yes">Yes</MenuItem>
+                  <MenuItem value="no">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <DonorForm
+              donorData={donorFormData}
+              disabled={prevDonated}
+              onChange={setDonorFormData}
+            />
+          </Grid>
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 }

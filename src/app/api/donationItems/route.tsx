@@ -19,8 +19,11 @@ export async function POST(request: NextRequest) {
     const result = await createDonationItem(validationResult.data);
 
     return NextResponse.json({ _id: result._id }, { status: 201 });
-  } catch {
-    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: `Unknown Error ${error}` },
+      { status: 500 }
+    );
   }
 }
 
