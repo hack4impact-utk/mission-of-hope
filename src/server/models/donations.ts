@@ -22,6 +22,10 @@ const DonationSchema = new Schema(
       ref: 'Donor',
       required: true,
     },
+    receipt: {
+      type: String,
+      required: true,
+    },
   },
   {
     versionKey: false,

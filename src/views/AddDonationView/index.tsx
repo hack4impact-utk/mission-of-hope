@@ -90,9 +90,10 @@ export default function AddDonationView({
   const handleAddDonation = async () => {
     const createDonation: CreateDonationRequest = {
       entryDate: new Date(donationData.donationDate),
-      user: donationData.user,
+      user: '661dc544ed3579f193bb008c',
       items: [],
       donor: '',
+      receipt: donationData.receipt,
     };
 
     try {
@@ -360,16 +361,20 @@ export default function AddDonationView({
               <TextField
                 fullWidth
                 id="outlined-required"
-                label="User"
-                value={donationData.user}
+                label="Receipt"
+                value={donationData.receipt}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setDonationFormData({
-                    ...donationData,
-                    user: e.target.value,
-                  });
+                  const re = /^[0-9\b]+$/;
+                  // if value is not blank, then test the regex
+                  if (e.target.value === '' || re.test(e.target.value)) {
+                    setDonationFormData({
+                      ...donationData,
+                      receipt: e.target.value,
+                    });
+                  }
                 }}
-                error={!!validationErrors?.user}
-                helperText={validationErrors?.user}
+                error={!!validationErrors?.receipt}
+                helperText={validationErrors?.receipt}
               />
             </Grid>
 
