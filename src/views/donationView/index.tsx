@@ -12,39 +12,52 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { useState } from 'react';
+import useSearch from '@/hooks/useSearch';
+import useMonth from '@/hooks/useMonth';
 
 interface DonationViewProps {
   donations: DonationResponse[];
 }
 
 export default function DonationView({ donations }: DonationViewProps) {
-  const [selectedMonth, setSelectedMonth] = useState<string>(
-    (new Date().getMonth() + 1).toString() // Default to current month
-  );
+  const { searchString, searchQuery, setSearchQuery } = useSearch();
+  const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+  if (selectedMonth === '') {
+    setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
+  }
+  // const [selectedMonth, setSelectedMonth] = useState<string>(
+  //   (new Date().getMonth() + 1).toString() // Default to current month
+  // );
 
   // Function to handle month selection change
   const handleMonthChange = (event: SelectChangeEvent<string>) => {
-    setSelectedMonth(event.target.value as string);
+    setMonthQuery(event.target.value as string);
   };
 
-  const filteredDonations = selectedMonth
-    ? donations.filter(
-        (donation) =>
-          parseInt(
-            donation.entryDate.toString().split('T')[0].split('-')[1]
-          ) === parseInt(selectedMonth)
-      )
-    : donations;
+  const filteredDonations =
+    monthQuery !== '13'
+      ? donations.filter(
+          (donation) =>
+            parseInt(
+              donation.entryDate.toString().split('T')[0].split('-')[1]
+            ) === parseInt(monthQuery)
+        )
+      : donations;
 
-  const rows = filteredDonations.map((donation, index) => ({
-    id: index + 1,
-    donor: `${donation.donor.firstName} ${donation.donor.lastName}`,
-    quantity: donation.items.length,
-    user_name: donation.user.email,
-    date: donation.entryDate,
-    edit: donation._id,
-  }));
+  const rows = filteredDonations
+    .map((donation, index) => ({
+      id: index + 1,
+      donor: `${donation.donor.firstName} ${donation.donor.lastName}`,
+      quantity: donation.items.length,
+      user_name: donation.user.email,
+      date: donation.entryDate,
+      edit: donation._id,
+    }))
+    .filter((row) =>
+      Object.values(row).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
 
   const columns: GridColDef[] = [
     { field: 'donor', headerName: 'Donor Name', width: 250, flex: 0.5 },
@@ -104,7 +117,7 @@ export default function DonationView({ donations }: DonationViewProps) {
               displayEmpty
               inputProps={{ 'aria-label': 'Select month' }}
             >
-              <MenuItem value="">All Months</MenuItem>
+              <MenuItem value="13">All Months</MenuItem>
               {/* Generate month options */}
               {[...Array(12).keys()].map((month) => (
                 <MenuItem key={month} value={month + 1}>
@@ -128,7 +141,13 @@ export default function DonationView({ donations }: DonationViewProps) {
           slotProps={{
             toolbar: {
               showQuickFilter: true,
-              quickFilterProps: { debounceMs: 500 },
+              quickFilterProps: {
+                debounceMs: 100,
+                value: searchString,
+                onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearchQuery(event.target.value);
+                },
+              },
             },
           }}
         />
