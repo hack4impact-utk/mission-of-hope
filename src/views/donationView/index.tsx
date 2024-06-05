@@ -22,7 +22,7 @@ interface DonationViewProps {
 export default function DonationView({ donations }: DonationViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
-  if (monthQuery === '') {
+  if (selectedMonth === '') {
     setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
   }
   // const [selectedMonth, setSelectedMonth] = useState<string>(
@@ -35,12 +35,12 @@ export default function DonationView({ donations }: DonationViewProps) {
   };
 
   const filteredDonations =
-    selectedMonth !== '13'
+    monthQuery !== '13'
       ? donations.filter(
           (donation) =>
             parseInt(
               donation.entryDate.toString().split('T')[0].split('-')[1]
-            ) === parseInt(selectedMonth)
+            ) === parseInt(monthQuery)
         )
       : donations;
 
