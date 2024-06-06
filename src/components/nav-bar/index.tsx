@@ -1,16 +1,17 @@
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
+import Image from 'next/image';
 
 export default function Navbar() {
   return (
     <>
       <Box height={'100vh'}>
         <Box display={'flex'} justifyContent={'center'} p={2}>
-          <img
+          <Image
             className="rounded-md"
             alt="logo"
-            src="https://missionofhope.org/wp-content/uploads/2023/04/cropped-MOH-Logo-768x393.png"
+            src="/cropped-MOH-Logo-768x393.png"
             width="180"
             height="100"
             // style={{ marginRight: '25px' }} // Add spacing between the image and links
