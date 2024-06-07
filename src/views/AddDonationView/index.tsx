@@ -125,6 +125,7 @@ export default function AddDonationView({
         const donationItem: CreateDonationItemRequest = {
           item: itemForm.itemRes._id,
           quantity: itemForm.quantity,
+          barcode: itemForm?.barcode,
           value: {
             price: itemForm.price,
             evaluation:
