@@ -1,3 +1,4 @@
+import ClientSessionProvider from '@/components/ClientSessionProvider';
 import Navbar from '@/components/nav-bar';
 import { Box } from '@mui/material';
 import TopBar from '@/components/top-bar';
@@ -16,19 +17,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ margin: 0 }}>
-        <Providers>
-          <Box
-            component="section"
-            className="layout"
-            sx={{ display: 'flex', py: 1, px: 0, p: 0, m: 0 }}
-          >
-            <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 0, m: 0 }}>
-              <TopBar></TopBar>
-              {children}
+        <ClientSessionProvider>
+          <Providers>
+            <Box
+              component="section"
+              className="layout"
+              sx={{ display: 'flex', py: 1, px: 0, p: 0, m: 0 }}
+            >
+              <Navbar />
+              <Box component="main" sx={{ flexGrow: 1, p: 0, m: 0 }}>
+                <TopBar></TopBar>
+                {children}
+              </Box>
             </Box>
-          </Box>
-        </Providers>
+          </Providers>
+        </ClientSessionProvider>
       </body>
     </html>
   );
