@@ -12,5 +12,9 @@ export const zDonationItemFormData = z.object({
   price: z.number().positive().min(1, { message: 'Required' }),
 });
 
+export const zDonationItemsFormData = z.array(
+  z.lazy(() => zDonationItemFormData)
+);
+
 export interface DonationItemFormData
   extends z.infer<typeof zDonationItemFormData> {}

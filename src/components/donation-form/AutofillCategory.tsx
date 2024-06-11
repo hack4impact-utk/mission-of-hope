@@ -8,6 +8,8 @@ interface Item {
   name: string;
   value: string;
   disabled?: boolean;
+  error?: boolean;
+  helperText?: string;
 }
 
 export default function AutofillCategory(props: Item) {
@@ -64,6 +66,8 @@ export default function AutofillCategory(props: Item) {
             //   onCategoryChange(e.target.value);
             // }}
             type="string"
+            error={props.error}
+            helperText={props.helperText}
           />
         )}
         onInputChange={(_, value) => {

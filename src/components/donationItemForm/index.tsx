@@ -2,6 +2,7 @@
 
 import {
   FormControl,
+  FormHelperText,
   Grid,
   InputAdornment,
   InputLabel,
@@ -14,6 +15,7 @@ import AutofillItem from '../donation-form/AutofillItem';
 import { ItemResponse } from '@/types/items';
 import { DonationItemFormData } from '@/types/forms/donationItem';
 import { useEffect } from 'react';
+import { ZodFormattedError } from 'zod';
 
 function getPriceFormatted(value: string): number {
   const numberValue = Number(value);
@@ -32,6 +34,7 @@ interface DonationItemFormProps {
   onChange: (donationItemDatas: DonationItemFormData) => void;
   disabled?: boolean;
   // validationErrors: Record<string, string> | undefined;
+  validationErrors?: ZodFormattedError<DonationItemFormData>;
 }
 
 export default function DonationItemForm({
@@ -39,7 +42,9 @@ export default function DonationItemForm({
   donationItemData,
   onChange,
   disabled,
+  validationErrors,
 }: DonationItemFormProps) {
+  console.log('component', validationErrors);
   useEffect(() => {
     if (donationItemData.newOrUsed === 'Used') {
       if (donationItemData.highOrLow === 'High') {
@@ -86,8 +91,8 @@ export default function DonationItemForm({
           category={donationItemData.category}
           value={donationItemData.name}
           disabled={disabled}
-          // error={!!validationErrors?.donatedItemName}
-          // helperText={validationErrors?.donatedItemName}
+          error={!!validationErrors?.name}
+          helperText={validationErrors?.name?._errors[0]}
         />
       </Grid>
       <Grid item xs={4}>
@@ -97,8 +102,8 @@ export default function DonationItemForm({
           name={donationItemData.name}
           value={donationItemData.category}
           disabled={disabled}
-          // error={!!validationErrors?.category}
-          // helperText={validationErrors?.category}
+          error={!!validationErrors?.category}
+          helperText={validationErrors?.category?._errors[0]}
         />
       </Grid>
       <Grid item xs={3} sm={4}>
@@ -115,8 +120,8 @@ export default function DonationItemForm({
             });
           }}
           disabled={disabled}
-          // error={!!validationErrors?.quantity}
-          // helperText={validationErrors?.quantity}
+          error={!!validationErrors?.quantity}
+          helperText={validationErrors?.quantity?._errors[0]}
         />
       </Grid>
       <Grid item xs={9} sm={8}>
@@ -133,8 +138,8 @@ export default function DonationItemForm({
             });
           }}
           disabled={disabled}
-          // error={!!validationErrors?.quantity}
-          // helperText={validationErrors?.quantity}
+          error={!!validationErrors?.quantity}
+          helperText={validationErrors?.quantity?._errors[0]}
         />
       </Grid>
       <Grid item xs={12} sm={4}>
@@ -147,12 +152,14 @@ export default function DonationItemForm({
             }}
             label="New or Used"
             id="new-or-used"
-            // error={!!validationErrors?.newOrUsed}
+            error={!!validationErrors?.newOrUsed}
           >
             <MenuItem value="New">New</MenuItem>
             <MenuItem value="Used">Used</MenuItem>
           </Select>
-          {/* <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText> */}
+          <FormHelperText>
+            {validationErrors?.newOrUsed?._errors[0]}
+          </FormHelperText>
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={4}>
@@ -174,12 +181,14 @@ export default function DonationItemForm({
             }}
             label="High or Low Value"
             id="high-or-low-value"
-            // error={!!validationErrors?.highOrLow}
+            error={!!validationErrors?.highOrLow}
           >
             <MenuItem value="High">High</MenuItem>
             <MenuItem value="Low">Low</MenuItem>
           </Select>
-          {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
+          <FormHelperText>
+            {validationErrors?.highOrLow?._errors[0]}
+          </FormHelperText>
         </FormControl>
         {/* onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                setHighOrLow(e.target.value);
@@ -207,8 +216,8 @@ export default function DonationItemForm({
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
           disabled={donationItemData.newOrUsed !== 'New' || disabled} // Disable if used
-          // error={!!validationErrors?.price}
-          // helperText={validationErrors?.price}
+          error={!!validationErrors?.price}
+          helperText={validationErrors?.price?._errors[0]}
         />
       </Grid>
     </>

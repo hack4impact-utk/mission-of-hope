@@ -8,6 +8,8 @@ interface Donor {
   DonorForm: DonorFormData;
   onDonorSelect: (donor: DonorResponse) => void;
   onChange: (donor: DonorFormData) => void;
+  error?: boolean;
+  helperText?: string;
 }
 
 export default function AutofillDonorEmail(props: Donor) {
@@ -46,6 +48,8 @@ export default function AutofillDonorEmail(props: Donor) {
           id="outlined-required"
           value={''}
           type="email"
+          error={props.error}
+          helperText={props.helperText}
         />
       )}
       onInputChange={(_, value) => {

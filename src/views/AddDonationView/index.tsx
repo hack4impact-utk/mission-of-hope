@@ -1,7 +1,9 @@
 'use client';
+
 import AutofillDonorEmail from '@/components/donation-form/AutofillDonorEmail';
 import DonorForm from '@/components/donorForm';
-import useValidation from '@/hooks/useValidation';
+// import useValidation from '@/hooks/useValidation';
+import { useFormValidation } from '@hack4impact-utk/use-form-validation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
 import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
 import { CreateDonorRequest, DonorResponse } from '@/types/persons';
@@ -26,7 +28,10 @@ import React, { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
 import { CreateItemRequest, ItemResponse } from '@/types/items';
 import DonationItemForm from '@/components/donationItemForm';
-import { DonationItemFormData } from '@/types/forms/donationItem';
+import {
+  DonationItemFormData,
+  zDonationItemsFormData,
+} from '@/types/forms/donationItem';
 import mohColors from '@/utils/moh-theme';
 import {
   CreateDonationItemRequest,
@@ -34,6 +39,7 @@ import {
   DonationItemResponse,
 } from '@/types/donation';
 import GenerateReceiptButton from '@/components/generateReceiptButton';
+import { ZodFormattedError } from 'zod';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
@@ -55,10 +61,16 @@ export default function AddDonationView({
   >([{} as DonationItemFormData] as DonationItemFormData[]);
   const [prevDonated, setPrevDonated] = useState(false);
 
-  const { validate: validateDonation } = useValidation(zDonationFormData);
-  const { validate: validateDonor } = useValidation(zDonorFormData);
-  const [validationErrors, setValidationErrors] = useState<
-    Record<string, string> | undefined
+  const validateDonor = useFormValidation(zDonorFormData);
+  const [donorValidationErrors, setDonorValidationErrors] = useState<
+    ZodFormattedError<DonorFormData> | undefined
+  >(undefined);
+  const validateDonationItems = useFormValidation(zDonationItemsFormData);
+  const [donationItemValidationErrors, setDonationItemValidationErrors] =
+    useState<ZodFormattedError<DonationItemFormData[]> | undefined>(undefined);
+  const validateDonation = useFormValidation(zDonationFormData);
+  const [donationValidationErrors, setDonationValidationErrors] = useState<
+    ZodFormattedError<DonationFormData> | undefined
   >(undefined);
   const { showSnackbar } = useSnackbar();
 
@@ -96,13 +108,14 @@ export default function AddDonationView({
       donor: '',
       receipt: donationData.receipt,
     };
-
     try {
       createDonation.donor = (await addDonor())._id;
+      console.log('hererere');
       createDonation.items = (await addDonationItems()).map((item) => {
         return item._id;
       });
       //Get user
+      console.log(createDonation);
       await addDonation(createDonation);
 
       setDonorFormData({} as DonorFormData);
@@ -112,10 +125,17 @@ export default function AddDonationView({
       } as DonationFormData);
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
+      console.error(error);
     }
   };
 
   const addDonationItems = async (): Promise<DonationItemResponse[]> => {
+    const validationResult = validateDonationItems(donationItemFormDatas);
+    if (validationResult) {
+      setDonationItemValidationErrors(validationResult);
+      throw 'Cannot add donation items';
+    }
+    setDonationItemValidationErrors(undefined);
     const donationItemResponces = donationItemFormDatas.map(
       async (itemForm): Promise<DonationItemResponse> => {
         if (!itemForm.itemRes) {
@@ -132,8 +152,8 @@ export default function AddDonationView({
               itemForm.newOrUsed === 'New'
                 ? 'New'
                 : itemForm.highOrLow === 'High'
-                ? 'High'
-                : 'Low',
+                  ? 'High'
+                  : 'Low',
           },
         };
 
@@ -197,6 +217,7 @@ export default function AddDonationView({
   const addDonor = async (): Promise<DonorResponse> => {
     // If donor has previously donated, don't add them to the database
     if (prevDonated) {
+      setDonorValidationErrors(undefined);
       return donorFormData as DonorResponse;
     }
 
@@ -212,10 +233,10 @@ export default function AddDonationView({
 
     const errors = validateDonor(donorFormData);
     if (errors) {
-      setValidationErrors(errors);
+      setDonorValidationErrors(errors);
       throw `Error adding donor`;
     }
-    setValidationErrors(undefined);
+    setDonorValidationErrors(undefined);
     try {
       // fetch request to add donor
       const donorRes = await fetch('/api/donors', {
@@ -242,10 +263,10 @@ export default function AddDonationView({
   const addDonation = async (createDonation: CreateDonationRequest) => {
     const errors = validateDonation(donationData);
     if (errors) {
-      setValidationErrors(errors);
+      setDonationValidationErrors(errors);
       throw 'Cannot add donation';
     }
-    setValidationErrors(undefined);
+    setDonationValidationErrors(undefined);
     try {
       // fetch request to add donor
       const donationRes = await fetch('/api/donations', {
@@ -291,6 +312,8 @@ export default function AddDonationView({
                 DonorForm={donorFormData}
                 onDonorSelect={handleDonorSelect}
                 onChange={setDonorFormData}
+                error={!!donorValidationErrors?.email}
+                helperText={donorValidationErrors?.email?._errors[0]}
               />
             </Grid>
             <Grid item sm={4}>
@@ -310,8 +333,8 @@ export default function AddDonationView({
                   shrink: true,
                   style: { paddingRight: '10px' },
                 }}
-                error={!!validationErrors?.donationDate}
-                helperText={validationErrors?.donationDate}
+                error={!!donationValidationErrors?.donationDate}
+                helperText={donationValidationErrors?.donationDate?._errors[0]}
               />
             </Grid>
 
@@ -338,7 +361,7 @@ export default function AddDonationView({
                   }
                   key={index}
                   disabled={false}
-                  // validationErrors={}
+                  validationErrors={donationItemValidationErrors?.[index]}
                 />
               </>
             ))}
@@ -395,8 +418,8 @@ export default function AddDonationView({
                     />
                   ),
                 }}
-                error={!!validationErrors?.receipt}
-                helperText={validationErrors?.receipt}
+                error={!!donationValidationErrors?.receipt}
+                helperText={donationValidationErrors?.receipt?._errors[0]}
               />
             </Grid>
 

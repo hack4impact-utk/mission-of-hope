@@ -8,6 +8,8 @@ interface Item {
   category: string;
   value: string;
   disabled?: boolean;
+  error?: boolean;
+  helperText?: string;
 }
 
 export default function AutofillItem(props: Item) {
@@ -54,6 +56,8 @@ export default function AutofillItem(props: Item) {
           id="outlined-required"
           value={''}
           type="string"
+          error={props.error}
+          helperText={props.helperText}
         />
       )}
       onInputChange={(_, value) => {
