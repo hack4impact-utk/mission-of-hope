@@ -14,7 +14,7 @@ const DonationItemSchema = new Schema(
     },
     barcode: {
       type: String,
-      required: true,
+      required: false,
     },
     value: {
       type: {
@@ -41,9 +41,9 @@ export interface DonationItemDocument
   extends Omit<DonationItemEntity, '_id'>,
     Document {}
 
-export default (models.DonationItems as Model<DonationItemDocument>) ||
+export default (models.DonationItem as Model<DonationItemDocument>) ||
   model<DonationItemDocument>(
-    'DonationItems',
+    'DonationItem',
     DonationItemSchema,
     'donationItems'
   );

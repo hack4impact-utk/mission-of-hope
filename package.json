@@ -19,12 +19,14 @@
     "@mui/x-data-grid": "^7.3.0",
     "bson": "^6.2.0",
     "mongodb": "^5.9.1",
+    "html-react-parser": "^5.1.10",
     "mongoose": "^7.4.5",
     "next": "13.4.19",
     "next-auth": "^4.24.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-google-button": "^0.7.2",
+    "react-quill": "^2.0.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {

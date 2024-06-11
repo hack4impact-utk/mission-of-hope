@@ -1,0 +1,8 @@
+.ql-insert .ql-picker-item:before {
+  content: attr(data-label);
+}
+
+.ql-insert .ql-picker-label:before {
+  content: "Insert Data";
+  width: 6rem;
+}
