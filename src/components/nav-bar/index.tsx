@@ -18,7 +18,7 @@ export default function Navbar() {
           />
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="./"
             style={{
@@ -31,7 +31,7 @@ export default function Navbar() {
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation/add"
             style={{
@@ -44,7 +44,7 @@ export default function Navbar() {
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation"
             style={{
@@ -53,11 +53,11 @@ export default function Navbar() {
               textTransform: 'none',
             }}
           >
-            View Donations
+            Donations
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donors"
             style={{
@@ -66,11 +66,11 @@ export default function Navbar() {
               textTransform: 'none',
             }}
           >
-            View Donors
+            Donors
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donationItem"
             style={{
@@ -83,7 +83,7 @@ export default function Navbar() {
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/item/add"
             style={{
@@ -95,7 +95,7 @@ export default function Navbar() {
             Add Evaluation
           </Button>
         </Box>
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/item"
             style={{
@@ -104,11 +104,11 @@ export default function Navbar() {
               textTransform: 'none',
             }}
           >
-            View Evaluations
+            Evaluations
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="./"
             style={{
@@ -118,6 +118,18 @@ export default function Navbar() {
             }}
           >
             Trends
+          </Button>
+        </Box>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
+          <Button
+            href="/user"
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            Users
           </Button>
         </Box>
       </Box>
