@@ -3,6 +3,15 @@ import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
 import Image from 'next/image';
 
+import HomeIcon from '@mui/icons-material/Home';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddIcon from '@mui/icons-material/Add';
+import RedeemIcon from '@mui/icons-material/Redeem';
+import BallotIcon from '@mui/icons-material/Ballot';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import SsidChartIcon from '@mui/icons-material/SsidChart';
+import GroupIcon from '@mui/icons-material/Group';
+
 export default function Navbar() {
   return (
     <>
@@ -21,6 +30,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="./"
+            startIcon={<HomeIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -34,6 +44,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation/add"
+            startIcon={<AddIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -47,6 +58,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation"
+            startIcon={<RedeemIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -60,6 +72,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donors"
+            startIcon={<BallotIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -73,6 +86,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donationItem"
+            startIcon={<InventoryIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -86,6 +100,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/item/add"
+            startIcon={<AddBoxIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -98,6 +113,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/item"
+            startIcon={<BallotIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -111,6 +127,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="./"
+            startIcon={<SsidChartIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -123,6 +140,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/user"
+            startIcon={<GroupIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
