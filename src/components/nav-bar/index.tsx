@@ -5,11 +5,11 @@ import Image from 'next/image';
 
 import HomeIcon from '@mui/icons-material/Home';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import AddIcon from '@mui/icons-material/Add';
-import RedeemIcon from '@mui/icons-material/Redeem';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import BallotIcon from '@mui/icons-material/Ballot';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import SsidChartIcon from '@mui/icons-material/SsidChart';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import GroupIcon from '@mui/icons-material/Group';
 
 export default function Navbar() {
@@ -44,7 +44,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation/add"
-            startIcon={<AddIcon />}
+            startIcon={<AddCircleIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -58,7 +58,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation"
-            startIcon={<RedeemIcon />}
+            startIcon={<VolunteerActivismIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -127,7 +127,7 @@ export default function Navbar() {
         <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="./"
-            startIcon={<SsidChartIcon />}
+            startIcon={<EqualizerIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
