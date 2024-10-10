@@ -3,6 +3,15 @@ import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
 import Image from 'next/image';
 
+import HomeIcon from '@mui/icons-material/Home';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import BallotIcon from '@mui/icons-material/Ballot';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import GroupIcon from '@mui/icons-material/Group';
+
 export default function Navbar() {
   return (
     <>
@@ -18,9 +27,10 @@ export default function Navbar() {
           />
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="./"
+            startIcon={<HomeIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -31,9 +41,10 @@ export default function Navbar() {
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation/add"
+            startIcon={<AddCircleIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -44,35 +55,38 @@ export default function Navbar() {
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donation"
+            startIcon={<VolunteerActivismIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
               textTransform: 'none',
             }}
           >
-            View Donations
+            Donations
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donors"
+            startIcon={<BallotIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
               textTransform: 'none',
             }}
           >
-            View Donors
+            Donors
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/donationItem"
+            startIcon={<InventoryIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -83,9 +97,10 @@ export default function Navbar() {
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/item/add"
+            startIcon={<AddBoxIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -95,22 +110,24 @@ export default function Navbar() {
             Add Evaluation
           </Button>
         </Box>
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="/item"
+            startIcon={<BallotIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
               textTransform: 'none',
             }}
           >
-            View Evaluations
+            Evaluations
           </Button>
         </Box>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
           <Button
             href="./"
+            startIcon={<EqualizerIcon />}
             style={{
               color: '#ff8a65',
               fontSize: '25px',
@@ -118,6 +135,19 @@ export default function Navbar() {
             }}
           >
             Trends
+          </Button>
+        </Box>
+        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
+          <Button
+            href="/user"
+            startIcon={<GroupIcon />}
+            style={{
+              color: '#ff8a65',
+              fontSize: '25px',
+              textTransform: 'none',
+            }}
+          >
+            Users
           </Button>
         </Box>
       </Box>
