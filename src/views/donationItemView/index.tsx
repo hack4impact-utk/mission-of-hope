@@ -81,7 +81,7 @@ export default function DonationItemView({ donations }: DonationItemProps) {
     if (monthQuery === '') {
       setMonthQuery((new Date().getMonth() + 1).toString());
     }
-  }, []);
+  }, [monthQuery, setMonthQuery]);
   // const [selectedMonth, setSelectedMonth] = useState<string>(
   //   (new Date().getMonth() + 1).toString() // Default to current month
   // );
