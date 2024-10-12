@@ -76,6 +76,7 @@ export default function DonationItemView({ donations }: DonationItemProps) {
   //map the donation items to the rows
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+  // use useEffect hook that only runs once to prevent infinite rerender for monthQuery.
   useEffect(() => {
     if (monthQuery === '') {
       setMonthQuery((new Date().getMonth() + 1).toString());
