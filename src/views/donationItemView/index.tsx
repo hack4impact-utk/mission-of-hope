@@ -1,4 +1,5 @@
 'use client';
+import React, { useEffect } from 'react';
 import {
   Box,
   Chip,
@@ -75,9 +76,12 @@ export default function DonationItemView({ donations }: DonationItemProps) {
   //map the donation items to the rows
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
-  if (monthQuery === '') {
-    setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
-  }
+  // use useEffect hook that only runs once to prevent infinite rerender for monthQuery.
+  useEffect(() => {
+    if (monthQuery === '') {
+      setMonthQuery((new Date().getMonth() + 1).toString());
+    }
+  }, [monthQuery, setMonthQuery]);
   // const [selectedMonth, setSelectedMonth] = useState<string>(
   //   (new Date().getMonth() + 1).toString() // Default to current month
   // );
