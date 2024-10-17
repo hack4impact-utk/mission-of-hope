@@ -7,19 +7,16 @@ const zPersonBase = z.object({
   email: z.string(),
 });
 
-export const zUserBase = zPersonBase.extend({
-  admin: z.boolean(),
+export const zUserEntity = zBase.extend({
+  name: z.string(),
+  email: z.string().email(),
+  image: z.string(),
+  isAdmin: z.boolean(),
 });
-
-export const zUserEntity = zUserBase.extend({ ...zBase.shape });
-
-export const zCreateUserRequest = zUserBase;
 
 export const zUserResponse = zUserEntity;
 
 export interface UserEntity extends z.infer<typeof zUserEntity> {}
-
-export interface CreateUserRequest extends z.infer<typeof zCreateUserRequest> {}
 
 export interface UserResponse extends z.infer<typeof zUserResponse> {}
 

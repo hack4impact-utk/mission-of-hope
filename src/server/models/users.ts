@@ -3,19 +3,19 @@ import { UserEntity } from '../../types/persons';
 
 const UserSchema = new Schema(
   {
-    firstName: {
+    name: {
       type: String,
       required: false,
-    },
-    lastName: {
-      type: String,
-      required: true,
     },
     email: {
       type: String,
       required: true,
     },
-    admin: {
+    image: {
+      type: String,
+      required: true,
+    },
+    isAdmin: {
       type: Boolean,
       required: true,
     },
