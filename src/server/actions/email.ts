@@ -22,7 +22,7 @@ export async function sendEmail(
       from: process.env.EVENTS_EMAIL_ADDR,
       to: recipients.join(','),
       subject: subject,
-      text: body,
+      html: body,
     };
 
     await transporter.sendMail(emailOptions);
