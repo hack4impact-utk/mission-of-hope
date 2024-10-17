@@ -11,12 +11,8 @@ import {
   Box,
   Button,
   Divider,
-  FormControl,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   ThemeProvider,
   Tooltip,
@@ -325,7 +321,7 @@ export default function AddDonationView({
               onChange={setDonorFormData}
             />
 
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
                 id="outlined-required"
@@ -364,23 +360,6 @@ export default function AddDonationView({
                 error={!!validationErrors?.receipt}
                 helperText={validationErrors?.receipt}
               />
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Has this donor previously donated?</InputLabel>
-                <Select
-                  value={prevDonated ? 'yes' : 'no'}
-                  onChange={(e) => {
-                    setPrevDonated(e.target.value === 'yes');
-                  }}
-                  label="Has this donor previously donated?"
-                  id="donor-donated"
-                >
-                  <MenuItem value="yes">Yes</MenuItem>
-                  <MenuItem value="no">No</MenuItem>
-                </Select>
-              </FormControl>
             </Grid>
 
             {donationItemFormDatas.map((_, index) => (
