@@ -375,6 +375,10 @@ export default function AddDonationView({
                     });
                   }
                 }}
+                InputLabelProps={{
+                  // Ensures the label floats when a value is present
+                  shrink: !!donationData.receipt,
+                }}
                 InputProps={{
                   endAdornment: (
                     <GenerateReceiptButton
