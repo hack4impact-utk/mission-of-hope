@@ -283,9 +283,13 @@ export default function AddDonationView({
           <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
             Add Donation
           </Typography>
-          <Divider></Divider>
+          <Divider
+            sx={{
+              backgroundColor: '#379541',
+            }}
+          ></Divider>
           <Grid container spacing={2} sx={{ mt: 1, pl: 2, pr: 2 }}>
-            <Grid item sm={8}>
+            <Grid item xs={12} sm={8}>
               <AutofillDonorEmail
                 DonorOptions={donorOptions}
                 DonorForm={donorFormData}
@@ -293,7 +297,7 @@ export default function AddDonationView({
                 onChange={setDonorFormData}
               />
             </Grid>
-            <Grid item sm={4}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
                 id="outlined-required"
@@ -402,7 +406,7 @@ export default function AddDonationView({
                 <Grid
                   item
                   xs={12}
-                  sm={2}
+                  sm={1}
                   md={0.5}
                   display={'flex'}
                   alignContent={'center'}
@@ -421,9 +425,9 @@ export default function AddDonationView({
                 </Grid>
               </>
             ))}
-            <Grid item xs={12} sm={5} md={6}>
+            <Grid item xs={12}>
               <Button
-                sx={{ height: '100%' }}
+                sx={{ height: '40px' }}
                 variant="outlined"
                 startIcon={<AddIcon></AddIcon>}
                 color="moh"
@@ -439,10 +443,10 @@ export default function AddDonationView({
               </Button>
             </Grid>
 
-            <Grid item xs={12} sm={5} md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
-                sx={{ height: '100%' }}
+                sx={{ height: '40px' }}
                 onClick={() => handleAddDonation()}
                 color="moh"
                 fullWidth

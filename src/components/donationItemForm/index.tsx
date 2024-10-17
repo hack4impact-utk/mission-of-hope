@@ -79,7 +79,7 @@ export default function DonationItemForm({
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item xs={12} sm={8}>
         <AutofillItem
           ItemOptions={itemOptions}
           onItemSelect={handleItemSelect}
@@ -90,7 +90,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.donatedItemName}
         />
       </Grid>
-      <Grid item xs={3} sm={4}>
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -108,7 +108,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.quantity}
         />
       </Grid>
-      <Grid item xs={9} sm={8}>
+      <Grid item xs={12} sm={8}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -126,7 +126,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.quantity}
         />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} sm={4}>
         <AutofillCategory
           ItemOptions={itemOptions}
           onCategorySelect={handleCategorySelect}
@@ -185,7 +185,7 @@ export default function DonationItemForm({
                setHighOrLow(e.target.value);
             }}*/}
       </Grid>
-      <Grid item xs={12} sm={4} md={3.5}>
+      <Grid item xs={12} sm={3} md={3.5}>
         <TextField
           id="price"
           label="Price"
