@@ -19,7 +19,7 @@ export async function GET(
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     // if the donor is not found, return a 500 error
-    return NextResponse.json({ error: 'Donor not found' }, { status: 500 });
+    return NextResponse.json({ error: 'Donor not found' }, { status: 404 });
   }
 }
 
@@ -52,7 +52,7 @@ export async function PUT(
     return NextResponse.json(updatedDonor, { status: 200 });
   } catch (error) {
     // Handle any errors during parsing or updating
-    const message = error instanceof Error ? error.message : 'Unknowm errpr';
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
       { error: 'Failed to update donor information', details: message },
       { status: 500 }
