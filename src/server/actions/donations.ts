@@ -6,21 +6,18 @@ import {
   DonationResponse,
   UpdateDonationRequest,
 } from '@/types/donation';
-import UserSchema from '@/server/models/users';
-import DonorSchema from '@/server/models/donors';
-import DonationItemSchema from '@/server/models/donationItem';
-
-UserSchema;
-DonorSchema;
-DonationItemSchema;
 
 export async function createDonation(
   donation: CreateDonationRequest
 ): Promise<DonationEntity> {
-  await dbConnect();
+  try {
+    await dbConnect();
 
-  const response: DonationEntity = await DonationSchema.create(donation);
-  return response;
+    const response: DonationEntity = await DonationSchema.create(donation);
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function getAllDonations(): Promise<DonationResponse[]> {

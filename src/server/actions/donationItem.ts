@@ -47,7 +47,7 @@ export async function createDonationItem(
   return response;
 }
 
-// currently not used in the app - also, shouldnt donationItem be a DonationItemEntity?
+// currently not used in the app
 export async function updateDonationItem(
   id: string,
   updatedData: UpdateDonationItemRequest
