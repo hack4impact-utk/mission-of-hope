@@ -7,11 +7,17 @@ import useSnackbar from '@/hooks/useSnackbar';
 import { ItemFormData } from '@/types/forms/item';
 import { CreateItemRequest } from '@/types/items';
 import ItemForm from '@/components/itemForm';
-
+const initialFormData: ItemFormData = {
+  name: '',
+  category: '',
+  high: 0,
+  low: 0,
+  highString: '',
+  lowString: '',
+};
 export default function AddItemView() {
-  const [itemFormData, setItemFormData] = useState<ItemFormData>(
-    {} as ItemFormData
-  );
+  const [itemFormData, setItemFormData] =
+    useState<ItemFormData>(initialFormData);
 
   const { showSnackbar } = useSnackbar();
 
@@ -49,6 +55,7 @@ export default function AddItemView() {
     } catch (error) {
       showSnackbar(`Error: ${error}`, 'error');
     }
+    setItemFormData(initialFormData);
   };
 
   return (
