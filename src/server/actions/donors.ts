@@ -2,7 +2,7 @@ import {
   CreateDonorRequest,
   DonorResponse,
   UpdateDonorRequest, //deleted a duplicate DonorResponse
-} from '@/types/persons';
+} from '@/types/donors';
 import dbConnect from '@/utils/db-connect';
 import DonorSchema from '../models/donors';
 

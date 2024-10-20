@@ -1,7 +1,7 @@
 import { getAllDonations } from '@/server/actions/donations';
 import { getAllDonors } from '@/server/actions/donors';
 import { DonationResponse } from '@/types/donation';
-import { DonorResponse } from '@/types/persons';
+import { DonorResponse } from '@/types/donors';
 import DonorView from '@/views/donorView';
 
 export default async function DonorPage() {

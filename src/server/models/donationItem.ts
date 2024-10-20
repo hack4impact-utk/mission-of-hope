@@ -25,7 +25,7 @@ const DonationItemSchema = new Schema(
         evaluation: {
           type: String,
           enum: evaluationEnum,
-          required: false,
+          required: true,
         },
       },
       required: true,
@@ -40,6 +40,8 @@ const DonationItemSchema = new Schema(
 export interface DonationItemDocument
   extends Omit<DonationItemEntity, '_id'>,
     Document {}
+
+if (models.DonationItem) delete models.DonationItem;
 
 export default (models.DonationItem as Model<DonationItemDocument>) ||
   model<DonationItemDocument>(

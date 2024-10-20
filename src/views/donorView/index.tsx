@@ -2,7 +2,7 @@
 import useMonth from '@/hooks/useMonth';
 import useSearch from '@/hooks/useSearch';
 import { DonationResponse } from '@/types/donation';
-import { DonorResponse } from '@/types/persons';
+import { DonorResponse } from '@/types/donors';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   Box,

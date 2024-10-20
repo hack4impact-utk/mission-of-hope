@@ -1,5 +1,5 @@
 import { getDonorById } from '@/server/actions/donors';
-import { DonorResponse } from '@/types/persons';
+import { DonorResponse } from '@/types/donors';
 import DonorIdView from '@/views/donorIdView';
 
 export default async function DonorEditPage({

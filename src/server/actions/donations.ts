@@ -1,26 +1,29 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import dbConnect from '@/utils/db-connect';
 import DonationSchema from '../models/donations';
+import DonationItem from '../models/donationItem';
+import User from '../models/users';
 import {
   CreateDonationRequest,
   DonationEntity,
   DonationResponse,
   UpdateDonationRequest,
 } from '@/types/donation';
-import UserSchema from '@/server/models/users';
-import DonorSchema from '@/server/models/donors';
-import DonationItemSchema from '@/server/models/donationItem';
 
-UserSchema;
-DonorSchema;
-DonationItemSchema;
+User;
+DonationItem;
 
 export async function createDonation(
   donation: CreateDonationRequest
 ): Promise<DonationEntity> {
-  await dbConnect();
+  try {
+    await dbConnect();
 
-  const response: DonationEntity = await DonationSchema.create(donation);
-  return response;
+    const response: DonationEntity = await DonationSchema.create(donation);
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function getAllDonations(): Promise<DonationResponse[]> {
