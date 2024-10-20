@@ -7,6 +7,7 @@ import useSnackbar from '@/hooks/useSnackbar';
 import { ItemFormData } from '@/types/forms/item';
 import { CreateItemRequest } from '@/types/items';
 import ItemForm from '@/components/itemForm';
+
 const initialFormData: ItemFormData = {
   name: '',
   category: '',
@@ -15,15 +16,18 @@ const initialFormData: ItemFormData = {
   highString: '',
   lowString: '',
 };
+
 export default function AddItemView() {
   const [itemFormData, setItemFormData] =
     useState<ItemFormData>(initialFormData);
-
   const { showSnackbar } = useSnackbar();
+
+  const handleChange = (newItemForm: ItemFormData) => {
+    setItemFormData(newItemForm);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     // Validate form fields
     const requestData = {
       name: itemFormData.name,
@@ -41,13 +45,13 @@ export default function AddItemView() {
         },
         body: JSON.stringify(requestData),
       });
+
       // Check if response is successful
       if (response.ok) {
         // Handle successful response
         showSnackbar('Item added successfully.', 'success');
-
         // Reset form fields
-        setItemFormData({} as ItemFormData);
+        setItemFormData(initialFormData);
       } else {
         // Handle error response
         showSnackbar('Failed to add item', 'error');
@@ -55,7 +59,6 @@ export default function AddItemView() {
     } catch (error) {
       showSnackbar(`Error: ${error}`, 'error');
     }
-    setItemFormData(initialFormData);
   };
 
   return (
@@ -75,21 +78,20 @@ export default function AddItemView() {
           <Typography variant="h4" sx={{ p: 1 }}>
             Add Item
           </Typography>
-          <Divider></Divider>
+          <Divider />
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3} justifyContent="flex-start">
               <ItemForm
                 itemForm={itemFormData}
-                onChange={setItemFormData}
+                onChange={handleChange}
                 disabled={false}
-              ></ItemForm>
+              />
               <Grid item xs={12}>
                 <Button
                   type="submit"
                   variant="contained"
                   color="moh"
                   fullWidth
-                  // disabled={highValueError || lowValueError ? true : false}
                   sx={{
                     height: 56,
                     textTransform: 'none',
