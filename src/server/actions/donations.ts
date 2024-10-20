@@ -1,12 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import dbConnect from '@/utils/db-connect';
 import DonationSchema from '../models/donations';
-import Donation from '../models/donations';
+import DonationItem from '../models/donationItem';
+import User from '../models/users';
 import {
   CreateDonationRequest,
   DonationEntity,
   DonationResponse,
   UpdateDonationRequest,
 } from '@/types/donation';
+
+User;
+DonationItem;
 
 export async function createDonation(
   donation: CreateDonationRequest
@@ -25,7 +30,7 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
   try {
     await dbConnect();
 
-    const response: DonationResponse[] = await Donation.find().populate([
+    const response: DonationResponse[] = await DonationSchema.find().populate([
       'user',
       'donor',
       'items',
