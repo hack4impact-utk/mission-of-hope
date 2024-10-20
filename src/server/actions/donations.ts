@@ -1,5 +1,6 @@
 import dbConnect from '@/utils/db-connect';
 import DonationSchema from '../models/donations';
+import Donation from '../models/donations';
 import {
   CreateDonationRequest,
   DonationEntity,
@@ -24,7 +25,7 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
   try {
     await dbConnect();
 
-    const response: DonationResponse[] = await DonationSchema.find().populate([
+    const response: DonationResponse[] = await Donation.find().populate([
       'user',
       'donor',
       'items',

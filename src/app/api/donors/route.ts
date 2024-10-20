@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllDonors, createDonors } from '@/server/actions/donors';
-import { DonorResponse, zCreateDonorRequest } from '@/types/persons';
+import { DonorResponse, zCreateDonorRequest } from '@/types/donors';
 
 export async function GET() {
   try {

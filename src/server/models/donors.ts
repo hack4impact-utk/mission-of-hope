@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose';
-import { DonorEntity } from '../../types/persons';
+import { DonorEntity } from '../../types/donors';
 
 const DonorSchema = new Schema(
   {

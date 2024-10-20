@@ -1,4 +1,4 @@
-import { DonorResponse } from '@/types/persons';
+import { DonorResponse } from '@/types/donors';
 import { NextResponse, NextRequest } from 'next/server';
 import { getDonorById, updateDonor } from '../../../../server/actions/donors';
 
