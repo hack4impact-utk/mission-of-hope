@@ -79,7 +79,7 @@ export default function DonationItemForm({
       onChange({ ...donationItemData, name: name });
     } else {
       onChange({ ...donationItemData, name: name.name, itemRes: name });
-      updateHighLowVals(donationItemData.newOrUsed, name); // update values of High/Low
+      updateHighLowVals(donationItemData.newOrUsed, name);
     }
   };
 
@@ -92,7 +92,7 @@ export default function DonationItemForm({
         category: category.category,
         itemRes: category,
       });
-      updateHighLowVals(donationItemData.newOrUsed, category); // update values of High/Low
+      updateHighLowVals(donationItemData.newOrUsed, category);
     }
   };
 
