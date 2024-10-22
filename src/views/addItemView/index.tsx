@@ -28,6 +28,18 @@ export default function AddItemView() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const { high, low } = itemFormData;
+
+    // Check if high is greater than low
+    if (high < low) {
+      showSnackbar(
+        'Low Value must be less than or equal to High Value',
+        'error'
+      );
+      return;
+    }
+
     // Validate form fields
     const requestData = {
       name: itemFormData.name,
