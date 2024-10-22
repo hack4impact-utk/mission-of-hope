@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import dbConnect from '@/utils/db-connect';
+import Donor from '../models/donors';
 import DonationSchema from '../models/donations';
 import DonationItem from '../models/donationItem';
 import User from '../models/users';
@@ -12,6 +13,7 @@ import {
 
 User;
 DonationItem;
+Donor;
 
 export async function createDonation(
   donation: CreateDonationRequest

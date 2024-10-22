@@ -8,7 +8,7 @@ const zDonorBase = z.object({
   address: z.string(),
   city: z.string(),
   state: z.string(),
-  zip: z.number(),
+  zip: z.string(),
 });
 
 export const zDonorEntity = zDonorBase.extend({ ...zBase.shape });

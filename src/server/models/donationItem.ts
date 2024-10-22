@@ -41,8 +41,6 @@ export interface DonationItemDocument
   extends Omit<DonationItemEntity, '_id'>,
     Document {}
 
-if (models.DonationItem) delete models.DonationItem;
-
 export default (models.DonationItem as Model<DonationItemDocument>) ||
   model<DonationItemDocument>(
     'DonationItem',

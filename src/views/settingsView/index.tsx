@@ -26,7 +26,7 @@ export default function SettingsView() {
     setUserInfo({ ...userInfo, email: event.target.value });
   };
 
-  // There isn't an API endpoint to update the user's information yet
+  // TODO: Create settings API endpoint
   const handleSubmit = async () => {
     try {
       // Make an API call to update the user's information
