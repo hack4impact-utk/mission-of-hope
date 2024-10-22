@@ -4,7 +4,7 @@ import DonorForm from '@/components/donorForm';
 import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
 import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
-import { CreateDonorRequest, DonorResponse } from '@/types/persons';
+import { CreateDonorRequest, DonorResponse } from '@/types/donors';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
