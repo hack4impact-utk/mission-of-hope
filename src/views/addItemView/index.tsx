@@ -21,7 +21,7 @@ export default function AddItemView() {
     const { high, low } = itemFormData;
 
     // Check if high is greater than low
-    if (high <= low) {
+    if (high < low) {
       showSnackbar('High value must be greater than Low value.', 'error');
       return;
     }
