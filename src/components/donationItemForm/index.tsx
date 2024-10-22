@@ -48,12 +48,8 @@ export default function DonationItemForm({
 
   // Checking undefined, null, and emptiness before show the Higg/Low values
   const updateHighLowVals = (newOrUsed: string, itemRes: ItemResponse) => {
-    if (!!newOrUsed) {
-      if (newOrUsed === 'Used') {
-        if (!!itemRes) {
-          setHighLowVals([`High ($${itemRes.high})`, `Low ($${itemRes.low})`]);
-        }
-      }
+    if (newOrUsed === 'Used') {
+      setHighLowVals([`High ($${itemRes.high})`, `Low ($${itemRes.low})`]);
     }
   };
 
@@ -181,7 +177,9 @@ export default function DonationItemForm({
           fullWidth
           disabled={donationItemData.newOrUsed !== 'Used' || disabled} // Disable if new
         >
-          <InputLabel id="high-or-low-value-label">High or Low?</InputLabel>
+          <InputLabel id="high-or-low-value-label">
+            High or Low Value?
+          </InputLabel>
           <Select
             labelId="high-or-low-value-label"
             value={donationItemData.highOrLow ?? ''}
