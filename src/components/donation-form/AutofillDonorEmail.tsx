@@ -1,5 +1,5 @@
 import { DonorFormData } from '@/types/forms/donor';
-import { DonorResponse } from '@/types/persons';
+import { DonorResponse } from '@/types/donors';
 import { Autocomplete, TextField } from '@mui/material';
 import { useState } from 'react';
 

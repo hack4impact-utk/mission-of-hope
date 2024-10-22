@@ -88,7 +88,6 @@ export default function DonationItemForm({
 
   return (
     <>
-      {console.log('item name = ', donationItemData.name)}
       <Grid item xs={7}>
         <AutofillItem
           ItemOptions={itemOptions}
@@ -100,18 +99,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.donatedItemName}
         />
       </Grid>
-      <Grid item xs={4}>
-        <AutofillCategory
-          ItemOptions={itemOptions}
-          onCategorySelect={handleCategorySelect}
-          name={donationItemData.name}
-          value={donationItemData.category}
-          disabled={disabled}
-          // error={!!validationErrors?.category}
-          // helperText={validationErrors?.category}
-        />
-      </Grid>
-      <Grid item xs={3} sm={4}>
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -129,7 +117,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.quantity}
         />
       </Grid>
-      <Grid item xs={9} sm={8}>
+      <Grid item xs={12} sm={8}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -145,6 +133,17 @@ export default function DonationItemForm({
           disabled={disabled}
           // error={!!validationErrors?.quantity}
           // helperText={validationErrors?.quantity}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <AutofillCategory
+          ItemOptions={itemOptions}
+          onCategorySelect={handleCategorySelect}
+          name={donationItemData.name}
+          value={donationItemData.category}
+          disabled={disabled}
+          // error={!!validationErrors?.category}
+          // helperText={validationErrors?.category}
         />
       </Grid>
       <Grid item xs={12} sm={4}>
@@ -169,7 +168,7 @@ export default function DonationItemForm({
               }
               onChange({ ...donationItemData, newOrUsed: e.target.value });
             }}
-            label="New or Used"
+            label="New or Used?"
             id="new-or-used"
             // error={!!validationErrors?.newOrUsed}
           >
