@@ -40,8 +40,7 @@ export default function DonationItemForm({
   onChange,
   disabled,
 }: DonationItemFormProps) {
-  const [showHighLow, setShowHighLow] = useState<boolean>(false);
-  const [showPrice, setShowPrice] = useState<boolean>(false);
+  const [isNew, setIsNew] = useState<boolean>(false);
 
   useEffect(() => {
     if (donationItemData.newOrUsed === 'Used') {
@@ -146,7 +145,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.category}
         />
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={5}>
         <FormControl
           fullWidth
           disabled={
@@ -160,11 +159,9 @@ export default function DonationItemForm({
             value={donationItemData.newOrUsed ?? ''}
             onChange={(e) => {
               if (e.target.value === 'New') {
-                setShowHighLow(false);
-                setShowPrice(true);
+                setIsNew(true);
               } else {
-                setShowHighLow(true);
-                setShowPrice(false);
+                setIsNew(false);
               }
               onChange({ ...donationItemData, newOrUsed: e.target.value });
             }}
@@ -178,46 +175,9 @@ export default function DonationItemForm({
           {/* <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText> */}
         </FormControl>
       </Grid>
-      {showHighLow && (
-        <Grid item xs={12} sm={4}>
-          <FormControl
-            fullWidth
-            // Disable if Item or Category are not selected
-            disabled={
-              disabled ||
-              donationItemData.newOrUsed !== 'Used' ||
-              !isValidString(donationItemData.name) ||
-              !isValidString(donationItemData.category)
-            }
-          >
-            <InputLabel id="high-or-low-value-label">
-              High or Low Value
-            </InputLabel>
-            <Select
-              labelId="high-or-low-value-label"
-              value={donationItemData.highOrLow ?? ''}
-              onChange={(e) => {
-                onChange({
-                  ...donationItemData,
-                  highOrLow: e.target.value,
-                });
-              }}
-              label="High or Low Value"
-              id="high-or-low-value"
-              // error={!!validationErrors?.highOrLow}
-            >
-              <MenuItem value="High">High</MenuItem>
-              <MenuItem value="Low">Low</MenuItem>
-            </Select>
-            {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
-          </FormControl>
-          {/* onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-               setHighOrLow(e.target.value);
-            }}*/}
-        </Grid>
-      )}
-      {showPrice && (
-        <Grid item xs={12} sm={4}>
+
+      <Grid item xs={12} sm={6}>
+        {isNew ? (
           <FormControl fullWidth>
             <TextField
               id="price"
@@ -252,8 +212,43 @@ export default function DonationItemForm({
               // helperText={validationErrors?.price}
             />
           </FormControl>
-        </Grid>
-      )}
+        ) : (
+          <FormControl
+            fullWidth
+            // Disable if Item or Category are not selected
+            disabled={
+              disabled ||
+              donationItemData.newOrUsed !== 'Used' ||
+              !isValidString(donationItemData.name) ||
+              !isValidString(donationItemData.category)
+            }
+          >
+            <InputLabel id="high-or-low-value-label">
+              High or Low Value
+            </InputLabel>
+            <Select
+              labelId="high-or-low-value-label"
+              value={donationItemData.highOrLow ?? ''}
+              onChange={(e) => {
+                onChange({
+                  ...donationItemData,
+                  highOrLow: e.target.value,
+                });
+              }}
+              label="High or Low Value"
+              id="high-or-low-value"
+              // error={!!validationErrors?.highOrLow}
+            >
+              <MenuItem value="High">High</MenuItem>
+              <MenuItem value="Low">Low</MenuItem>
+            </Select>
+            {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
+          </FormControl>
+          /*{ onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setHighOrLow(e.target.value);
+                }}}*/
+        )}
+      </Grid>
     </>
   );
 }
