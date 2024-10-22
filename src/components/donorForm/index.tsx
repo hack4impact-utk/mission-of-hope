@@ -87,7 +87,7 @@ export default function DonorForm(props: donorProps) {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({
               ...props.donorData,
-              zip: Number(e.target.value),
+              zip: e.target.value,
             });
           }}
         />

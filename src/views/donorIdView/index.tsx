@@ -2,7 +2,7 @@
 import DonorForm from '@/components/donorForm';
 import useSnackbar from '@/hooks/useSnackbar';
 import { DonorFormData } from '@/types/forms/donor';
-import { DonorResponse } from '@/types/persons';
+import { DonorResponse } from '@/types/donors';
 import mohColors from '@/utils/moh-theme';
 import { ArrowBack } from '@mui/icons-material';
 import {
