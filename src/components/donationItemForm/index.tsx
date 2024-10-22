@@ -87,7 +87,7 @@ export default function DonationItemForm({
 
   return (
     <>
-      <Grid item xs={7}>
+      <Grid item xs={8}>
         <AutofillItem
           ItemOptions={itemOptions}
           onItemSelect={handleItemSelect}
@@ -145,14 +145,15 @@ export default function DonationItemForm({
           // helperText={validationErrors?.category}
         />
       </Grid>
-      <Grid item xs={12} sm={5}>
+      <Grid item xs={12} sm={5.5}>
         <FormControl
           fullWidth
+          // Disable if Item or Category is not selected or invalid
           disabled={
             disabled ||
             !isValidString(donationItemData.name) ||
             !isValidString(donationItemData.category)
-          } // Disable if Item or Category are not selected
+          }
         >
           <InputLabel>New or Used</InputLabel>
           <Select
@@ -176,7 +177,7 @@ export default function DonationItemForm({
         </FormControl>
       </Grid>
 
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={5.5}>
         {isNew ? (
           <FormControl fullWidth>
             <TextField
@@ -201,7 +202,7 @@ export default function DonationItemForm({
                   <InputAdornment position="start">$</InputAdornment>
                 ),
               }}
-              // Disable if Item or Category are not selected
+              // Disable if Item or Category is not selected or invalid
               disabled={
                 disabled ||
                 donationItemData.newOrUsed !== 'New' ||
@@ -215,7 +216,7 @@ export default function DonationItemForm({
         ) : (
           <FormControl
             fullWidth
-            // Disable if Item or Category are not selected
+            // Disable if Item or Category is not selected or invalid
             disabled={
               disabled ||
               donationItemData.newOrUsed !== 'Used' ||
