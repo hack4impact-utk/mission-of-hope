@@ -1,5 +1,5 @@
 import UserSchema from '@/server/models/users';
-import { UserResponse } from '@/types/persons';
+import { UserResponse } from '@/types/users';
 import dbConnect from '@/utils/db-connect';
 
 export async function getAllUsers(): Promise<UserResponse[]> {

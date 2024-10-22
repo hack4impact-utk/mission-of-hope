@@ -1,30 +1,14 @@
 import zBase from './base';
 import { z } from 'zod';
 
-const zPersonBase = z.object({
+const zDonorBase = z.object({
   lastName: z.string(),
   firstName: z.string().optional(),
   email: z.string(),
-});
-
-export const zUserEntity = zBase.extend({
-  name: z.string(),
-  email: z.string().email(),
-  image: z.string(),
-  isAdmin: z.boolean(),
-});
-
-export const zUserResponse = zUserEntity;
-
-export interface UserEntity extends z.infer<typeof zUserEntity> {}
-
-export interface UserResponse extends z.infer<typeof zUserResponse> {}
-
-export const zDonorBase = zPersonBase.extend({
   address: z.string(),
   city: z.string(),
   state: z.string(),
-  zip: z.number(),
+  zip: z.string(),
 });
 
 export const zDonorEntity = zDonorBase.extend({ ...zBase.shape });

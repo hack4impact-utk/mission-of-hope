@@ -79,7 +79,7 @@ export default function DonationItemForm({
 
   return (
     <>
-      <Grid item xs={7}>
+      <Grid item xs={12} sm={8}>
         <AutofillItem
           ItemOptions={itemOptions}
           onItemSelect={handleItemSelect}
@@ -90,18 +90,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.donatedItemName}
         />
       </Grid>
-      <Grid item xs={4}>
-        <AutofillCategory
-          ItemOptions={itemOptions}
-          onCategorySelect={handleCategorySelect}
-          name={donationItemData.name}
-          value={donationItemData.category}
-          disabled={disabled}
-          // error={!!validationErrors?.category}
-          // helperText={validationErrors?.category}
-        />
-      </Grid>
-      <Grid item xs={3} sm={4}>
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -119,7 +108,7 @@ export default function DonationItemForm({
           // helperText={validationErrors?.quantity}
         />
       </Grid>
-      <Grid item xs={9} sm={8}>
+      <Grid item xs={12} sm={8}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -138,14 +127,25 @@ export default function DonationItemForm({
         />
       </Grid>
       <Grid item xs={12} sm={4}>
+        <AutofillCategory
+          ItemOptions={itemOptions}
+          onCategorySelect={handleCategorySelect}
+          name={donationItemData.name}
+          value={donationItemData.category}
+          disabled={disabled}
+          // error={!!validationErrors?.category}
+          // helperText={validationErrors?.category}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4}>
         <FormControl fullWidth disabled={disabled}>
-          <InputLabel>New or Used</InputLabel>
+          <InputLabel>New or Used?</InputLabel>
           <Select
             value={donationItemData.newOrUsed ?? ''}
             onChange={(e) => {
               onChange({ ...donationItemData, newOrUsed: e.target.value });
             }}
-            label="New or Used"
+            label="New or Used?"
             id="new-or-used"
             // error={!!validationErrors?.newOrUsed}
           >
@@ -161,7 +161,7 @@ export default function DonationItemForm({
           disabled={donationItemData.newOrUsed !== 'Used' || disabled} // Disable if new
         >
           <InputLabel id="high-or-low-value-label">
-            High or Low Value
+            High or Low Value?
           </InputLabel>
           <Select
             labelId="high-or-low-value-label"
@@ -172,7 +172,7 @@ export default function DonationItemForm({
                 highOrLow: e.target.value,
               });
             }}
-            label="High or Low Value"
+            label="High or Low Value?"
             id="high-or-low-value"
             // error={!!validationErrors?.highOrLow}
           >
@@ -185,7 +185,7 @@ export default function DonationItemForm({
                setHighOrLow(e.target.value);
             }}*/}
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={3} md={3.5}>
         <TextField
           id="price"
           label="Price"
@@ -207,6 +207,7 @@ export default function DonationItemForm({
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
           disabled={donationItemData.newOrUsed !== 'New' || disabled} // Disable if used
+          fullWidth
           // error={!!validationErrors?.price}
           // helperText={validationErrors?.price}
         />

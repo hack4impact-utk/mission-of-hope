@@ -51,7 +51,7 @@ export default function DonorForm(props: donorProps) {
           }}
         />
       </Grid>
-      <Grid item xs={12} sm={5}>
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -75,7 +75,7 @@ export default function DonorForm(props: donorProps) {
           }}
         />
       </Grid>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           id="outlined-required"
@@ -87,7 +87,7 @@ export default function DonorForm(props: donorProps) {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({
               ...props.donorData,
-              zip: Number(e.target.value),
+              zip: e.target.value,
             });
           }}
         />

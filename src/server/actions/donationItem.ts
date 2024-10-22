@@ -8,6 +8,7 @@ import {
 import dbConnect from '@/utils/db-connect';
 import ItemSchema from '@/server/models/items';
 ItemSchema;
+
 export async function getDonationItemById(
   id: string
 ): Promise<DonationItemResponse | null> {
@@ -41,10 +42,12 @@ export async function createDonationItem(
 ): Promise<DonationItemEntity> {
   await dbConnect();
 
-  const response = await DonationItemSchema.create(donationItem);
+  const response: DonationItemEntity =
+    await DonationItemSchema.create(donationItem);
   return response;
 }
 
+// currently not used in the app
 export async function updateDonationItem(
   id: string,
   updatedData: UpdateDonationItemRequest

@@ -4,19 +4,15 @@ import DonorForm from '@/components/donorForm';
 import useValidation from '@/hooks/useValidation';
 import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
 import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
-import { CreateDonorRequest, DonorResponse } from '@/types/persons';
+import { CreateDonorRequest, DonorResponse } from '@/types/donors';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Button,
   Divider,
-  FormControl,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   ThemeProvider,
   Tooltip,
@@ -283,9 +279,13 @@ export default function AddDonationView({
           <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
             Add Donation
           </Typography>
-          <Divider></Divider>
+          <Divider
+            sx={{
+              backgroundColor: '#379541',
+            }}
+          ></Divider>
           <Grid container spacing={2} sx={{ mt: 1, pl: 2, pr: 2 }}>
-            <Grid item sm={8}>
+            <Grid item xs={12} sm={8}>
               <AutofillDonorEmail
                 DonorOptions={donorOptions}
                 DonorForm={donorFormData}
@@ -293,7 +293,7 @@ export default function AddDonationView({
                 onChange={setDonorFormData}
               />
             </Grid>
-            <Grid item sm={4}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
                 id="outlined-required"
@@ -315,51 +315,13 @@ export default function AddDonationView({
               />
             </Grid>
 
-            {donationItemFormDatas.map((_, index) => (
-              <>
-                <Grid item sm={1} display={'flex'} alignContent={'center'}>
-                  <Tooltip title="Remove">
-                    <IconButton
-                      onClick={() => {
-                        donationItemFormDatas.splice(index, 1);
-                        setDonationItemFormDatas([...donationItemFormDatas]);
-                      }}
-                      key={index}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                <DonationItemForm
-                  itemOptions={itemOptions}
-                  donationItemData={donationItemFormDatas[index]}
-                  onChange={(value: DonationItemFormData) =>
-                    handleDonationItemFormChange(value, index)
-                  }
-                  key={index}
-                  disabled={false}
-                  // validationErrors={}
-                />
-              </>
-            ))}
-            <Grid item sm={4}>
-              <Button
-                sx={{ height: '100%' }}
-                variant="outlined"
-                startIcon={<AddIcon></AddIcon>}
-                color="moh"
-                onClick={() =>
-                  setDonationItemFormDatas([
-                    ...donationItemFormDatas,
-                    {} as DonationItemFormData,
-                  ])
-                }
-                fullWidth
-              >
-                Add Item
-              </Button>
-            </Grid>
-            <Grid item xs={8} sm={8}>
+            <DonorForm
+              donorData={donorFormData}
+              disabled={prevDonated}
+              onChange={setDonorFormData}
+            />
+
+            <Grid item xs={12}>
               <TextField
                 fullWidth
                 id="outlined-required"
@@ -374,6 +336,10 @@ export default function AddDonationView({
                       receipt: e.target.value,
                     });
                   }
+                }}
+                InputLabelProps={{
+                  // Ensures the label floats when a value is present
+                  shrink: !!donationData.receipt,
                 }}
                 InputProps={{
                   endAdornment: (
@@ -400,39 +366,77 @@ export default function AddDonationView({
               />
             </Grid>
 
-            <Grid item sm={4}>
+            {donationItemFormDatas.map((_, index) => (
+              <>
+                <Grid item xs={12}>
+                  <Divider
+                    sx={{
+                      margin: '18px',
+                      backgroundColor: '#379541',
+                    }}
+                  />
+                </Grid>
+                <DonationItemForm
+                  itemOptions={itemOptions}
+                  donationItemData={donationItemFormDatas[index]}
+                  onChange={(value: DonationItemFormData) =>
+                    handleDonationItemFormChange(value, index)
+                  }
+                  key={index}
+                  disabled={false}
+                  // validationErrors={}
+                />
+                <Grid
+                  item
+                  xs={12}
+                  sm={1}
+                  md={0.5}
+                  display={'flex'}
+                  alignContent={'center'}
+                >
+                  <Tooltip title="Remove">
+                    <IconButton
+                      onClick={() => {
+                        donationItemFormDatas.splice(index, 1);
+                        setDonationItemFormDatas([...donationItemFormDatas]);
+                      }}
+                      key={index}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </>
+            ))}
+            <Grid item xs={12}>
+              <Button
+                sx={{ height: '40px' }}
+                variant="outlined"
+                startIcon={<AddIcon></AddIcon>}
+                color="moh"
+                onClick={() =>
+                  setDonationItemFormDatas([
+                    ...donationItemFormDatas,
+                    {} as DonationItemFormData,
+                  ])
+                }
+                fullWidth
+              >
+                Add Additional Item
+              </Button>
+            </Grid>
+
+            <Grid item xs={12}>
               <Button
                 variant="contained"
-                sx={{ height: '100%' }}
+                sx={{ height: '40px' }}
                 onClick={() => handleAddDonation()}
                 color="moh"
                 fullWidth
               >
-                Add Donation
+                Submit Donation
               </Button>
             </Grid>
-            <Grid item xs={12} sm={8}>
-              <FormControl fullWidth>
-                <InputLabel>Has this donor previously donated?</InputLabel>
-                <Select
-                  value={prevDonated ? 'yes' : 'no'}
-                  onChange={(e) => {
-                    setPrevDonated(e.target.value === 'yes');
-                  }}
-                  label="Has this donor previously donated?"
-                  id="donor-donated"
-                >
-                  <MenuItem value="yes">Yes</MenuItem>
-                  <MenuItem value="no">No</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <DonorForm
-              donorData={donorFormData}
-              disabled={prevDonated}
-              onChange={setDonorFormData}
-            />
           </Grid>
         </Box>
       </Box>
