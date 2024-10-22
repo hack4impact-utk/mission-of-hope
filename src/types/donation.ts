@@ -2,7 +2,7 @@ import zBase from './base';
 import { z } from 'zod';
 import zObjectId from './objectId';
 import { zItemResponse } from './items';
-import { zUserResponse } from './persons';
+import { zUserResponse } from './users';
 import { zDonorResponse } from './donors';
 
 export const evaluationEnum = ['High', 'Low', 'New'] as const;
