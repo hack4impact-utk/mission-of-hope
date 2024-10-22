@@ -25,7 +25,7 @@ const DonationItemSchema = new Schema(
         evaluation: {
           type: String,
           enum: evaluationEnum,
-          required: false,
+          required: true,
         },
       },
       required: true,
