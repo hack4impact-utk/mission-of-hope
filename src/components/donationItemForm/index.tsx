@@ -26,6 +26,14 @@ function getPriceFormatted(value: string): number {
   return formattedValue;
 }
 
+/*
+  Return false if the string is either: empty, space-only, undefined, or null
+  Return true otherwise
+*/
+const isValidString = (value: string): boolean => {
+  return typeof value === 'string' && value.trim().length > 0;
+};
+
 interface DonationItemFormProps {
   itemOptions: ItemResponse[];
   donationItemData: DonationItemFormData;
@@ -77,12 +85,6 @@ export default function DonationItemForm({
         itemRes: category,
       });
     }
-  };
-
-  // Return false if the string is either: empty, space-only, undefined, or null
-  // Return true otherwise
-  const isValidString = (value: string): boolean => {
-    return typeof value === 'string' && value.trim().length > 0;
   };
 
   return (
@@ -178,7 +180,7 @@ export default function DonationItemForm({
       </Grid>
 
       <Grid item xs={12} sm={5.5}>
-        {isNew ? (
+        {isNew ? ( // Display Price field if the item is "New"
           <FormControl fullWidth>
             <TextField
               id="price"
@@ -214,6 +216,7 @@ export default function DonationItemForm({
             />
           </FormControl>
         ) : (
+          // Display HighLow field if the item is "Used"
           <FormControl
             fullWidth
             // Disable if Item or Category is not selected or invalid
