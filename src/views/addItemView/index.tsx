@@ -33,7 +33,7 @@ export default function AddItemView() {
 
     // Check if high is greater than low
     if (high < low) {
-      showSnackbar('greater than', 'error');
+      showSnackbar('Low Value greater than High Value', 'error');
       return;
     }
 
