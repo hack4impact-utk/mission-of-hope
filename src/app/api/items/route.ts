@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createItem, getAllItems } from '@/server/actions/items';
 import { zCreateItemRequest } from '@/types/items';
-// import { CreateItem } from '@/server/actions/items';
 
 export async function POST(request: NextRequest) {
   try {
