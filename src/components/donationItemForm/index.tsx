@@ -13,7 +13,7 @@ import AutofillCategory from '../donation-form/AutofillCategory';
 import AutofillItem from '../donation-form/AutofillItem';
 import { ItemResponse } from '@/types/items';
 import { DonationItemFormData } from '@/types/forms/donationItem';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function getPriceFormatted(value: string): number {
   const numberValue = Number(value);
@@ -48,7 +48,21 @@ export default function DonationItemForm({
   onChange,
   disabled,
 }: DonationItemFormProps) {
+  // Tracking the value of newOrUsed to render Price or highOrLow
   const [isNew, setIsNew] = useState<boolean>(false);
+
+  // Tracking the current high/low values to show it instantly
+  const [highLowVals, setHighLowVals] = useState<[string, string]>([
+    'High',
+    'Low',
+  ]);
+
+  // Checking undefined, null, and emptiness before show the Higg/Low values
+  const updateHighLowVals = (newOrUsed: string, itemRes: ItemResponse) => {
+    if (newOrUsed === 'Used') {
+      setHighLowVals([`High ($${itemRes.high})`, `Low ($${itemRes.low})`]);
+    }
+  };
 
   useEffect(() => {
     if (donationItemData.newOrUsed === 'Used') {
@@ -72,6 +86,7 @@ export default function DonationItemForm({
       onChange({ ...donationItemData, name: name });
     } else {
       onChange({ ...donationItemData, name: name.name, itemRes: name });
+      updateHighLowVals(donationItemData.newOrUsed, name);
     }
   };
 
@@ -84,12 +99,13 @@ export default function DonationItemForm({
         category: category.category,
         itemRes: category,
       });
+      updateHighLowVals(donationItemData.newOrUsed, category);
     }
   };
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item xs={12} sm={8}>
         <AutofillItem
           ItemOptions={itemOptions}
           onItemSelect={handleItemSelect}
@@ -157,7 +173,7 @@ export default function DonationItemForm({
             !isValidString(donationItemData.category)
           }
         >
-          <InputLabel>New or Used</InputLabel>
+          <InputLabel>New or Used?</InputLabel>
           <Select
             value={donationItemData.newOrUsed ?? ''}
             onChange={(e) => {
@@ -167,6 +183,7 @@ export default function DonationItemForm({
                 setIsNew(false);
               }
               onChange({ ...donationItemData, newOrUsed: e.target.value });
+              updateHighLowVals(e.target.value, donationItemData.itemRes);
             }}
             label="New or Used?"
             id="new-or-used"
@@ -228,7 +245,7 @@ export default function DonationItemForm({
             }
           >
             <InputLabel id="high-or-low-value-label">
-              High or Low Value
+              High or Low Value?
             </InputLabel>
             <Select
               labelId="high-or-low-value-label"
@@ -243,8 +260,8 @@ export default function DonationItemForm({
               id="high-or-low-value"
               // error={!!validationErrors?.highOrLow}
             >
-              <MenuItem value="High">High</MenuItem>
-              <MenuItem value="Low">Low</MenuItem>
+              <MenuItem value="High">{highLowVals[0]}</MenuItem>
+              <MenuItem value="Low">{highLowVals[1]}</MenuItem>
             </Select>
             {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
           </FormControl>
