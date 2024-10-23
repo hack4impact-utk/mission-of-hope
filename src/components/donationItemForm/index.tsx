@@ -26,6 +26,14 @@ function getPriceFormatted(value: string): number {
   return formattedValue;
 }
 
+/*
+  Return false if the string is either: empty, space-only, undefined, or null
+  Return true otherwise
+*/
+const isValidString = (value: string): boolean => {
+  return typeof value === 'string' && value.trim().length > 0;
+};
+
 interface DonationItemFormProps {
   itemOptions: ItemResponse[];
   donationItemData: DonationItemFormData;
@@ -40,6 +48,8 @@ export default function DonationItemForm({
   onChange,
   disabled,
 }: DonationItemFormProps) {
+  const [isNew, setIsNew] = useState<boolean>(false);
+
   // Tracking the current high/low values to show it instantly
   const [highLowVals, setHighLowVals] = useState<[string, string]>([
     'High',
@@ -94,7 +104,7 @@ export default function DonationItemForm({
 
   return (
     <>
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={8}>
         <AutofillItem
           ItemOptions={itemOptions}
           onItemSelect={handleItemSelect}
@@ -152,12 +162,25 @@ export default function DonationItemForm({
           // helperText={validationErrors?.category}
         />
       </Grid>
-      <Grid item xs={12} sm={4}>
-        <FormControl fullWidth disabled={disabled}>
-          <InputLabel>New or Used?</InputLabel>
+      <Grid item xs={12} sm={5.5}>
+        <FormControl
+          fullWidth
+          // Disable if Item or Category is not selected or invalid
+          disabled={
+            disabled ||
+            !isValidString(donationItemData.name) ||
+            !isValidString(donationItemData.category)
+          }
+        >
+          <InputLabel>New or Used</InputLabel>
           <Select
             value={donationItemData.newOrUsed ?? ''}
             onChange={(e) => {
+              if (e.target.value === 'New') {
+                setIsNew(true);
+              } else {
+                setIsNew(false);
+              }
               onChange({ ...donationItemData, newOrUsed: e.target.value });
               updateHighLowVals(e.target.value, donationItemData.itemRes);
             }}
@@ -172,62 +195,79 @@ export default function DonationItemForm({
         </FormControl>
       </Grid>
 
-      <Grid item xs={12} sm={4}>
-        <FormControl
-          fullWidth
-          disabled={donationItemData.newOrUsed !== 'Used' || disabled} // Disable if new
-        >
-          <InputLabel id="high-or-low-value-label">
-            High or Low Value?
-          </InputLabel>
-          <Select
-            labelId="high-or-low-value-label"
-            value={donationItemData.highOrLow ?? ''}
-            onChange={(e) => {
-              onChange({
-                ...donationItemData,
-                highOrLow: e.target.value,
-              });
-            }}
-            label="High or Low Value?"
-            id="high-or-low-value"
-            // error={!!validationErrors?.highOrLow}
+      <Grid item xs={12} sm={5.5}>
+        {isNew ? ( // Display Price field if the item is "New"
+          <FormControl fullWidth>
+            <TextField
+              id="price"
+              label="Price"
+              type="number"
+              value={donationItemData.price ?? ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                onChange({
+                  ...donationItemData,
+                  price: Number(e.target.value),
+                });
+              }}
+              onBlur={(e) =>
+                onChange({
+                  ...donationItemData,
+                  price: getPriceFormatted(e.target.value),
+                })
+              }
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+              // Disable if Item or Category is not selected or invalid
+              disabled={
+                disabled ||
+                donationItemData.newOrUsed !== 'New' ||
+                !isValidString(donationItemData.name) ||
+                !isValidString(donationItemData.category)
+              }
+              // error={!!validationErrors?.price}
+              // helperText={validationErrors?.price}
+            />
+          </FormControl>
+        ) : (
+          // Display HighLow field if the item is "Used"
+          <FormControl
+            fullWidth
+            // Disable if Item or Category is not selected or invalid
+            disabled={
+              disabled ||
+              donationItemData.newOrUsed !== 'Used' ||
+              !isValidString(donationItemData.name) ||
+              !isValidString(donationItemData.category)
+            }
           >
-            <MenuItem value="High">{highLowVals[0]}</MenuItem>
-            <MenuItem value="Low">{highLowVals[1]}</MenuItem>
-          </Select>
-          {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
-        </FormControl>
-        {/* onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-               setHighOrLow(e.target.value);
-            }}*/}
-      </Grid>
-      <Grid item xs={12} sm={3} md={3.5}>
-        <TextField
-          id="price"
-          label="Price"
-          type="number"
-          value={donationItemData.price ?? ''}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            onChange({
-              ...donationItemData,
-              price: Number(e.target.value),
-            });
-          }}
-          onBlur={(e) =>
-            onChange({
-              ...donationItemData,
-              price: getPriceFormatted(e.target.value),
-            })
-          }
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-          }}
-          disabled={donationItemData.newOrUsed !== 'New' || disabled} // Disable if used
-          fullWidth
-          // error={!!validationErrors?.price}
-          // helperText={validationErrors?.price}
-        />
+            <InputLabel id="high-or-low-value-label">
+              High or Low Value
+            </InputLabel>
+            <Select
+              labelId="high-or-low-value-label"
+              value={donationItemData.highOrLow ?? ''}
+              onChange={(e) => {
+                onChange({
+                  ...donationItemData,
+                  highOrLow: e.target.value,
+                });
+              }}
+              label="High or Low Value"
+              id="high-or-low-value"
+              // error={!!validationErrors?.highOrLow}
+            >
+              <MenuItem value="High">{highLowVals[0]}</MenuItem>
+              <MenuItem value="Low">{highLowVals[1]}</MenuItem>
+            </Select>
+            {/* <FormHelperText>{validationErrors?.highOrLow}</FormHelperText> */}
+          </FormControl>
+          /*{ onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setHighOrLow(e.target.value);
+                }}}*/
+        )}
       </Grid>
     </>
   );
