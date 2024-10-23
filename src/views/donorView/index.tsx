@@ -15,6 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { useEffect } from 'react';
 
 interface DonorViewProps {
   donors: DonorResponse[];
@@ -24,10 +25,12 @@ interface DonorViewProps {
 export default function DonorView({ donors, donations }: DonorViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
-  if (monthQuery === '') {
-    setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
-  }
 
+  useEffect(() => {
+    if (monthQuery === '') {
+      setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
+    }
+  });
   // Function to handle month selection change
   const handleMonthChange = (event: SelectChangeEvent<string>) => {
     setMonthQuery(event.target.value as string);
