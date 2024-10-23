@@ -48,6 +48,7 @@ export default function DonationItemForm({
   onChange,
   disabled,
 }: DonationItemFormProps) {
+  // Tracking the value of newOrUsed to render Price or highOrLow
   const [isNew, setIsNew] = useState<boolean>(false);
 
   // Tracking the current high/low values to show it instantly
@@ -104,7 +105,7 @@ export default function DonationItemForm({
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item xs={12} sm={8}>
         <AutofillItem
           ItemOptions={itemOptions}
           onItemSelect={handleItemSelect}
@@ -172,7 +173,7 @@ export default function DonationItemForm({
             !isValidString(donationItemData.category)
           }
         >
-          <InputLabel>New or Used</InputLabel>
+          <InputLabel>New or Used?</InputLabel>
           <Select
             value={donationItemData.newOrUsed ?? ''}
             onChange={(e) => {
@@ -244,7 +245,7 @@ export default function DonationItemForm({
             }
           >
             <InputLabel id="high-or-low-value-label">
-              High or Low Value
+              High or Low Value?
             </InputLabel>
             <Select
               labelId="high-or-low-value-label"
