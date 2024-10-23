@@ -30,7 +30,7 @@ export default function DonorView({ donors, donations }: DonorViewProps) {
     if (monthQuery === '') {
       setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
     }
-  });
+  }, [monthQuery, setMonthQuery]);
   // Function to handle month selection change
   const handleMonthChange = (event: SelectChangeEvent<string>) => {
     setMonthQuery(event.target.value as string);
