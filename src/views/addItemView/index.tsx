@@ -110,10 +110,11 @@ export default function AddItemView() {
               <ItemForm
                 itemForm={itemFormData}
                 onChange={handleChange}
-                disabled={false}
+                disabled={isLoading}
               />
               <Grid item xs={12}>
                 <Button
+                  disabled={isLoading}
                   type="submit"
                   variant="contained"
                   color="moh"
