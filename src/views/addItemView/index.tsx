@@ -17,7 +17,11 @@ const initialFormData: ItemFormData = {
   lowString: '',
 };
 
-export default function AddItemView() {
+interface AddItemViewProps {
+  categories: string[];
+}
+
+export default function AddItemView(props: AddItemViewProps) {
   const [itemFormData, setItemFormData] =
     useState<ItemFormData>(initialFormData);
   const { showSnackbar } = useSnackbar();
@@ -97,6 +101,7 @@ export default function AddItemView() {
                 itemForm={itemFormData}
                 onChange={handleChange}
                 disabled={false}
+                categories={props.categories}
               />
               <Grid item xs={12}>
                 <Button
