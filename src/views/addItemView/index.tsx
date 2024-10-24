@@ -1,7 +1,14 @@
 'use client';
 import mohColors from '@/utils/moh-theme';
 import { ThemeProvider } from '@emotion/react';
-import { Box, Button, Divider, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
 import { ItemFormData } from '@/types/forms/item';
@@ -17,11 +24,13 @@ const initialFormData: ItemFormData = {
   lowString: '',
 };
 
+
 interface AddItemViewProps {
   categories: string[];
 }
 
 export default function AddItemView(props: AddItemViewProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false); // For the loading wheel
   const [itemFormData, setItemFormData] =
     useState<ItemFormData>(initialFormData);
   const { showSnackbar } = useSnackbar();
@@ -43,6 +52,9 @@ export default function AddItemView(props: AddItemViewProps) {
       );
       return;
     }
+
+    // Start showing the loading wheel
+    setIsLoading(true);
 
     // Validate form fields
     const requestData = {
@@ -74,6 +86,9 @@ export default function AddItemView(props: AddItemViewProps) {
       }
     } catch (error) {
       showSnackbar(`Error: ${error}`, 'error');
+    } finally {
+      // Stop showing the wheel
+      setIsLoading(false);
     }
   };
 
@@ -100,11 +115,12 @@ export default function AddItemView(props: AddItemViewProps) {
               <ItemForm
                 itemForm={itemFormData}
                 onChange={handleChange}
-                disabled={false}
                 categories={props.categories}
+                disabled={isLoading}
               />
               <Grid item xs={12}>
                 <Button
+                  disabled={isLoading}
                   type="submit"
                   variant="contained"
                   color="moh"
@@ -116,7 +132,11 @@ export default function AddItemView(props: AddItemViewProps) {
                     backgroundColor: 'rgba(55, 149, 65, 0.8)',
                   }}
                 >
-                  Add Item
+                  {isLoading ? (
+                    <CircularProgress color="inherit"></CircularProgress>
+                  ) : (
+                    'Add Item'
+                  )}
                 </Button>
               </Grid>
             </Grid>
