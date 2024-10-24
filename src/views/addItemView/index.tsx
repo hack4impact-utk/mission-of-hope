@@ -24,7 +24,12 @@ const initialFormData: ItemFormData = {
   lowString: '',
 };
 
-export default function AddItemView() {
+
+interface AddItemViewProps {
+  categories: string[];
+}
+
+export default function AddItemView(props: AddItemViewProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false); // For the loading wheel
   const [itemFormData, setItemFormData] =
     useState<ItemFormData>(initialFormData);
@@ -110,6 +115,7 @@ export default function AddItemView() {
               <ItemForm
                 itemForm={itemFormData}
                 onChange={handleChange}
+                categories={props.categories}
                 disabled={isLoading}
               />
               <Grid item xs={12}>

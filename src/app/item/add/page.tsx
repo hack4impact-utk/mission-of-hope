@@ -1,9 +1,12 @@
 import AddItemView from '@/views/addItemView';
+import { getUniqueCategories } from '@/server/actions/items';
 
-export default function AddItemPage() {
+export default async function AddItemPage() {
+  const categories = await getUniqueCategories();
+
   return (
     <>
-      <AddItemView />
+      <AddItemView categories={categories} />
     </>
   );
 }

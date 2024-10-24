@@ -60,3 +60,17 @@ export async function updateItem(
     throw error;
   }
 }
+
+export async function getUniqueCategories(): Promise<string[]> {
+  try {
+    await dbConnect();
+
+    // Get a unique list of categories
+    const uniqueCategories: string[] = await ItemSchema.distinct('category');
+
+    return uniqueCategories;
+  } catch (error) {
+    // Catch any errors and throw them
+    throw error;
+  }
+}

@@ -153,6 +153,7 @@ export default function ItemIdView(props: itemProps) {
                 itemForm={itemForm}
                 onChange={setItemForm}
                 disabled={!editSwitch}
+                categories={[]}
               ></ItemForm>
               <Grid item xs={3} sm={6}></Grid>
               <Grid item xs={3} sm={3}>
