@@ -16,14 +16,12 @@ import {
   Box,
   Button,
   Divider,
-  FormControlLabel,
-  FormGroup,
   Grid,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface donationProps {
   id: string;
@@ -33,7 +31,7 @@ interface donationProps {
 
 export default function DonationIdView(props: donationProps) {
   const { showSnackbar } = useSnackbar();
-  const [editSwitch, setEditSwitch] = useState<boolean>(false);
+
   const [donationForm, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(props.donation.entryDate),
     receipt: props.donation.receipt ?? '',
@@ -56,6 +54,9 @@ export default function DonationIdView(props: donationProps) {
     )
   );
 
+  // This setDonationFormFromDonation will be used to implemente edit function
+  // So, I comment it out for now so that typescript won't complain
+  /*
   function setDonationFormFromDonation(donation: DonationResponse) {
     setDonationItemFormDatas(
       donation.items.map(
@@ -76,6 +77,7 @@ export default function DonationIdView(props: donationProps) {
       donationDate: new Date(donation.entryDate),
     } as DonationFormData);
   }
+    */
 
   const handleDonationItemFormChange = (
     updatedDonationItem: DonationItemFormData,
@@ -96,7 +98,6 @@ export default function DonationIdView(props: donationProps) {
 
     try {
       // Grab item from the autofill
-
       const dItems: UpdateDonationItemRequest[] = donationItemForms.map(
         (itemForm) =>
           ({
@@ -117,15 +118,21 @@ export default function DonationIdView(props: donationProps) {
     } catch (error) {
       showSnackbar(`Error updating donor: ${error}`, 'error');
     }
-    setEditSwitch(false);
   };
 
-  const handleCancel = () => {
-    // Reset the form data to initial donor data
-    // setDonorFormFromDonor(props.donor);
-    setDonationFormFromDonation(props.donation);
-    setEditSwitch(false); // Optionally turn off edit mode
-  };
+  // useRouter to go back in "ViewDonation" button
+  const router = useRouter();
+
+  // Track if component is mounted
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure the component is mounted (runs only on the client)
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Do not render if the component is not mounted
+  if (!isMounted) return null;
 
   return (
     <>
@@ -138,7 +145,9 @@ export default function DonationIdView(props: donationProps) {
                 variant="contained"
                 color="moh"
                 startIcon={<ArrowBack></ArrowBack>}
-                onClick={() => (window.location.href = `/donation`)}
+                onClick={() => {
+                  if (isMounted) router.back();
+                }}
               >
                 View Donations
               </Button>
@@ -160,28 +169,11 @@ export default function DonationIdView(props: donationProps) {
                     <Divider></Divider>
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={editSwitch}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) => setEditSwitch(event.target.checked)}
-                            inputProps={{ 'aria-label': 'controlled' }}
-                          />
-                        }
-                        label="Edit"
-                      />
-                    </FormGroup>
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
                     <TextField
                       fullWidth
                       id="outlined-required"
                       label="Donation Date"
                       type="date"
-                      disabled={!editSwitch}
                       value={
                         donationForm?.donationDate
                           ?.toISOString()
@@ -206,7 +198,6 @@ export default function DonationIdView(props: donationProps) {
                       onChange={(value: DonationItemFormData) =>
                         handleDonationItemFormChange(value, index)
                       }
-                      disabled={!editSwitch}
                       key={index}
                     ></DonationItemForm>
                   ))}
@@ -215,33 +206,12 @@ export default function DonationIdView(props: donationProps) {
                       fullWidth
                       id="outlined-required"
                       label="Receipt"
-                      disabled={true}
                       value={donationForm.receipt}
                     />
                   </Grid>
-
-                  <Grid item xs={3} sm={6}></Grid>
-                  <Grid item xs={3} sm={3}>
-                    <Button
-                      sx={{
-                        '&:hover': {
-                          backgroundColor: '#666666ff',
-                        },
-                        backgroundColor: '#666666cc',
-                      }}
-                      fullWidth
-                      disabled={!editSwitch}
-                      variant="contained"
-                      onClick={handleCancel}
-                      // color='moh'
-                    >
-                      Cancel
-                    </Button>
-                  </Grid>
-                  <Grid item xs={3} sm={3}>
+                  <Grid item xs={12} sm={12}>
                     <Button
                       fullWidth
-                      disabled={!editSwitch}
                       variant="contained"
                       onClick={handleUpdate}
                       color="moh"
