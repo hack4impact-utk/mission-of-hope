@@ -10,7 +10,7 @@ const TopBar: React.FC = () => {
         width: '100%',
         height: '10vh',
         backgroundColor: '#379541cc',
-        position: 'sticky',
+        position: 'static',
         top: 0,
         left: 0,
         right: 0,
