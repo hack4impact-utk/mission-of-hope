@@ -1,30 +1,26 @@
 import { ItemResponse } from '@/types/items';
 import { Autocomplete, TextField } from '@mui/material';
-interface AutofillCategoryProps {
-  categoryOptions: ItemResponse[];
+import { useState } from 'react';
+
+interface Item {
+  ItemOptions: ItemResponse[];
   onCategorySelect: (category: string | ItemResponse) => void;
   name: string;
   value: string;
   disabled?: boolean;
 }
 
-export default function AutofillCategory(props: AutofillCategoryProps) {
-  let selectedCategory = '';
-
-  const filteredCategories = props.categoryOptions.filter((item) => {
+export default function AutofillCategory(props: Item) {
+  const [itemOptions] = useState<ItemResponse[]>(props.ItemOptions);
+  const filteredItems = itemOptions.filter((item) => {
     if (!props.name) {
       return true;
     }
     return item.name === props.name;
   });
 
-  // If the filtered items gets down to one, set the value equal to said category of the item.
-  if (filteredCategories.length === 1) {
-    selectedCategory = filteredCategories[0].category;
-  }
-
   function onCategoryChange(value: string) {
-    const categoryMatches = props.categoryOptions.filter(
+    const categoryMatches = itemOptions.filter(
       (item) => item.category.toLowerCase() === value.toLowerCase()
     );
     if (categoryMatches.length > 0 && props.name) {
@@ -41,8 +37,8 @@ export default function AutofillCategory(props: AutofillCategoryProps) {
       <Autocomplete
         freeSolo
         autoComplete
-        value={selectedCategory ?? ''}
-        options={filteredCategories}
+        value={props.value ?? ''}
+        options={filteredItems}
         disabled={props.disabled}
         isOptionEqualToValue={(option, value) =>
           option.category === value.category
