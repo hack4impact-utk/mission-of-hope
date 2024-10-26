@@ -154,7 +154,7 @@ export default function DonationItemForm({
       </Grid>
       <Grid item xs={12} sm={4}>
         <AutofillCategory
-          ItemOptions={itemOptions}
+          categoryOptions={itemOptions}
           onCategorySelect={handleCategorySelect}
           name={donationItemData.name}
           value={donationItemData.category}
