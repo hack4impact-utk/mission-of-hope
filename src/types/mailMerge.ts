@@ -15,9 +15,14 @@ export const zCreateMailMergeRequest = zMailMergeBase;
 
 export const zMailMergeResponse = zMailMergeEntity;
 
+export const zUpdateMailMergeRequest = zCreateMailMergeRequest.partial();
+
 export interface MailMergeEntity extends z.infer<typeof zMailMergeEntity> {}
 
 export interface CreateMailMergeRequest
   extends z.infer<typeof zCreateMailMergeRequest> {}
 
 export interface MailMergeResponse extends z.infer<typeof zMailMergeResponse> {}
+
+export interface UpdateMailMergeRequest
+  extends z.infer<typeof zUpdateMailMergeRequest> {}
