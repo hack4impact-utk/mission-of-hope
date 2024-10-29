@@ -236,6 +236,7 @@ export default function AddDonationView({
   };
 
   const addDonation = async (createDonation: CreateDonationRequest) => {
+    donationData.prevDonated = prevDonated;
     const errors = validateDonation(donationData);
     if (errors) {
       setValidationErrors(errors);
