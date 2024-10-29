@@ -1,5 +1,13 @@
 'use client';
-import { Box, Card, Tab, Tabs, TextField, ThemeProvider } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Tab,
+  Tabs,
+  TextField,
+  ThemeProvider,
+} from '@mui/material';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
 import { useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
@@ -127,6 +135,14 @@ export default function EmailEditor({
             ></EmailParserCard>
           </CustomTabPanel>
         </Box>
+        <Button
+          variant="contained"
+          sx={{ height: '40px' }}
+          color="moh"
+          fullWidth
+        >
+          Send Email
+        </Button>
       </ThemeProvider>
     </>
   );
