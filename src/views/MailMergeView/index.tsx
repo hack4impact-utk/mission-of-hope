@@ -20,6 +20,10 @@ export default function MailMergeView({
     setValue(newValue);
   };
 
+  //const displayEmailTemplate = () => {
+  // This function will display the email template
+  //}
+
   return (
     <Box sx={{ m: 1 }}>
       <Box sx={{ borderBottom: 0, borderColor: 'divider' }}>

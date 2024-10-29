@@ -19,6 +19,7 @@ import { DonationResponse, DonationItemResponse } from '@/types/donation';
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import mohColors from '@/utils/moh-theme';
+import useSnackbar from '@/hooks/useSnackbar';
 
 interface mailMergeProps {
   exampleDonation: DonationResponse;
@@ -36,6 +37,7 @@ export default function EmailEditor({
   const [body, setBody] = useState('');
   const [subject, setSubject] = useState('');
   const [value, setValue] = React.useState(0);
+  const { showSnackbar } = useSnackbar();
 
   const handleSubjectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
@@ -47,6 +49,22 @@ export default function EmailEditor({
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleSaveButton = () => {
+    try {
+      fetch('/api/mailMerge', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ subject, body }),
+      });
+      showSnackbar('Email template saved', 'success');
+    } catch (error) {
+      showSnackbar('Error saving email template', 'error');
+      throw error;
+    }
   };
 
   return (
@@ -139,6 +157,7 @@ export default function EmailEditor({
           variant="contained"
           sx={{ height: '40px' }}
           color="moh"
+          onClick={handleSaveButton}
           fullWidth
         >
           Send Email
