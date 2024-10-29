@@ -24,6 +24,19 @@ export default function AutofillDonorEmail(props: Donor) {
     }
   }
 
+  function clear_form() {
+    props.onChange({
+      firstName: '',
+      lastName: '',
+      email: '',
+      address: '',
+      city: '',
+      state: '',
+      zip: '',
+      _id: '',
+    });
+  }
+
   return (
     <Autocomplete
       freeSolo
@@ -51,6 +64,11 @@ export default function AutofillDonorEmail(props: Donor) {
       onInputChange={(_, value) => {
         if (value) {
           onEmailChange(value);
+        }
+      }}
+      onChange={(_, value) => {
+        if (!value) {
+          clear_form();
         }
       }}
     />
