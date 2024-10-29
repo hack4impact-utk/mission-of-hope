@@ -9,7 +9,7 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import EmailParserCard from '@/components/email-card';
 import QuillToolBar, { modules, formats } from '@/components/tool-bar';
@@ -24,11 +24,13 @@ import useSnackbar from '@/hooks/useSnackbar';
 interface mailMergeProps {
   exampleDonation: DonationResponse;
   exampleDonationItems: DonationItemResponse[];
+  template?: { subject: string; body: string };
 }
 
 export default function EmailEditor({
   exampleDonation,
   exampleDonationItems,
+  template,
 }: mailMergeProps) {
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
@@ -38,6 +40,12 @@ export default function EmailEditor({
   const [subject, setSubject] = useState('');
   const [value, setValue] = React.useState(0);
   const { showSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    // Set the body and subject to the template if it exists
+    setBody(template?.body || '');
+    setSubject(template?.subject || '');
+  }, [template]);
 
   const handleSubjectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
