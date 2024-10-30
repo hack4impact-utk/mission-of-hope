@@ -1,10 +1,6 @@
 import dbConnect from '@/utils/db-connect';
 import MailMergeSchema from '../models/mailMerge';
-import {
-  CreateMailMergeRequest,
-  MailMergeResponse,
-  UpdateMailMergeRequest,
-} from '@/types/mailMerge';
+import { CreateMailMergeRequest, MailMergeResponse } from '@/types/mailMerge';
 
 export async function getAllMailMerge(): Promise<MailMergeResponse[]> {
   try {
@@ -18,37 +14,27 @@ export async function getAllMailMerge(): Promise<MailMergeResponse[]> {
   }
 }
 
-export async function getMailMergeByType(
-  type: string
-): Promise<MailMergeResponse> {
-  await dbConnect();
-
-  const response = await MailMergeSchema.findOne({ type: type });
-
-  if (!response) throw Error('Document not found');
-
-  return response;
-}
-
-export async function createMailMerge(
+// Upsert a MailMerge document for the mailType of the argument object.
+// Only updates the first document if multiple of the same mailType exist (this should never occur).
+// Returns the new document and a boolean indicating which operation was performed
+// True = update, False = insert
+export async function upsertMailMerge(
   mailMerge: CreateMailMergeRequest
-): Promise<MailMergeResponse> {
+): Promise<[MailMergeResponse, boolean]> {
   await dbConnect();
 
-  const response: MailMergeResponse = await MailMergeSchema.create(mailMerge);
+  const result = await MailMergeSchema.findOneAndUpdate(
+    { type: mailMerge.type },
+    mailMerge,
+    { new: true, upsert: true, includeResultMetadata: true }
+  );
 
-  return response;
-}
+  const response = result.value;
 
-export async function updateMailMerge(
-  id: string,
-  update: UpdateMailMergeRequest
-): Promise<MailMergeResponse> {
-  await dbConnect();
+  if (!response) {
+    throw Error('Unable to insert or update document.');
+  }
 
-  const response = await MailMergeSchema.findByIdAndUpdate(id, update);
-
-  if (!response) throw Error('Document not found');
-
-  return response;
+  // Not sure when lastErrorObject would ever be null
+  return [response, result.lastErrorObject?.updatedExisting ?? false];
 }
