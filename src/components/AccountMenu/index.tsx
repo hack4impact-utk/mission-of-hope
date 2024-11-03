@@ -49,6 +49,7 @@ export default function AccountMenu() {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        disableScrollLock // Prevents MUI from managing scroll behavior
       >
         <MenuItem onClick={handleNavigateToPages}>
           <Link href="/signin" underline="none" color="#000">

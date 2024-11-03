@@ -1,8 +1,11 @@
-import { createMailMerge, getAllMailMerge } from '@/server/actions/mailMerge';
+import { getAllMailMerge, upsertMailMerge } from '@/server/actions/mailMerge';
 import { zCreateMailMergeRequest } from '@/types/mailMerge';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+// Upsert a MailMerge document
+// If no document for the given mailType exists, one is created
+// Otherwise, the existing one is updated (first if multiple)
+export async function PUT(request: NextRequest) {
   try {
     const requestBody = await request.json();
     const validationResult = zCreateMailMergeRequest.safeParse(requestBody);
@@ -13,9 +16,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await createMailMerge(validationResult.data);
+    const [res, updated] = await upsertMailMerge(validationResult.data);
 
-    return NextResponse.json({ _id: result._id }, { status: 201 });
+    return NextResponse.json({ _id: res._id }, { status: updated ? 200 : 201 });
   } catch {
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
