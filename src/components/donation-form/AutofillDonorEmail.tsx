@@ -12,6 +12,7 @@ interface Donor {
 
 export default function AutofillDonorEmail(props: Donor) {
   const [donorOptions] = useState<DonorResponse[]>(props.DonorOptions);
+  const [matchFound, setMatchFound] = useState(false);
 
   function onEmailChange(value: string) {
     const donorMatch = donorOptions.find(
@@ -21,6 +22,10 @@ export default function AutofillDonorEmail(props: Donor) {
     if (donorMatch) {
       // Pass selected donor details back to parent component
       props.onDonorSelect(donorMatch);
+      setMatchFound(true);
+    } else if (matchFound) {
+      clear_form();
+      setMatchFound(false);
     }
   }
 
