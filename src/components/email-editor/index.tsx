@@ -25,14 +25,12 @@ interface mailMergeProps {
   exampleDonation: DonationResponse;
   exampleDonationItems: DonationItemResponse[];
   template?: { subject: string; body: string };
-  emailType?: string;
 }
 
 export default function EmailEditor({
   exampleDonation,
   exampleDonationItems,
   template,
-  emailType,
 }: mailMergeProps) {
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
@@ -61,39 +59,15 @@ export default function EmailEditor({
     setValue(newValue);
   };
 
-  const handleSaveButton = async () => {
-    // Validate input fields
-    if (!subject.trim() || !body.trim()) {
-      showSnackbar('Subject and body cannot be empty', 'error');
-      return;
-    }
-
-    // Ensure emailType is provided and is valid
-    const validEmailTypes = ['Receipt', 'Monthly', 'Yearly'];
-    if (!emailType || !validEmailTypes.includes(emailType)) {
-      showSnackbar('Invalid email type', 'error');
-      console.log(emailType);
-      return;
-    }
-
+  const handleSaveButton = () => {
     try {
-      const response = await fetch('/api/mailMerge', {
+      fetch('/api/mailMerge', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          type: emailType, // Use the correct type here
-          subject,
-          body,
-        }),
+        body: JSON.stringify({ subject, body }),
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || 'Error saving email template');
-      }
-
       showSnackbar('Email template saved', 'success');
     } catch (error) {
       showSnackbar('Error saving email template', 'error');

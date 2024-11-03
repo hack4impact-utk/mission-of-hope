@@ -58,7 +58,6 @@ export default function MailMergeView({
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
           template={templates['receipt']}
-          emailType="Receipt"
         ></EmailEditor>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
@@ -66,7 +65,6 @@ export default function MailMergeView({
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
           template={templates['monthly']}
-          emailType="Monthly"
         ></EmailEditor>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
@@ -74,7 +72,6 @@ export default function MailMergeView({
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
           template={templates['yearly']}
-          emailType="Yearly"
         ></EmailEditor>
       </CustomTabPanel>
     </Box>
