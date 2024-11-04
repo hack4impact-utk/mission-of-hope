@@ -105,6 +105,7 @@ export default function AddDonationView({
       setDonationItemFormDatas([{} as DonationItemFormData]);
       setDonationFormData({
         donationDate: new Date(),
+        receipt: '',
       } as DonationFormData);
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
