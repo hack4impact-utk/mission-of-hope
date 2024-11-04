@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { DonationResponse } from '@/types/donation';
 import {
   Box,
@@ -9,9 +10,14 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
+  Button,
+  FormControl,
+  InputLabel,
+  Checkbox,
+  ListItemText,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import useSearch from '@/hooks/useSearch';
 import useMonth from '@/hooks/useMonth';
 
@@ -22,12 +28,17 @@ interface DonationViewProps {
 export default function DonationView({ donations }: DonationViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([
+    'donor',
+    'quantity',
+    'user_name',
+    'date',
+    'edit',
+  ]);
+
   if (selectedMonth === '') {
     setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
   }
-  // const [selectedMonth, setSelectedMonth] = useState<string>(
-  //   (new Date().getMonth() + 1).toString() // Default to current month
-  // );
 
   // Function to handle month selection change
   const handleMonthChange = (event: SelectChangeEvent<string>) => {
@@ -59,7 +70,7 @@ export default function DonationView({ donations }: DonationViewProps) {
       )
     );
 
-  const columns: GridColDef[] = [
+  const allColumns: GridColDef[] = [
     { field: 'donor', headerName: 'Donor Name', width: 250, flex: 0.5 },
     { field: 'quantity', headerName: 'Quantity', width: 50, flex: 0.5 },
     { field: 'user_name', headerName: 'User Email', width: 300, flex: 0.7 },
@@ -96,6 +107,76 @@ export default function DonationView({ donations }: DonationViewProps) {
     },
   ];
 
+  // Filter columns based on visibleColumns selection
+  const columns = allColumns.filter((column) =>
+    visibleColumns.includes(column.field)
+  );
+
+  const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
+    const selectedColumns = event.target.value as string[];
+    setVisibleColumns(selectedColumns);
+  };
+
+  const CustomToolbar = () => (
+    <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel></InputLabel>
+          <Select
+            multiple
+            value={visibleColumns}
+            onChange={handleColumnSelectionChange}
+            renderValue={(selected) =>
+              selected.length === 0 ? 'Select Columns' : 'Columns'
+            }
+          >
+            {allColumns.map((column) => (
+              <MenuItem key={column.field} value={column.field}>
+                <Checkbox checked={visibleColumns.includes(column.field)} />
+                <ListItemText primary={column.headerName} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button variant="contained" color="primary" onClick={exportToCSV}>
+          Export to CSV
+        </Button>
+      </Box>
+      <GridToolbarQuickFilter
+        quickFilterProps={{
+          debounceMs: 100,
+          value: searchString,
+          onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+            setSearchQuery(event.target.value);
+          },
+        }}
+      />
+    </Box>
+  );
+
+  const exportToCSV = () => {
+    const headers = columns.map((col) => col.headerName).join(',');
+    const csvRows = rows.map((row) =>
+      [
+        row.donor,
+        row.quantity,
+        row.user_name,
+        new Date(row.date).toLocaleDateString(),
+        row.edit,
+      ].join(',')
+    );
+    const csvContent = `data:text/csv;charset=utf-8,${headers}\n${csvRows.join(
+      '\n'
+    )}`;
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'donations.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Container>
       <Box sx={{ maxWidth: '73vw', height: '78vh' }}>
@@ -118,7 +199,6 @@ export default function DonationView({ donations }: DonationViewProps) {
               inputProps={{ 'aria-label': 'Select month' }}
             >
               <MenuItem value="13">All Months</MenuItem>
-              {/* Generate month options */}
               {[...Array(12).keys()].map((month) => (
                 <MenuItem key={month} value={month + 1}>
                   {new Date(2000, month).toLocaleString('default', {
@@ -137,19 +217,7 @@ export default function DonationView({ donations }: DonationViewProps) {
           initialState={{
             pagination: { paginationModel: { pageSize: 25 } },
           }}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-              quickFilterProps: {
-                debounceMs: 100,
-                value: searchString,
-                onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-                  setSearchQuery(event.target.value);
-                },
-              },
-            },
-          }}
+          slots={{ toolbar: CustomToolbar }}
         />
       </Box>
     </Container>
