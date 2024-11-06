@@ -52,6 +52,7 @@ export default function DonationView({ donations }: DonationViewProps) {
       user_name: donation.user.email,
       date: donation.entryDate,
       edit: donation._id,
+      receipt: donation.receipt,
     }))
     .filter((row) =>
       Object.values(row).some((value) =>
@@ -61,7 +62,6 @@ export default function DonationView({ donations }: DonationViewProps) {
 
   const columns: GridColDef[] = [
     { field: 'donor', headerName: 'Donor Name', width: 250, flex: 0.5 },
-    { field: 'quantity', headerName: 'Quantity', width: 50, flex: 0.5 },
     { field: 'user_name', headerName: 'User Email', width: 300, flex: 0.7 },
     {
       field: 'date',
@@ -75,6 +75,7 @@ export default function DonationView({ donations }: DonationViewProps) {
         return new Date(value).toLocaleDateString();
       },
     },
+    { field: 'receipt', headerName: 'Receipt Number', width: 200, flex: 0.5 },
     {
       field: 'edit',
       headerName: 'Edit',
