@@ -55,9 +55,11 @@ export default function DonationView({ donations }: DonationViewProps) {
       receipt: donation.receipt,
     }))
     .filter((row) =>
-      Object.values(row).some((value) =>
-        String(value).toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      Object.entries(row)
+        .filter(([key]) => key !== 'edit') // Exclude 'edit' (donation._id) value from search
+        .some((value) =>
+          String(value).toLowerCase().includes(searchQuery.toLowerCase())
+        )
     );
 
   const columns: GridColDef[] = [
