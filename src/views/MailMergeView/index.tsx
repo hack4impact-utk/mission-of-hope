@@ -2,6 +2,7 @@
 import EmailEditor from '@/components/email-editor';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
 import { DonationItemResponse, DonationResponse } from '@/types/donation';
+import { MailMergeResponse } from '@/types/mailMerge';
 import { Box, Tab, Tabs } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
@@ -23,9 +24,25 @@ export default function MailMergeView({
         const response = await fetch('/api/mailMerge', {
           method: 'GET',
         });
-        const data = await response.json();
-        setTemplates(data);
-        // have to figure out how to set templates for each type
+        const data: MailMergeResponse[] = await response.json();
+        const templateDict = {
+          receipt: data.find((response) => response['type'] == 'Receipt') ?? {
+            type: 'Receipt',
+            subject: '',
+            body: '',
+          },
+          monthly: data.find((response) => response['type'] == 'Monthly') ?? {
+            type: 'Receipt',
+            subject: '',
+            body: '',
+          },
+          yearly: data.find((response) => response['type'] == 'Yearly') ?? {
+            type: 'Yearly',
+            subject: '',
+            body: '',
+          },
+        };
+        setTemplates(templateDict);
       } catch (error) {
         console.error(error);
       }

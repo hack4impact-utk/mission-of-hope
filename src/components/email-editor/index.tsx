@@ -24,7 +24,7 @@ import useSnackbar from '@/hooks/useSnackbar';
 interface mailMergeProps {
   exampleDonation: DonationResponse;
   exampleDonationItems: DonationItemResponse[];
-  template?: { subject: string; body: string };
+  template: { type: string; subject: string; body: string };
 }
 
 export default function EmailEditor({
@@ -66,7 +66,7 @@ export default function EmailEditor({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ subject, body }),
+        body: JSON.stringify({ type: template?.type, subject, body }),
       });
       showSnackbar('Email template saved', 'success');
     } catch (error) {

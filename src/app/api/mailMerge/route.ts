@@ -15,7 +15,6 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
-    console.log(validationResult.data);
 
     const [res, updated] = await upsertMailMerge(validationResult.data);
 
