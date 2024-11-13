@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { zCreateDonationRequest } from '@/types/donation';
 import { createDonation, getAllDonations } from '@/server/actions/donations';
+import { getDonorById } from '@/server/actions/donors';
+import { getAllMailMerge } from '@/server/actions/mailMerge';
+import { populateEmailTemplate } from '@/utils/string';
+import { sendEmail } from '@/server/actions/email';
 
 export async function GET() {
   try {
@@ -23,7 +27,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Create donation
     const result = await createDonation(validationResult.data);
+
+    // Send email to donor
+    const donor = await getDonorById(result.donor);
+    if (donor) {
+      const receiptTemplate = (await getAllMailMerge()).find(
+        (value) => value.type == 'Receipt'
+      );
+      if (receiptTemplate) {
+        const thing = populateEmailTemplate(
+          receiptTemplate.body,
+          donor,
+          result.entryDate
+        );
+        await sendEmail([donor.email], receiptTemplate.subject, thing);
+      }
+    }
 
     return NextResponse.json({ _id: result._id }, { status: 201 });
   } catch {
