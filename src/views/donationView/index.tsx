@@ -155,14 +155,16 @@ export default function DonationView({ donations }: DonationViewProps) {
   );
 
   const exportToCSV = () => {
-    const headers = columns.map((col) => col.headerName).join(',');
+    const headers = columns
+      .filter((col) => col.field !== 'edit')
+      .map((col) => col.headerName)
+      .join(',');
     const csvRows = rows.map((row) =>
       [
         row.donor,
         row.quantity,
         row.user_name,
         new Date(row.date).toLocaleDateString(),
-        row.edit,
       ].join(',')
     );
     const csvContent = `data:text/csv;charset=utf-8,${headers}\n${csvRows.join(
@@ -214,6 +216,7 @@ export default function DonationView({ donations }: DonationViewProps) {
           columns={columns}
           disableColumnFilter
           disableDensitySelector
+          disableRowSelectionOnClick
           initialState={{
             pagination: { paginationModel: { pageSize: 25 } },
           }}
