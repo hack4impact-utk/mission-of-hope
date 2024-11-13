@@ -118,12 +118,27 @@ export default function DonationView({ donations }: DonationViewProps) {
   };
 
   const CustomToolbar = () => (
-    <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
+    <Box
+      sx={{
+        p: 0.5, // Reduce padding
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center', // Center items vertically to fit smaller height
+      }}
+    >
       <Box sx={{ display: 'flex', gap: 1 }}>
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel></InputLabel>
           <Select
             multiple
+            sx={{
+              padding: '0px 6px',
+              minWidth: 'auto',
+              height: '30px',
+              fontSize: '1rem',
+              lineHeight: 1,
+              borderWidth: '1px',
+            }}
             value={visibleColumns}
             onChange={handleColumnSelectionChange}
             renderValue={(selected) =>
@@ -138,7 +153,20 @@ export default function DonationView({ donations }: DonationViewProps) {
             ))}
           </Select>
         </FormControl>
-        <Button variant="contained" color="primary" onClick={exportToCSV}>
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          onClick={exportToCSV}
+          sx={{
+            padding: '0px 6px',
+            minWidth: 'auto',
+            height: '30px',
+            fontSize: '0.9rem',
+            lineHeight: 1,
+            borderWidth: '1px',
+          }}
+        >
           Export to CSV
         </Button>
       </Box>
