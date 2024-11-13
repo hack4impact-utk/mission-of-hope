@@ -1,21 +1,10 @@
 'use client';
-import useMonth from '@/hooks/useMonth';
 import useSearch from '@/hooks/useSearch';
 import { DonationResponse } from '@/types/donation';
 import { DonorResponse } from '@/types/donors';
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  Box,
-  Container,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Grid, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { useEffect } from 'react';
 
 interface DonorViewProps {
   donors: DonorResponse[];
@@ -24,32 +13,10 @@ interface DonorViewProps {
 
 export default function DonorView({ donors, donations }: DonorViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
-  const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
-
-  useEffect(() => {
-    if (monthQuery === '') {
-      setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
-    }
-  }, [monthQuery, setMonthQuery]);
-  // Function to handle month selection change
-  const handleMonthChange = (event: SelectChangeEvent<string>) => {
-    setMonthQuery(event.target.value as string);
-  };
-
-  // Filter donations based on selected month
-  const filteredDonations =
-    selectedMonth !== '13'
-      ? donations.filter(
-          (donation) =>
-            parseInt(
-              donation.entryDate.toString().split('T')[0].split('-')[1]
-            ) === parseInt(selectedMonth)
-        )
-      : donations;
 
   // Extract unique donors from filtered donations
   const uniqueDonors = Array.from(
-    new Set(filteredDonations.map((donation) => donation.donor._id))
+    new Set(donations.map((donation) => donation.donor._id))
   );
 
   // Prepare columns for DataGrid
@@ -116,27 +83,6 @@ export default function DonorView({ donors, donations }: DonorViewProps) {
             <Typography variant="h4" sx={{ mr: 2 }}>
               Donor List
             </Typography>
-          </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}>
-            <Select
-              fullWidth
-              value={selectedMonth}
-              onChange={handleMonthChange}
-              variant="outlined"
-              displayEmpty
-              inputProps={{ 'aria-label': 'Select month' }}
-            >
-              <MenuItem value="13">All Months</MenuItem>
-              {/* Generate month options */}
-              {[...Array(12).keys()].map((month) => (
-                <MenuItem key={month} value={month + 1}>
-                  {new Date(2000, month).toLocaleString('default', {
-                    month: 'long',
-                  })}
-                </MenuItem>
-              ))}
-            </Select>
           </Grid>
         </Grid>
         <DataGrid
