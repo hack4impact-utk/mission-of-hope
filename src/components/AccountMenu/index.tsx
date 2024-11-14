@@ -1,6 +1,7 @@
 'use client';
 import { Button, Link, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -19,7 +20,7 @@ export default function AccountMenu() {
   };
 
   const handleLogout = () => {
-    // Handle logout logic here
+    signOut({ callbackUrl: '/' }); // Redirects to the homepage after sign out
     handleClose();
   };
 
