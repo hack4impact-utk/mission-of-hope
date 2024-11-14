@@ -1,6 +1,5 @@
 'use client';
 import useSearch from '@/hooks/useSearch';
-import { DonationResponse } from '@/types/donation';
 import { DonorResponse } from '@/types/donors';
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, Container, Grid, IconButton, Typography } from '@mui/material';
@@ -8,16 +7,10 @@ import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 
 interface DonorViewProps {
   donors: DonorResponse[];
-  donations: DonationResponse[];
 }
 
-export default function DonorView({ donors, donations }: DonorViewProps) {
+export default function DonorView({ donors }: DonorViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
-
-  // Extract unique donors from filtered donations
-  const uniqueDonors = Array.from(
-    new Set(donations.map((donation) => donation.donor._id))
-  );
 
   // Prepare columns for DataGrid
   const columns: GridColDef[] = [
@@ -50,9 +43,8 @@ export default function DonorView({ donors, donations }: DonorViewProps) {
   ];
 
   // Prepare rows for DataGrid
-  const rows = uniqueDonors
-    .map((donorId, index) => {
-      const donor = donors.find((donor) => donor._id === donorId);
+  const rows = donors
+    .map((donor, index) => {
       return {
         id: index + 1,
         name: `${donor?.firstName} ${donor?.lastName}`,
