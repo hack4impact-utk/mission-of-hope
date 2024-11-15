@@ -29,6 +29,7 @@ const DonationItemSchema = new Schema(
         },
       },
       required: true,
+      _id: false,
     },
   },
   {
