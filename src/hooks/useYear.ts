@@ -10,7 +10,7 @@ export default function useYear() {
   const setYearQuery = (query: string) => {
     setSearchString(query);
     const params = new URLSearchParams(searchParams.toString());
-    if (query) {
+    if (query && Number(query) > 0) {
       params.set('year', query);
     } else {
       params.delete('year');

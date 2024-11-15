@@ -9,8 +9,8 @@ export default function useMonth() {
 
   const setMonthQuery = (query: string) => {
     setSearchString(query);
-    const params = new URLSearchParams(searchParams);
-    if (query) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (query && Number(query) > 0) {
       params.set('month', query);
     } else {
       params.delete('month');

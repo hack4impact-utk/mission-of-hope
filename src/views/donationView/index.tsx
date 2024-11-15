@@ -1,5 +1,4 @@
 'use client';
-import { useEffect } from 'react';
 import { DonationResponse } from '@/types/donation';
 import {
   Box,
@@ -8,7 +7,6 @@ import {
   IconButton,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,41 +25,24 @@ export default function DonationView({ donations }: DonationViewProps) {
   const { selectedYear, yearQuery, setYearQuery } = useYear();
   const startYear = 2024;
 
-  useEffect(() => {
-    if (!yearQuery || yearQuery === '') {
-      setYearQuery('0'); // Default to 'All Years' option
-    }
-    if (!monthQuery || monthQuery === '') {
-      setMonthQuery('0'); // Default to 'All Months' option
-    }
-  });
-
-  // const [selectedMonth, setSelectedMonth] = useState<string>(
-  //   (new Date().getMonth() + 1).toString() // Default to current month
-  // );
-
   // Function to handle month selection change
-  const handleMonthChange = (event: SelectChangeEvent<string>) => {
-    setMonthQuery(event.target.value as string);
+  const handleMonthChange = (month: string) => {
+    setMonthQuery(month);
   };
 
   // Function to handle year selection change
-  const handleYearChange = (event: SelectChangeEvent<string>) => {
-    setYearQuery(event.target.value as string);
+  const handleYearChange = (year: string) => {
+    setYearQuery(year);
   };
 
   const filteredDonations = donations.filter((donation) => {
-    const [year, month] = donation.entryDate
-      .toString()
-      .split('T')[0]
-      .split('-');
+    const year = donation.entryDate.getFullYear().toString();
+    const month = (donation.entryDate.getMonth() + 1).toString();
 
     // Check if monthQuery and yearQuery are defined and not empty
-    const matchesMonth =
-      monthQuery === '0' || parseInt(month) === parseInt(monthQuery);
+    const matchesMonth = !monthQuery || month === monthQuery;
 
-    const matchesYear =
-      yearQuery === '0' || parseInt(year) === parseInt(yearQuery);
+    const matchesYear = !yearQuery || year === yearQuery;
 
     return matchesMonth && matchesYear;
   });
@@ -136,8 +117,8 @@ export default function DonationView({ donations }: DonationViewProps) {
           <Grid item xs={2}>
             <Select
               fullWidth
-              value={selectedYear}
-              onChange={handleYearChange}
+              value={selectedYear || '0'}
+              onChange={(e) => handleYearChange(e.target.value)}
               variant="outlined"
               displayEmpty
               inputProps={{ 'aria-label': 'Select year' }}
@@ -156,8 +137,8 @@ export default function DonationView({ donations }: DonationViewProps) {
           <Grid item xs={2}>
             <Select
               fullWidth
-              value={selectedMonth}
-              onChange={handleMonthChange}
+              value={selectedMonth || '0'}
+              onChange={(e) => handleMonthChange(e.target.value)}
               variant="outlined"
               displayEmpty
               inputProps={{ 'aria-label': 'Select month' }}
