@@ -7,13 +7,13 @@ import {
   IconButton,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import useSearch from '@/hooks/useSearch';
 import useMonth from '@/hooks/useMonth';
+import useYear from '@/hooks/useYear';
 
 interface DonationViewProps {
   donations: DonationResponse[];
@@ -22,27 +22,30 @@ interface DonationViewProps {
 export default function DonationView({ donations }: DonationViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
-  if (selectedMonth === '') {
-    setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
-  }
-  // const [selectedMonth, setSelectedMonth] = useState<string>(
-  //   (new Date().getMonth() + 1).toString() // Default to current month
-  // );
+  const { selectedYear, yearQuery, setYearQuery } = useYear();
+  const startYear = 2024;
 
   // Function to handle month selection change
-  const handleMonthChange = (event: SelectChangeEvent<string>) => {
-    setMonthQuery(event.target.value as string);
+  const handleMonthChange = (month: string) => {
+    setMonthQuery(month);
   };
 
-  const filteredDonations =
-    monthQuery !== '13'
-      ? donations.filter(
-          (donation) =>
-            parseInt(
-              donation.entryDate.toString().split('T')[0].split('-')[1]
-            ) === parseInt(monthQuery)
-        )
-      : donations;
+  // Function to handle year selection change
+  const handleYearChange = (year: string) => {
+    setYearQuery(year);
+  };
+
+  const filteredDonations = donations.filter((donation) => {
+    const year = donation.entryDate.getFullYear().toString();
+    const month = (donation.entryDate.getMonth() + 1).toString();
+
+    // Check if monthQuery and yearQuery are defined and not empty
+    const matchesMonth = !monthQuery || month === monthQuery;
+
+    const matchesYear = !yearQuery || year === yearQuery;
+
+    return matchesMonth && matchesYear;
+  });
 
   const rows = filteredDonations
     .map((donation, index) => ({
@@ -111,16 +114,36 @@ export default function DonationView({ donations }: DonationViewProps) {
             <Typography variant="h4">Donation List</Typography>
           </Grid>
           <Grid item xs={2}></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <Select
               fullWidth
-              value={selectedMonth}
-              onChange={handleMonthChange}
+              value={selectedYear || '0'}
+              onChange={(e) => handleYearChange(e.target.value)}
+              variant="outlined"
+              displayEmpty
+              inputProps={{ 'aria-label': 'Select year' }}
+            >
+              <MenuItem value="0">All Years</MenuItem>
+              {/* Generate year options */}
+              {[...Array(new Date().getFullYear() - startYear + 2).keys()].map(
+                (yearIndex) => (
+                  <MenuItem key={yearIndex} value={startYear + yearIndex}>
+                    {startYear + yearIndex}
+                  </MenuItem>
+                )
+              )}
+            </Select>
+          </Grid>
+          <Grid item xs={2}>
+            <Select
+              fullWidth
+              value={selectedMonth || '0'}
+              onChange={(e) => handleMonthChange(e.target.value)}
               variant="outlined"
               displayEmpty
               inputProps={{ 'aria-label': 'Select month' }}
             >
-              <MenuItem value="13">All Months</MenuItem>
+              <MenuItem value="0">All Months</MenuItem>
               {/* Generate month options */}
               {[...Array(12).keys()].map((month) => (
                 <MenuItem key={month} value={month + 1}>
