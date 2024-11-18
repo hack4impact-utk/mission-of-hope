@@ -2,54 +2,28 @@
 import EmailEditor from '@/components/email-editor';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
 import { DonationItemResponse, DonationResponse } from '@/types/donation';
-import { MailMergeResponse } from '@/types/mailMerge';
+import { CreateMailMergeRequest } from '@/types/mailMerge';
 import { Box, Tab, Tabs } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 interface mailMergeProps {
   exampleDonation: DonationResponse;
   exampleDonationItems: DonationItemResponse[];
+  templates: templates;
+}
+
+interface templates {
+  receipt: CreateMailMergeRequest;
+  monthly: CreateMailMergeRequest;
+  yearly: CreateMailMergeRequest;
 }
 
 export default function MailMergeView({
   exampleDonation,
   exampleDonationItems,
+  templates,
 }: mailMergeProps) {
   const [value, setValue] = React.useState(0);
-  const [templates, setTemplates] = useState<{ [key: string]: any }>({});
-
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const response = await fetch('/api/mailMerge', {
-          method: 'GET',
-        });
-        const data: MailMergeResponse[] = await response.json();
-        const templateDict = {
-          receipt: data.find((response) => response['type'] == 'Receipt') ?? {
-            type: 'Receipt',
-            subject: '',
-            body: '',
-          },
-          monthly: data.find((response) => response['type'] == 'Monthly') ?? {
-            type: 'Receipt',
-            subject: '',
-            body: '',
-          },
-          yearly: data.find((response) => response['type'] == 'Yearly') ?? {
-            type: 'Yearly',
-            subject: '',
-            body: '',
-          },
-        };
-        setTemplates(templateDict);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchTemplates();
-  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -74,21 +48,21 @@ export default function MailMergeView({
         <EmailEditor
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
-          template={templates['receipt']}
+          template={templates.receipt}
         ></EmailEditor>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <EmailEditor
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
-          template={templates['monthly']}
+          template={templates.monthly}
         ></EmailEditor>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <EmailEditor
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
-          template={templates['yearly']}
+          template={templates.yearly}
         ></EmailEditor>
       </CustomTabPanel>
     </Box>
