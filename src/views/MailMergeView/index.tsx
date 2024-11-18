@@ -2,17 +2,26 @@
 import EmailEditor from '@/components/email-editor';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
 import { DonationItemResponse, DonationResponse } from '@/types/donation';
+import { CreateMailMergeRequest } from '@/types/mailMerge';
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
 
 interface mailMergeProps {
   exampleDonation: DonationResponse;
   exampleDonationItems: DonationItemResponse[];
+  templates: templates;
+}
+
+interface templates {
+  receipt: CreateMailMergeRequest;
+  monthly: CreateMailMergeRequest;
+  yearly: CreateMailMergeRequest;
 }
 
 export default function MailMergeView({
   exampleDonation,
   exampleDonationItems,
+  templates,
 }: mailMergeProps) {
   const [value, setValue] = React.useState(0);
 
@@ -39,18 +48,21 @@ export default function MailMergeView({
         <EmailEditor
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
+          template={templates.receipt}
         ></EmailEditor>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <EmailEditor
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
+          template={templates.monthly}
         ></EmailEditor>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <EmailEditor
           exampleDonation={exampleDonation}
           exampleDonationItems={exampleDonationItems}
+          template={templates.yearly}
         ></EmailEditor>
       </CustomTabPanel>
     </Box>
