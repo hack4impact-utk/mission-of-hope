@@ -74,24 +74,19 @@ export default function DonationItemForm({
     }
   });
 
-  // Checking undefined, null, and emptiness before show the Higg/Low values
-  const updateHighLowVals = (
-    newOrUsed: string,
-    value: undefined | ItemResponse
-  ) => {
-    if (newOrUsed === 'Used' && typeof value === 'undefined') {
+  // Show/clear the High/Low values based on existence of the ItemResponse
+  const updateHighLowVals = (newOrUsed: string, itemRes?: ItemResponse) => {
+    if (newOrUsed === 'Used' && itemRes) {
+      setHighLowVals([`High ($${itemRes?.high})`, `Low ($${itemRes?.low})`]);
+    } else if (newOrUsed === 'Used') {
       setHighLowVals(['High', 'Low']);
-    } else if (newOrUsed === 'Used' && typeof value !== 'undefined') {
-      setHighLowVals([`High ($${value?.high})`, `Low ($${value?.low})`]);
     }
   };
 
   const handleItemSelect = (name: string | ItemResponse) => {
     if (typeof name === 'string') {
       onChange({ ...donationItemData, name: name });
-      if (!name.trim().length) {
-        updateHighLowVals(donationItemData.newOrUsed, undefined);
-      }
+      updateHighLowVals(donationItemData.newOrUsed);
     } else {
       onChange({ ...donationItemData, name: name.name, itemRes: name });
       updateHighLowVals(donationItemData.newOrUsed, name);
@@ -101,9 +96,7 @@ export default function DonationItemForm({
   const handleCategorySelect = (category: string | ItemResponse) => {
     if (typeof category === 'string') {
       onChange({ ...donationItemData, category: category });
-      if (!category.trim().length) {
-        updateHighLowVals(donationItemData.newOrUsed, undefined);
-      }
+      updateHighLowVals(donationItemData.newOrUsed);
     } else {
       onChange({
         ...donationItemData,
