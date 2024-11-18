@@ -7,7 +7,7 @@ export function replaceMultiple(
 ): string {
   let result: string = str;
   replacements.forEach((replaceValue, searchValue) => {
-    result = result.replace(searchValue, replaceValue);
+    result = result.replaceAll(searchValue, replaceValue);
   });
   return result;
 }

@@ -34,15 +34,15 @@ export async function POST(request: NextRequest) {
     const donor = await getDonorById(result.donor);
     if (donor) {
       const receiptTemplate = (await getAllMailMerge()).find(
-        (value) => value.type == 'Receipt'
+        (value) => value.type === 'Receipt'
       );
       if (receiptTemplate) {
-        const thing = populateEmailTemplate(
+        const body = populateEmailTemplate(
           receiptTemplate.body,
           donor,
           result.entryDate
         );
-        await sendEmail([donor.email], receiptTemplate.subject, thing);
+        await sendEmail([donor.email], receiptTemplate.subject, body);
       }
     }
 
