@@ -1,7 +1,8 @@
+'use server';
 import UserSchema from '@/server/models/users';
 import { UserResponse } from '@/types/users';
 import dbConnect from '@/utils/db-connect';
-
+UserSchema;
 export async function getAllUsers(): Promise<UserResponse[]> {
   await dbConnect();
 
@@ -33,5 +34,6 @@ export async function getUserByEmail(email: string): Promise<UserResponse> {
   if (!user) {
     throw new Error('404 User not found');
   }
+  user._id = user._id.toString();
   return user;
 }
