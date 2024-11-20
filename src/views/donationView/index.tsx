@@ -14,6 +14,7 @@ import {
   InputLabel,
   Checkbox,
   ListItemText,
+  SelectChangeEvent,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, GridColDef, GridToolbarQuickFilter } from '@mui/x-data-grid';
@@ -43,7 +44,6 @@ export default function DonationView({ donations }: DonationViewProps) {
 
   const { selectedYear, yearQuery, setYearQuery } = useYear();
   const startYear = 2024;
-
 
   // Function to handle month selection change
   const handleMonthChange = (month: string) => {
@@ -203,12 +203,9 @@ export default function DonationView({ donations }: DonationViewProps) {
       .map((col) => col.headerName)
       .join(',');
     const csvRows = rows.map((row) =>
-      [
-        row.donor,
-        row.quantity,
-        row.user_name,
-        new Date(row.date).toLocaleDateString(),
-      ].join(',')
+      [row.donor, row.user_name, new Date(row.date).toLocaleDateString()].join(
+        ','
+      )
     );
     const csvContent = `data:text/csv;charset=utf-8,${headers}\n${csvRows.join(
       '\n'
