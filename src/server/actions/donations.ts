@@ -2,6 +2,7 @@
 import dbConnect from '@/utils/db-connect';
 import Donor from '../models/donors';
 import DonationSchema from '../models/donations';
+import ItemSchema from '../models/items';
 import DonationItem from '../models/donationItem';
 import User from '../models/users';
 import {
@@ -14,6 +15,7 @@ import {
 User;
 DonationItem;
 Donor;
+ItemSchema;
 
 export async function createDonation(
   donation: CreateDonationRequest
@@ -32,11 +34,20 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
   try {
     await dbConnect();
 
-    const response: DonationResponse[] = await DonationSchema.find().populate([
-      'user',
-      'donor',
-      'items',
-    ]);
+    const response: DonationResponse[] = await DonationSchema.find()
+      .populate(['user', 'donor'])
+      .populate({ path: 'items', populate: { path: 'item' } })
+      .lean();
+
+    response.map((donation) => {
+      donation.user._id = donation.user._id.toString();
+      donation.donor._id = donation.donor._id.toString();
+      donation._id = donation._id.toString();
+      donation.items.map((donationItem) => {
+        donationItem._id = donationItem._id.toString();
+        donationItem.item._id = donationItem.item._id.toString();
+      });
+    });
 
     return response;
   } catch (error) {

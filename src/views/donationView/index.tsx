@@ -8,7 +8,6 @@ import {
   IconButton,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Typography,
   Button,
   FormControl,
@@ -20,6 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, GridColDef, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import useSearch from '@/hooks/useSearch';
 import useMonth from '@/hooks/useMonth';
+import useYear from '@/hooks/useYear';
 
 interface DonationViewProps {
   donations: DonationResponse[];
@@ -28,6 +28,7 @@ interface DonationViewProps {
 export default function DonationView({ donations }: DonationViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     'donor',
     'quantity',
@@ -40,20 +41,31 @@ export default function DonationView({ donations }: DonationViewProps) {
     setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
   }
 
+  const { selectedYear, yearQuery, setYearQuery } = useYear();
+  const startYear = 2024;
+
+
   // Function to handle month selection change
-  const handleMonthChange = (event: SelectChangeEvent<string>) => {
-    setMonthQuery(event.target.value as string);
+  const handleMonthChange = (month: string) => {
+    setMonthQuery(month);
   };
 
-  const filteredDonations =
-    monthQuery !== '13'
-      ? donations.filter(
-          (donation) =>
-            parseInt(
-              donation.entryDate.toString().split('T')[0].split('-')[1]
-            ) === parseInt(monthQuery)
-        )
-      : donations;
+  // Function to handle year selection change
+  const handleYearChange = (year: string) => {
+    setYearQuery(year);
+  };
+
+  const filteredDonations = donations.filter((donation) => {
+    const year = donation.entryDate.getFullYear().toString();
+    const month = (donation.entryDate.getMonth() + 1).toString();
+
+    // Check if monthQuery and yearQuery are defined and not empty
+    const matchesMonth = !monthQuery || month === monthQuery;
+
+    const matchesYear = !yearQuery || year === yearQuery;
+
+    return matchesMonth && matchesYear;
+  });
 
   const rows = filteredDonations
     .map((donation, index) => ({
@@ -63,16 +75,18 @@ export default function DonationView({ donations }: DonationViewProps) {
       user_name: donation.user.email,
       date: donation.entryDate,
       edit: donation._id,
+      receipt: donation.receipt,
     }))
     .filter((row) =>
-      Object.values(row).some((value) =>
-        String(value).toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      Object.entries(row)
+        .filter(([key]) => key !== 'edit') // Exclude 'edit' (donation._id) value from search
+        .some((value) =>
+          String(value).toLowerCase().includes(searchQuery.toLowerCase())
+        )
     );
 
   const allColumns: GridColDef[] = [
     { field: 'donor', headerName: 'Donor Name', width: 250, flex: 0.5 },
-    { field: 'quantity', headerName: 'Quantity', width: 50, flex: 0.5 },
     { field: 'user_name', headerName: 'User Email', width: 300, flex: 0.7 },
     {
       field: 'date',
@@ -86,6 +100,7 @@ export default function DonationView({ donations }: DonationViewProps) {
         return new Date(value).toLocaleDateString();
       },
     },
+    { field: 'receipt', headerName: 'Receipt Number', width: 200, flex: 0.5 },
     {
       field: 'edit',
       headerName: 'Edit',
@@ -219,16 +234,38 @@ export default function DonationView({ donations }: DonationViewProps) {
             <Typography variant="h4">Donation List</Typography>
           </Grid>
           <Grid item xs={2}></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <Select
               fullWidth
-              value={selectedMonth}
-              onChange={handleMonthChange}
+              value={selectedYear || '0'}
+              onChange={(e) => handleYearChange(e.target.value)}
+              variant="outlined"
+              displayEmpty
+              inputProps={{ 'aria-label': 'Select year' }}
+            >
+              <MenuItem value="0">All Years</MenuItem>
+              {/* Generate year options */}
+              {[...Array(new Date().getFullYear() - startYear + 2).keys()].map(
+                (yearIndex) => (
+                  <MenuItem key={yearIndex} value={startYear + yearIndex}>
+                    {startYear + yearIndex}
+                  </MenuItem>
+                )
+              )}
+            </Select>
+          </Grid>
+          <Grid item xs={2}>
+            <Select
+              fullWidth
+              value={selectedMonth || '0'}
+              onChange={(e) => handleMonthChange(e.target.value)}
               variant="outlined"
               displayEmpty
               inputProps={{ 'aria-label': 'Select month' }}
             >
-              <MenuItem value="13">All Months</MenuItem>
+              <MenuItem value="0">All Months</MenuItem>
+              {/* Generate month options */}
+
               {[...Array(12).keys()].map((month) => (
                 <MenuItem key={month} value={month + 1}>
                   {new Date(2000, month).toLocaleString('default', {
