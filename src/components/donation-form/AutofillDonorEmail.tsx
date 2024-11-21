@@ -12,7 +12,9 @@ interface Donor {
 
 export default function AutofillDonorEmail(props: Donor) {
   const [donorOptions] = useState<DonorResponse[]>(props.DonorOptions);
-  const [matchFound, setMatchFound] = useState(false);
+
+  // should check if the form was filled out
+  const [formFilled, setFormFilled] = useState(false);
 
   function onEmailChange(value: string) {
     const donorMatch = donorOptions.find(
@@ -22,10 +24,9 @@ export default function AutofillDonorEmail(props: Donor) {
     if (donorMatch) {
       // Pass selected donor details back to parent component
       props.onDonorSelect(donorMatch);
-      setMatchFound(true);
-    } else if (matchFound) {
+      setFormFilled(true);
+    } else if (formFilled) {
       clear_form();
-      setMatchFound(false);
     }
   }
 
@@ -40,6 +41,7 @@ export default function AutofillDonorEmail(props: Donor) {
       zip: '',
       _id: '',
     });
+    setFormFilled(false);
   }
 
   return (
@@ -67,9 +69,7 @@ export default function AutofillDonorEmail(props: Donor) {
         />
       )}
       onInputChange={(_, value) => {
-        if (value) {
-          onEmailChange(value);
-        }
+        onEmailChange(value);
       }}
       onChange={(_, value) => {
         if (!value) {
