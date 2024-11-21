@@ -1,157 +1,145 @@
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import { Box } from '@mui/material';
+'use client';
+
+import { useState } from 'react';
+import { Box, Button, Divider, Collapse } from '@mui/material';
+import {
+  AddBox,
+  Assignment,
+  Email,
+  Equalizer,
+  ExpandLess,
+  ExpandMore,
+  Group,
+  HandshakeRounded,
+  Inventory,
+  MiscellaneousServices,
+  VolunteerActivism,
+} from '@mui/icons-material';
 import Image from 'next/image';
 
-import HomeIcon from '@mui/icons-material/Home';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
-import BallotIcon from '@mui/icons-material/Ballot';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-import GroupIcon from '@mui/icons-material/Group';
-
 export default function Navbar() {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  const handleToggle = (section: string) => {
+    setExpandedSection((prev) => (prev === section ? null : section)); // Toggle the clicked section
+  };
+
+  const buttonStyles: React.CSSProperties = {
+    color: '#ff8a65',
+    fontSize: '16px',
+    textTransform: 'none',
+    justifyContent: 'flex-start',
+    width: '100%',
+    padding: '12px 16px',
+  };
+
+  const sections = [
+    {
+      title: 'Donations',
+      icon: <VolunteerActivism />,
+      buttons: [
+        {
+          href: '/donation/add',
+          icon: <AddBox />,
+          label: 'Add Donation',
+        },
+        {
+          href: '/donation',
+          icon: <VolunteerActivism />,
+          label: 'Donations',
+        },
+        { href: '/donors', icon: <HandshakeRounded />, label: 'Donors' },
+      ],
+    },
+    {
+      title: 'Inventory',
+      icon: <Inventory />,
+      buttons: [
+        { href: '/donationItem', icon: <Inventory />, label: 'Inventory' },
+        { href: '/item/add', icon: <AddBox />, label: 'Add Evaluation' },
+        { href: '/item', icon: <Assignment />, label: 'Evaluations' },
+      ],
+    },
+    {
+      title: 'Reporting & Settings',
+      icon: <MiscellaneousServices />,
+      buttons: [
+        { href: '/mailMerge', icon: <Email />, label: 'Emails' },
+        { href: '/user', icon: <Group />, label: 'Users' },
+        { href: '#', icon: <Equalizer />, label: 'Reports' },
+      ],
+    },
+  ];
+
   return (
-    <>
-      <Box height={'100vh'}>
-        <Box display={'flex'} justifyContent={'center'} p={2}>
-          <Image
-            className="rounded-md"
-            alt="logo"
-            src="/cropped-MOH-Logo-768x393.png"
-            width="180"
-            height="100"
-            // style={{ marginRight: '25px' }} // Add spacing between the image and links
-          />
-        </Box>
-
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="./"
-            startIcon={<HomeIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Home
-          </Button>
-        </Box>
-
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="/donation/add"
-            startIcon={<AddCircleIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Add Donation
-          </Button>
-        </Box>
-
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="/donation"
-            startIcon={<VolunteerActivismIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Donations
-          </Button>
-        </Box>
-
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="/donors"
-            startIcon={<BallotIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Donors
-          </Button>
-        </Box>
-
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="/donationItem"
-            startIcon={<InventoryIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Inventory
-          </Button>
-        </Box>
-
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="/item/add"
-            startIcon={<AddBoxIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Add Evaluation
-          </Button>
-        </Box>
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="/item"
-            startIcon={<BallotIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Evaluations
-          </Button>
-        </Box>
-
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="./"
-            startIcon={<EqualizerIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Trends
-          </Button>
-        </Box>
-        <Box display={'flex'} justifyContent={'flex-start'} p={2}>
-          <Button
-            href="/user"
-            startIcon={<GroupIcon />}
-            style={{
-              color: '#ff8a65',
-              fontSize: '25px',
-              textTransform: 'none',
-            }}
-          >
-            Users
-          </Button>
-        </Box>
+    <Box
+      height="100vh"
+      display="flex"
+      flexDirection="column"
+      width="250px" // Fix width of the navbar
+      overflow="hidden" // Prevent any expanding overflow
+      bgcolor="white" // Set background color explicitly
+      borderRight="1px solid #ddd"
+    >
+      {/* Logo Section */}
+      <Box display="flex" justifyContent="center" p={2}>
+        <Image
+          alt="logo"
+          src="/cropped-MOH-Logo-768x393.png"
+          width="180"
+          height="100"
+          className="rounded-md"
+        />
       </Box>
+
+      {/* Button Groups */}
+      {sections.map((section, index) => (
+        <Box key={index} width="100%">
+          {/* Section Header */}
+          <Button
+            onClick={() => handleToggle(section.title)}
+            startIcon={section.icon} // Add icon here
+            endIcon={
+              expandedSection === section.title ? (
+                <ExpandMore />
+              ) : (
+                <ExpandLess />
+              )
+            }
+            style={{ ...buttonStyles, fontWeight: 'bold' }}
+          >
+            {section.title}
+          </Button>
+
+          {/* Sub-buttons (Expandable) */}
+          <Collapse
+            in={expandedSection === section.title} // Expand only the selected section
+            timeout="auto"
+            unmountOnExit
+          >
+            <Box display="flex" flexDirection="column" pl={2}>
+              {section.buttons.map((btn, btnIndex) => (
+                <Button
+                  key={btnIndex}
+                  href={btn.href}
+                  startIcon={btn.icon}
+                  style={{
+                    ...buttonStyles,
+                    paddingLeft: '32px', // Indent sub-buttons
+                    fontSize: '14px', // Smaller font for sub-buttons
+                  }}
+                >
+                  {btn.label}
+                </Button>
+              ))}
+            </Box>
+          </Collapse>
+          <Divider flexItem />
+        </Box>
+      ))}
+
+      {/* Vertical Divider */}
       <Divider orientation="vertical" flexItem />
-    </>
+    </Box>
   );
 }
