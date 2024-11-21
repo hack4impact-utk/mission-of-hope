@@ -59,18 +59,24 @@ export default function AddDonationView({
   const { showSnackbar } = useSnackbar();
 
   const handleDonorSelect = (selectedDonor: DonorResponse) => {
-    setDonorFormData({
-      ...donorFormData,
-      _id: selectedDonor._id,
-      firstName: selectedDonor.firstName ?? '',
-      lastName: selectedDonor.lastName ?? '',
-      address: selectedDonor.address ?? '',
-      city: selectedDonor.city ?? '',
-      email: selectedDonor.email ?? '',
-      state: selectedDonor.state ?? '',
-      zip: selectedDonor.zip ?? 0,
-    });
-    setPrevDonated(true);
+    if (selectedDonor) {
+      setDonorFormData({
+        ...donorFormData,
+       _id: selectedDonor._id,
+        firstName: selectedDonor.firstName ?? '',
+        lastName: selectedDonor.lastName ?? '',
+        address: selectedDonor.address ?? '',
+        city: selectedDonor.city ?? '',
+        email: selectedDonor.email ?? '',
+        state: selectedDonor.state ?? '',
+        zip: selectedDonor.zip ?? 0,
+      });
+      setPrevDonated(true);
+    } else {
+      setDonorFormData({} as DonorFormData); // Clear form when donor is deselected
+      setPrevDonated(false);
+    }
+    // if donr is cleared after selecting a donor, set prevDonated to false
   };
 
   const handleDonationItemFormChange = (
@@ -317,7 +323,6 @@ export default function AddDonationView({
 
             <DonorForm
               donorData={donorFormData}
-              disabled={prevDonated}
               onChange={setDonorFormData}
             />
 

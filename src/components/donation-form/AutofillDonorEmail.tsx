@@ -13,7 +13,7 @@ interface Donor {
 export default function AutofillDonorEmail(props: Donor) {
   const [donorOptions] = useState<DonorResponse[]>(props.DonorOptions);
 
-  // should check if the form was filled out
+  // Kepps track of whether the form is filled or not
   const [formFilled, setFormFilled] = useState(false);
 
   function onEmailChange(value: string) {
