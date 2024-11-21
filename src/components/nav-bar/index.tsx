@@ -86,8 +86,8 @@ export default function Navbar() {
         <Image
           alt="logo"
           src="/cropped-MOH-Logo-768x393.png"
-          width="180"
-          height="100"
+          width="200"
+          height="102"
           className="rounded-md"
         />
       </Box>
