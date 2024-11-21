@@ -26,11 +26,11 @@ export default function Navbar() {
 
   const buttonStyles: React.CSSProperties = {
     color: '#ff8a65',
-    fontSize: '16px',
+    fontSize: '15px',
     textTransform: 'none',
     justifyContent: 'flex-start',
     width: '100%',
-    padding: '12px 16px',
+    padding: '10px 10px',
   };
 
   const sections = [
@@ -76,7 +76,7 @@ export default function Navbar() {
       height="100vh"
       display="flex"
       flexDirection="column"
-      width="250px" // Fix width of the navbar
+      width="33vh" // Fix width of the navbar
       overflow="hidden" // Prevent any expanding overflow
       bgcolor="white" // Set background color explicitly
       borderRight="1px solid #ddd"
@@ -101,9 +101,9 @@ export default function Navbar() {
             startIcon={section.icon} // Add icon here
             endIcon={
               expandedSection === section.title ? (
-                <ExpandMore />
-              ) : (
                 <ExpandLess />
+              ) : (
+                <ExpandMore />
               )
             }
             style={{ ...buttonStyles, fontWeight: 'bold' }}
@@ -125,7 +125,7 @@ export default function Navbar() {
                   startIcon={btn.icon}
                   style={{
                     ...buttonStyles,
-                    paddingLeft: '32px', // Indent sub-buttons
+                    paddingLeft: '10px', // Indent sub-buttons
                     fontSize: '14px', // Smaller font for sub-buttons
                   }}
                 >
