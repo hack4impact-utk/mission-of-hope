@@ -35,3 +35,14 @@ export async function getUserByEmail(email: string): Promise<UserResponse> {
   }
   return user;
 }
+
+//
+export async function addAdmins(userIds: string[]): Promise<void> {
+  try {
+    await dbConnect();
+
+    await UserSchema.updateMany({ _id: { $in: userIds } }, { isAdmin: true });
+  } catch (error) {
+    throw new Error('500 Admins could not be added');
+  }
+}
