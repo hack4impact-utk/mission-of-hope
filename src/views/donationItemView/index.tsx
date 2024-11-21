@@ -106,8 +106,8 @@ export default function DonationItemView({ donations }: DonationItemProps) {
   );
 
   const formattedRows = uniqueDonationItems
-    .map((row) => ({
-      id: row._id,
+    .map((row, index) => ({
+      id: index + 1,
       product: row.item.name,
       category: row.item.category,
       quantity: row.quantity,
@@ -117,9 +117,11 @@ export default function DonationItemView({ donations }: DonationItemProps) {
       edit: row._id,
     }))
     .filter((row) =>
-      Object.values(row).some((value) =>
-        String(value).toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      Object.entries(row)
+        .filter(([key]) => key !== 'edit') // Exclude 'edit' (row._id) value from search
+        .some((value) =>
+          String(value).toLowerCase().includes(searchQuery.toLowerCase())
+        )
     );
 
   return (
