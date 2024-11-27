@@ -20,8 +20,9 @@ import Image from 'next/image';
 export default function Navbar() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
+  // Expand or Collapse sub-buttons
   const handleToggle = (section: string) => {
-    setExpandedSection((prev) => (prev === section ? null : section)); // Toggle the clicked section
+    setExpandedSection((prev) => (prev === section ? null : section));
   };
 
   const buttonStyles: React.CSSProperties = {
@@ -78,18 +79,19 @@ export default function Navbar() {
       flexDirection="column"
       width="33vh" // Fix width of the navbar
       overflow="hidden" // Prevent any expanding overflow
-      bgcolor="white" // Set background color explicitly
       borderRight="1px solid #ddd"
     >
       {/* Logo Section */}
-      <Box display="flex" justifyContent="center" p={2}>
-        <Image
-          alt="logo"
-          src="/cropped-MOH-Logo-768x393.png"
-          width="200"
-          height="102"
-          className="rounded-md"
-        />
+      <Box display="flex" justifyContent="center">
+        <Button href="/">
+          <Image
+            alt="logo"
+            src="/cropped-MOH-Logo-768x393.png"
+            width="220"
+            height="107"
+            className="rounded-md"
+          />
+        </Button>
       </Box>
 
       {/* Button Groups */}
