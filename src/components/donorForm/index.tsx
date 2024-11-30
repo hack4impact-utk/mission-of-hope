@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 
 interface donorProps {
   donorData: DonorFormData;
-  disabled: boolean;
   onChange: (DonorData: DonorFormData) => void;
 }
 
@@ -20,7 +19,6 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="First Name"
-          disabled={props.disabled}
           value={props.donorData.firstName ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, firstName: e.target.value });
@@ -32,7 +30,6 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="Last Name"
-          disabled={props.disabled}
           value={props.donorData.lastName ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, lastName: e.target.value });
@@ -44,7 +41,6 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="Address"
-          disabled={props.disabled}
           value={props.donorData.address ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, address: e.target.value });
@@ -56,7 +52,6 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="City"
-          disabled={props.disabled}
           value={props.donorData.city ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, city: e.target.value });
@@ -68,7 +63,6 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="State"
-          disabled={props.disabled}
           value={props.donorData.state ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, state: e.target.value });
@@ -80,7 +74,6 @@ export default function DonorForm(props: donorProps) {
           fullWidth
           id="outlined-required"
           label="Zip"
-          disabled={props.disabled}
           value={props.donorData.zip ?? ''}
           type="number"
           inputMode="numeric"
