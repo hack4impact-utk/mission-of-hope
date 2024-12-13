@@ -19,12 +19,14 @@ import { DataGrid, GridColDef, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
 import { ItemResponse } from '@/types/items';
+import useSearch from '@/hooks/useSearch';
 
 interface ItemViewProps {
   items: ItemResponse[];
 }
 
 export default function ItemView({ items }: ItemViewProps) {
+  const { searchString, searchQuery, setSearchQuery } = useSearch();
   const currency = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -90,14 +92,22 @@ export default function ItemView({ items }: ItemViewProps) {
     visibleColumns.includes(column.field)
   );
 
-  const rows = items.map((item, index) => ({
-    id: index + 1,
-    name: item.name,
-    category: item.category,
-    high: item.high,
-    low: item.low,
-    edit: item._id,
-  }));
+  const rows = items
+    .map((item, index) => ({
+      id: index + 1,
+      name: item.name,
+      category: item.category,
+      high: item.high,
+      low: item.low,
+      edit: item._id,
+    }))
+    .filter((row) =>
+      Object.entries(row)
+        .filter(([key]) => key !== 'edit') // Exclude 'edit' (item._id) value from search
+        .some((value) =>
+          String(value).toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
 
   const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
     const selectedColumns = event.target.value as string[];
@@ -178,6 +188,10 @@ export default function ItemView({ items }: ItemViewProps) {
       <GridToolbarQuickFilter
         quickFilterProps={{
           debounceMs: 100,
+          value: searchString,
+          onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+            setSearchQuery(event.target.value);
+          },
         }}
       />
     </Box>

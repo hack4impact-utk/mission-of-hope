@@ -80,9 +80,11 @@ export default function DonorView({ donors }: DonorViewProps) {
       edit: donor?._id,
     }))
     .filter((row) =>
-      Object.values(row).some((value) =>
-        String(value).toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      Object.entries(row)
+        .filter(([key]) => key !== 'edit') // Exclude 'edit' (donor._id) value from search
+        .some((value) =>
+          String(value).toLowerCase().includes(searchQuery.toLowerCase())
+        )
     );
 
   const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
