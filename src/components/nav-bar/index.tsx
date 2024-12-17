@@ -16,6 +16,7 @@ import {
   VolunteerActivism,
 } from '@mui/icons-material';
 import Image from 'next/image';
+import logo from '/public/cropped-MOH-Logo-768x393.png';
 
 export default function Navbar() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -27,7 +28,6 @@ export default function Navbar() {
 
   const buttonStyles: React.CSSProperties = {
     color: '#ff8a65',
-    fontSize: '15px',
     textTransform: 'none',
     justifyContent: 'flex-start',
     width: '100%',
@@ -73,66 +73,78 @@ export default function Navbar() {
   ];
 
   return (
-    <Box
-      height="100vh"
-      display="flex"
-      flexDirection="column"
-      width="33vh" // Fix width of the navbar
-      overflow="hidden" // Prevent any expanding overflow
-      borderRight="1px solid #ddd"
-    >
+    <Box flexDirection="column" height="100vh" borderRight="1px solid #ddd">
       {/* Logo Section */}
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" p={2}>
         <Button href="/">
-          <Image
-            alt="logo"
-            src="/cropped-MOH-Logo-768x393.png"
-            width="220"
-            height="107"
-            className="rounded-md"
-          />
+          <Box
+            style={{
+              width: '100%', // Responsive width
+              maxWidth: '200px', // Increase this will make nav-bar wider but still responsive
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Image
+              priority={true}
+              alt="logo"
+              src={logo}
+              style={{
+                width: '100%',
+                height: 'auto',
+              }}
+              className="rounded-md"
+            />
+          </Box>
         </Button>
       </Box>
 
-      {/* Button Groups */}
+      {/* Section Groups */}
       {sections.map((section, index) => (
         <Box key={index} width="100%">
           {/* Section Header */}
           <Button
             onClick={() => handleToggle(section.title)}
-            startIcon={section.icon} // Add icon here
-            endIcon={
-              expandedSection === section.title ? (
-                <ExpandLess />
-              ) : (
-                <ExpandMore />
-              )
-            }
-            style={{ ...buttonStyles, fontWeight: 'bold' }}
+            style={{
+              ...buttonStyles,
+              fontWeight: 'bold',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+            }}
           >
-            {section.title}
+            {/* StartIcon and Text are left-alignment */}
+            <Box display="flex" alignItems="center" gap={1}>
+              {section.icon} {/* StartIcon */}
+              <span>{section.title}</span> {/* Button text */}
+            </Box>
+
+            {/* EndIcon is right-alignment */}
+            {expandedSection === section.title ? (
+              <ExpandLess />
+            ) : (
+              <ExpandMore />
+            )}
           </Button>
 
-          {/* Sub-buttons (Expandable) */}
-          <Collapse
-            in={expandedSection === section.title} // Expand only the selected section
-            timeout="auto"
-            unmountOnExit
-          >
+          {/* Expand only the selected subSection */}
+          <Collapse in={expandedSection === section.title}>
             <Box display="flex" flexDirection="column" pl={2}>
               {section.buttons.map((btn, btnIndex) => (
-                <Button
-                  key={btnIndex}
-                  href={btn.href}
-                  startIcon={btn.icon}
-                  style={{
-                    ...buttonStyles,
-                    paddingLeft: '10px', // Indent sub-buttons
-                    fontSize: '14px', // Smaller font for sub-buttons
-                  }}
-                >
-                  {btn.label}
-                </Button>
+                <Box key={btnIndex} width="100%">
+                  <Button
+                    key={btnIndex}
+                    href={btn.href}
+                    startIcon={btn.icon}
+                    style={{
+                      ...buttonStyles,
+                      marginLeft: '5%', // Indent sub-section
+                    }}
+                  >
+                    {btn.label}
+                  </Button>
+                </Box>
               ))}
             </Box>
           </Collapse>
