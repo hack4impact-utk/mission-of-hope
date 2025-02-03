@@ -7,6 +7,7 @@ import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
 import { CreateDonorRequest, DonorResponse } from '@/types/donors';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useSession } from 'next-auth/react';
 import {
   Box,
   Button,
@@ -30,6 +31,7 @@ import {
   DonationItemResponse,
 } from '@/types/donation';
 import GenerateReceiptButton from '@/components/generateReceiptButton';
+import { getUserByEmail } from '@/server/actions/users';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
@@ -40,6 +42,7 @@ export default function AddDonationView({
   donorOptions,
   itemOptions,
 }: AddDonationViewProps) {
+  const { data: session } = useSession();
   const [donationData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(),
   } as DonationFormData);
@@ -87,7 +90,7 @@ export default function AddDonationView({
   const handleAddDonation = async () => {
     const createDonation: CreateDonationRequest = {
       entryDate: new Date(donationData.donationDate),
-      user: '661dc544ed3579f193bb008c',
+      user: (await getUserByEmail(session!.user.email))._id,
       items: [],
       donor: '',
       receipt: donationData.receipt,
@@ -98,9 +101,7 @@ export default function AddDonationView({
       createDonation.items = (await addDonationItems()).map((item) => {
         return item._id;
       });
-      //Get user
       await addDonation(createDonation);
-
       setDonorFormData({} as DonorFormData);
       setDonationItemFormDatas([{} as DonationItemFormData]);
       setDonationFormData({
@@ -253,7 +254,7 @@ export default function AddDonationView({
         },
         body: JSON.stringify(createDonation),
       });
-
+      console.log(donationRes);
       if (donationRes.ok) {
         console.log(createDonation);
         showSnackbar('Donation added successfully.', 'success');
