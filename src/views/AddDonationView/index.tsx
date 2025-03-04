@@ -50,6 +50,7 @@ export default function AddDonationView({
     DonationItemFormData[]
   >([{} as DonationItemFormData] as DonationItemFormData[]);
   const [prevDonated, setPrevDonated] = useState(false);
+  const [donorInfoFormDisabled, setDonorInfoFormDisabled] = useState(false);
 
   const { validate: validateDonation } = useValidation(zDonationFormData);
   const { validate: validateDonor } = useValidation(zDonorFormData);
@@ -62,7 +63,7 @@ export default function AddDonationView({
     if (selectedDonor) {
       setDonorFormData({
         ...donorFormData,
-       _id: selectedDonor._id,
+        _id: selectedDonor._id,
         firstName: selectedDonor.firstName ?? '',
         lastName: selectedDonor.lastName ?? '',
         address: selectedDonor.address ?? '',
@@ -72,8 +73,10 @@ export default function AddDonationView({
         zip: selectedDonor.zip ?? 0,
       });
       setPrevDonated(true);
+      setDonorInfoFormDisabled(true);
     } else {
       setDonorFormData({} as DonorFormData); // Clear form when donor is deselected
+      setDonorInfoFormDisabled(false);
       setPrevDonated(false);
     }
     // if donr is cleared after selecting a donor, set prevDonated to false
@@ -299,6 +302,7 @@ export default function AddDonationView({
                 DonorForm={donorFormData}
                 onDonorSelect={handleDonorSelect}
                 onChange={setDonorFormData}
+                onClear={() => setDonorInfoFormDisabled(false)}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -326,6 +330,7 @@ export default function AddDonationView({
             <DonorForm
               donorData={donorFormData}
               onChange={setDonorFormData}
+              disabled={donorInfoFormDisabled}
             />
 
             <Grid item xs={12}>

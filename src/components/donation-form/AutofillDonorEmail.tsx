@@ -8,6 +8,7 @@ interface Donor {
   DonorForm: DonorFormData;
   onDonorSelect: (donor: DonorResponse) => void;
   onChange: (donor: DonorFormData) => void;
+  onClear: () => void;
 }
 
 export default function AutofillDonorEmail(props: Donor) {
@@ -74,6 +75,7 @@ export default function AutofillDonorEmail(props: Donor) {
       onChange={(_, value) => {
         if (!value) {
           clear_form();
+          props.onClear();
         }
       }}
     />
