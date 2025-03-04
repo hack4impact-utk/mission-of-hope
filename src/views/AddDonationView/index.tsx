@@ -111,6 +111,7 @@ export default function AddDonationView({
       setDonationItemFormDatas([{} as DonationItemFormData]);
       setDonationFormData({
         donationDate: new Date(),
+        receipt: '',
       } as DonationFormData);
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
@@ -242,6 +243,7 @@ export default function AddDonationView({
   };
 
   const addDonation = async (createDonation: CreateDonationRequest) => {
+    donationData.prevDonated = prevDonated;
     const errors = validateDonation(donationData);
     if (errors) {
       setValidationErrors(errors);

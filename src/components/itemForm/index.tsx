@@ -1,5 +1,6 @@
 import { ItemFormData } from '@/types/forms/item';
 import {
+  Autocomplete,
   FormControl,
   Grid,
   InputAdornment,
@@ -14,6 +15,7 @@ interface itemFormProps {
   itemForm: ItemFormData;
   onChange: (itemForm: ItemFormData) => void;
   disabled: boolean;
+  categories: string[];
 }
 
 export default function ItemForm(props: itemFormProps) {
@@ -38,6 +40,12 @@ export default function ItemForm(props: itemFormProps) {
     onChange(formattedValue);
   };
 
+  const filteredCategories = props.categories.filter((category) => {
+    const categoryRegex = new RegExp(props.itemForm.category, 'i');
+
+    return categoryRegex.test(category);
+  });
+
   return (
     <>
       <Grid mt={2} item xs={12}>
@@ -54,18 +62,29 @@ export default function ItemForm(props: itemFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          required
-          label="Category"
-          variant="outlined"
-          fullWidth
-          disabled={props.disabled}
+        <Autocomplete
           value={props.itemForm.category}
-          onChange={(e) =>
-            props.onChange({ ...props.itemForm, category: e.target.value })
-          }
+          freeSolo
+          onInputChange={(_, value) => {
+            props.onChange({ ...props.itemForm, category: value || '' });
+          }}
+          options={filteredCategories}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              required
+              label="Category"
+              variant="outlined"
+              fullWidth
+              disabled={props.disabled}
+            />
+          )}
         />
-        {/* Consider using Select component here for dropdown */}
+        {filteredCategories.length === 0 && (
+          <Typography variant="caption" sx={{ color: 'gray' }}>
+            This is a new category that will be added
+          </Typography>
+        )}
       </Grid>
       <Grid item xs={12} sm={6}>
         <FormControl fullWidth disabled={props.disabled}>

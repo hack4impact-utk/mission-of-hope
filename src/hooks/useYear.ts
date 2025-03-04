@@ -1,22 +1,22 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function useMonth() {
+export default function useYear() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const monthQuery = searchParams.get('month') || '';
-  const [selectedMonth, setSearchString] = useState<string>(monthQuery);
+  const yearQuery = searchParams.get('year') || '';
+  const [selectedYear, setSearchString] = useState<string>(yearQuery);
 
-  const setMonthQuery = (query: string) => {
+  const setYearQuery = (query: string) => {
     setSearchString(query);
     const params = new URLSearchParams(searchParams.toString());
     if (query && Number(query) > 0) {
-      params.set('month', query);
+      params.set('year', query);
     } else {
-      params.delete('month');
+      params.delete('year');
     }
     router.push(`?${params.toString()}`);
   };
 
-  return { selectedMonth, monthQuery, setMonthQuery };
+  return { selectedYear, yearQuery, setYearQuery };
 }

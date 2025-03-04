@@ -1,7 +1,15 @@
 'use client';
-import { Box, Card, Tab, Tabs, TextField, ThemeProvider } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Tab,
+  Tabs,
+  TextField,
+  ThemeProvider,
+} from '@mui/material';
 import { CustomTabPanel, ap } from '@/components/tab-panel';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import EmailParserCard from '@/components/email-card';
 import QuillToolBar, { modules, formats } from '@/components/tool-bar';
@@ -11,15 +19,18 @@ import { DonationResponse, DonationItemResponse } from '@/types/donation';
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import mohColors from '@/utils/moh-theme';
+import useSnackbar from '@/hooks/useSnackbar';
 
 interface mailMergeProps {
   exampleDonation: DonationResponse;
   exampleDonationItems: DonationItemResponse[];
+  template: { type: string; subject: string; body: string };
 }
 
 export default function EmailEditor({
   exampleDonation,
   exampleDonationItems,
+  template,
 }: mailMergeProps) {
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
@@ -28,6 +39,13 @@ export default function EmailEditor({
   const [body, setBody] = useState('');
   const [subject, setSubject] = useState('');
   const [value, setValue] = React.useState(0);
+  const { showSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    // Set the body and subject to the template if it exists
+    setBody(template?.body || '');
+    setSubject(template?.subject || '');
+  }, [template]);
 
   const handleSubjectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
@@ -39,6 +57,22 @@ export default function EmailEditor({
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleSaveButton = () => {
+    try {
+      fetch('/api/mailMerge', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type: template?.type, subject, body }),
+      });
+      showSnackbar('Email template saved', 'success');
+    } catch (error) {
+      showSnackbar('Error saving email template', 'error');
+      throw error;
+    }
   };
 
   return (
@@ -127,6 +161,15 @@ export default function EmailEditor({
             ></EmailParserCard>
           </CustomTabPanel>
         </Box>
+        <Button
+          variant="contained"
+          sx={{ height: '40px' }}
+          color="moh"
+          onClick={handleSaveButton}
+          fullWidth
+        >
+          Save Email
+        </Button>
       </ThemeProvider>
     </>
   );

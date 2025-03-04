@@ -2,6 +2,7 @@ import { Box, Card, Divider, Typography } from '@mui/material';
 import parse from 'html-react-parser';
 import { DonationResponse } from '@/types/donation';
 import { DonationItemResponse } from '@/types/donation';
+import { populateEmailTemplate } from '@/utils/string';
 
 interface emailProps {
   subjectLine: string;
@@ -15,28 +16,11 @@ export default function EmailParserCard({
   body,
   donation,
 }: emailProps) {
-  // const donor_regex = 'DONOR/i'
-  type repObj = {
-    FDONOR: string | undefined;
-    LDONOR: string;
-    DATE: string;
-  };
-  const entryDate = new Date(donation.entryDate);
-
-  const replaceObj: repObj = {
-    FDONOR: donation.donor.firstName,
-    LDONOR: donation.donor.lastName,
-    DATE: entryDate.toDateString(),
-  };
-
-  let key: keyof repObj;
-  let body_parse = body;
-
-  for (key in replaceObj) {
-    const replace = replaceObj[key];
-    if (replace === undefined) continue;
-    body_parse = body_parse.replaceAll(`[${key}]`, replace);
-  }
+  const body_parse = populateEmailTemplate(
+    body,
+    donation.donor,
+    donation.entryDate
+  );
 
   return (
     <Card sx={{ p: 2, pl: 9 }}>
