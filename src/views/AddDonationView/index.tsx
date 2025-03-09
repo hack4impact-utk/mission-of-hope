@@ -264,7 +264,6 @@ export default function AddDonationView({
       });
 
       if (donationRes.ok) {
-        console.log(createDonation);
         showSnackbar('Donation added successfully.', 'success');
       } else {
         throw `Error adding donor, status: ${donationRes.status}`;

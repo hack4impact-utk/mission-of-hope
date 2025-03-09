@@ -64,7 +64,6 @@ export default function AutofillCategory(props: AutofillCategoryProps) {
             id="outlined-required"
             value={''}
             // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            //   console.log('hello');
             //   onCategoryChange(e.target.value);
             // }}
             type="string"
@@ -72,9 +71,8 @@ export default function AutofillCategory(props: AutofillCategoryProps) {
         )}
         onInputChange={(_, value) => {
           onCategoryChange(value);
-          console.log(value);
 
-          // whent you type or click, what event handler is actually being called and what does it return?
+          // when you type or click, what event handler is actually being called and what does it return?
           // then, pass the setstate from the parent component to update the parent state with the new category
           // deletion is not updating it
         }}

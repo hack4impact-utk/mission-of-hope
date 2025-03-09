@@ -46,8 +46,7 @@ export default function SettingsView() {
         throw new Error("Failed to update user's information");
       }
 
-      const data = await response.json();
-      console.log(data); // TODO: Logging response data for now
+      await response.json();
       showSnackbar('User information updated successfully', 'success');
     } catch (error) {
       console.error(error);
