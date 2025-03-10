@@ -86,7 +86,6 @@ export default function DonorIdView(props: donorProps) {
       showSnackbar('Donor updated successfully.', 'success');
       setDonorFormFromDonor(updatedDonor);
       setEditSwitch(false); // Optionally turn off edit mode
-      // console.log('Donor updated successfully:', updatedDonor);
       // Optionally update local state or trigger other UI updates
     } catch (error) {
       showSnackbar(`Error updating donor: ${error}`, 'error');

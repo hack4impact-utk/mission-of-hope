@@ -1,6 +1,8 @@
 import UserSchema from '@/server/models/users';
-import { UserResponse } from '@/types/users';
+import { UpdateAllowedUsersRequest, UserResponse } from '@/types/users';
 import dbConnect from '@/utils/db-connect';
+import { getSettings } from './settings';
+import Settings from '@/server/models/settings';
 
 export async function getAllUsers(): Promise<UserResponse[]> {
   await dbConnect();
@@ -34,4 +36,39 @@ export async function getUserByEmail(email: string): Promise<UserResponse> {
     throw new Error('404 User not found');
   }
   return user;
+}
+
+//
+export async function addAdmins(userIds: string[]): Promise<void> {
+  try {
+    await dbConnect();
+
+    await UserSchema.updateMany({ _id: { $in: userIds } }, { isAdmin: true });
+  } catch (error) {
+    throw new Error('500 Admins could not be added');
+  }
+}
+
+export async function updateAllowedUsers(req: UpdateAllowedUsersRequest) {
+  try {
+    await dbConnect();
+
+    // if userEmails is not undefined, update allowed emails array
+    if (req.userEmails) {
+      const currentSettings = await getSettings();
+      await Settings.updateOne(
+        { _id: currentSettings._id },
+        { allowedEmails: req.userEmails }
+      );
+    }
+
+    // Should we remove user objects for emails that are no longer allowed?
+
+    //if adminIds is not undefined, flag included users as admin
+    if (req.adminIds) {
+      await addAdmins(req.adminIds);
+    }
+  } catch (error) {
+    throw error;
+  }
 }
