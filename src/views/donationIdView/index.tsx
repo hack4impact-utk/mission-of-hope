@@ -3,8 +3,7 @@ import DonationItemForm from '@/components/donationItemForm';
 import useSnackbar from '@/hooks/useSnackbar';
 import {
   DonationResponse,
-  UpdateDonationItemRequest,
-  UpdateDonationRequest,
+  //UpdateDonationItemRequest,
 } from '@/types/donation';
 import { DonationFormData } from '@/types/forms/donation';
 import { DonationItemFormData } from '@/types/forms/donationItem';
@@ -32,11 +31,13 @@ interface donationProps {
 export default function DonationIdView(props: donationProps) {
   const { showSnackbar } = useSnackbar();
 
-  const [donationForm, setDonationFormData] = useState<DonationFormData>({
+  const [donationFormData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(props.donation.entryDate),
     receipt: props.donation.receipt ?? '',
+    prevDonated: props.donation.entryDate ? true : false,
   } as DonationFormData);
-  const [donationItemForms, setDonationItemFormDatas] = useState<
+
+  const [donationItemFormData, setDonationItemFormData] = useState<
     DonationItemFormData[]
   >(
     props.donation.items.map(
@@ -54,12 +55,13 @@ export default function DonationIdView(props: donationProps) {
     )
   );
 
-  // This setDonationFormFromDonation will be used to implemente edit function
-  // So, I comment it out for now so that typescript won't complain
+  // Update the donation (Call 2 set-state functions)
+  // Used for updating items - skip for now
   /*
-  function setDonationFormFromDonation(donation: DonationResponse) {
-    setDonationItemFormDatas(
-      donation.items.map(
+  const updateDonation = (donationRes: DonationResponse) => {
+    // Step 1: Update items array
+    setDonationItemFormData(
+      donationRes.items.map(
         (item) =>
           ({
             itemRes: item.item,
@@ -73,32 +75,38 @@ export default function DonationIdView(props: donationProps) {
           }) as DonationItemFormData
       )
     );
+
+    // Step 2: Update the donation with the new item array
     setDonationFormData({
-      donationDate: new Date(donation.entryDate),
+      donationDate: new Date(donationRes.entryDate),
+      receipt: donationRes.receipt,
+      prevDonated: donationRes.entryDate ? true : false,
     } as DonationFormData);
-  }
-    */
+  };
+  */
 
   const handleDonationItemFormChange = (
     updatedDonationItem: DonationItemFormData,
     index: number
   ) => {
-    const newArr = [...donationItemForms];
+    const newArr = [...donationItemFormData];
 
     newArr[index] = updatedDonationItem;
 
-    setDonationItemFormDatas(newArr);
+    setDonationItemFormData(newArr);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (!props.donation._id) {
-      console.error('Donor ID is missing');
+      console.error('Donation ID is missing');
       return;
     }
 
     try {
       // Grab item from the autofill
-      const dItems: UpdateDonationItemRequest[] = donationItemForms.map(
+      // Used for updating items - skip for now
+      /*
+      const dItems: UpdateDonationItemRequest[] = donationItemFormData.map(
         (itemForm) =>
           ({
             quantity: itemForm.quantity,
@@ -109,12 +117,22 @@ export default function DonationIdView(props: donationProps) {
             },
           }) as UpdateDonationItemRequest
       );
-      const donation: UpdateDonationRequest = {
-        entryDate: donationForm.donationDate,
-      };
-      console.log(dItems, donation);
+      */
 
-      //update the donation
+      // Send PUT request to .src/app/api/donations/[donationId]/route.ts
+      const response = await fetch(`/api/donations/${props.donation._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(donationFormData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update donation');
+      }
+
+      showSnackbar('Donation receipt updated successfully!', 'success');
     } catch (error) {
       showSnackbar(`Error updating donor: ${error}`, 'error');
     }
@@ -175,13 +193,13 @@ export default function DonationIdView(props: donationProps) {
                       label="Donation Date"
                       type="date"
                       value={
-                        donationForm?.donationDate
+                        donationFormData?.donationDate
                           ?.toISOString()
                           ?.split('T')[0] || ''
                       }
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setDonationFormData({
-                          ...donationForm,
+                          ...donationFormData,
                           donationDate: new Date(e.target.value),
                         });
                       }}
@@ -191,10 +209,10 @@ export default function DonationIdView(props: donationProps) {
                       }}
                     />
                   </Grid>
-                  {donationItemForms.map((_, index) => (
+                  {donationItemFormData.map((_, index) => (
                     <DonationItemForm
                       itemOptions={props.itemOptions}
-                      donationItemData={donationItemForms[index]}
+                      donationItemData={donationItemFormData[index]}
                       onChange={(value: DonationItemFormData) =>
                         handleDonationItemFormChange(value, index)
                       }
@@ -206,7 +224,13 @@ export default function DonationIdView(props: donationProps) {
                       fullWidth
                       id="outlined-required"
                       label="Receipt"
-                      value={donationForm.receipt}
+                      value={donationFormData.receipt}
+                      onChange={(e) =>
+                        setDonationFormData({
+                          ...donationFormData,
+                          receipt: e.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={12}>
