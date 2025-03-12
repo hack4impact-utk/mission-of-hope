@@ -1,36 +1,55 @@
-import { DonationResponse } from '@/types/donation';
+import { DonationResponse, zUpdateDonationRequest } from '@/types/donation';
+import { z } from 'zod';
 import { NextResponse, NextRequest } from 'next/server';
 import { updateDonation } from '../../../../server/actions/donations';
+
+const donationIdSchema = z
+  .string()
+  .regex(/^[a-fA-F0-9]{24}$/, 'Invalid donation ID format');
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: { donationId: string } }
 ) {
-  if (!params || !params.donationId) {
-    return NextResponse.json(
-      { error: 'Invalid request, no donation ID provided' },
-      { status: 400 }
-    );
-  }
-
   try {
-    // Parse the JSON body from the request
-    const updatedData = await request.json();
+    // Parse and validate the string from the params
+    const validationId = donationIdSchema.safeParse(params.donationId);
+    if (!validationId.success) {
+      return NextResponse.json({ error: validationId.error }, { status: 400 });
+    }
 
-    // Update the donation by id
-    const updatedDonation: DonationResponse | null = await updateDonation(
+    if (!validationId.data) {
+      return NextResponse.json(
+        { error: 'Donation ID not found' },
+        { status: 404 }
+      );
+    }
+
+    // Parse the JSON body from the request and validate
+    const requestBody = await request.json();
+    const validationResult = zUpdateDonationRequest.safeParse(requestBody);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { message: validationResult.error },
+        { status: 400 }
+      );
+    }
+
+    // Create a DonationResponse object
+    const donationRes: DonationResponse | null = await updateDonation(
       params.donationId,
-      updatedData
+      validationResult.data
     );
 
-    if (!updatedDonation) {
+    // Validate the object
+    if (!donationRes) {
       return NextResponse.json(
         { error: 'Donation not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(updatedDonation, { status: 200 });
+    return NextResponse.json(donationRes, { status: 200 });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(

@@ -34,7 +34,7 @@ export default function DonationIdView(props: donationProps) {
   const [donationFormData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(props.donation.entryDate),
     receipt: props.donation.receipt ?? '',
-    prevDonated: props.donation.entryDate ? true : false,
+    prevDonated: !!props.donation.entryDate,
   } as DonationFormData);
 
   const [donationItemFormData, setDonationItemFormData] = useState<
@@ -132,7 +132,7 @@ export default function DonationIdView(props: donationProps) {
         throw new Error('Failed to update donation');
       }
 
-      showSnackbar('Donation receipt updated successfully!', 'success');
+      showSnackbar('Donation updated successfully!', 'success');
     } catch (error) {
       showSnackbar(`Error updating donor: ${error}`, 'error');
     }
