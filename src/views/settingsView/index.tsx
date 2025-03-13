@@ -1,7 +1,7 @@
 'use client';
 import { UserResponse } from '@/types/users';
 import UserList from './UserList';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Divider, ThemeProvider, Typography } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import AdminAutocomplete from './AdminAutocomplete';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import LoadingButton from '@/components/LoadingButton';
 import { SettingsResponse } from '@/types/settings';
 import { MuiChipsInput } from 'mui-chips-input';
 import { z } from 'zod';
+import mohColors from '@/utils/moh-theme';
 import useSnackbar from '@/hooks/useSnackbar';
 import { useRouter } from 'next/navigation';
 
@@ -82,70 +83,80 @@ export default function SettingsView({ users, settings }: SettingsViewProps) {
   };
 
   return (
-    <Container>
-      <Box sx={{ maxWidth: '73vw', height: '78vh' }}>
-        <Grid2 container>
-          <Grid2 xs={12} sx={{ mb: 3 }}>
-            <Typography variant="h3">Settings</Typography>
-          </Grid2>
-          <Grid2 xs={12}>
-            <Typography variant="h6">Admins</Typography>
-          </Grid2>
-          <Grid2 xs={12} md={6}>
-            <UserList users={adminUsers} onUserDelete={handleRemoveAdmin} />
-          </Grid2>
-          <Grid2 xs={12} sx={{ mt: 2 }}>
-            <Typography variant="subtitle1">Add admins</Typography>
-          </Grid2>
-          <Grid2 xs={12} md={6} sx={{ mt: 1 }}>
-            <AdminAutocomplete
-              value={newAdmins}
-              users={normalUsers}
-              onChange={setNewAdmins}
-            />
-          </Grid2>
-          <Grid2 xs={12} sx={{ mt: 3 }}>
-            <Typography variant="h6">Users</Typography>
-          </Grid2>
-          <Grid2 xs={12} sx={{ mt: 2 }}>
-            <Typography variant="subtitle1">
-              Emails allowed to log in
-            </Typography>
-          </Grid2>
-          <Grid2 xs={12}>
-            <Typography variant="caption" color="textSecondary">
-              Emails ending with &quot;@compassionministries.net&quot; are
-              allowed automatically.
-            </Typography>
-          </Grid2>
-          <Grid2 xs={12} md={6} sx={{ mt: 1 }}>
-            <MuiChipsInput
-              validate={(email) => {
-                const emailSchema = z.string().email();
-                return (
-                  emailSchema.safeParse(email).success &&
-                  !allowedEmails.includes(email)
-                );
-              }}
-              value={allowedEmails}
-              onChange={setAllowedEmails}
-              fullWidth
-              hideClearAll
-            />
-          </Grid2>
-          <Grid2 xs={12} sx={{ mt: 2 }}>
-            {/* TODO: update to loading button when ready */}
-            <LoadingButton
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={newAdmins.length === 0 && !allowedEmailsDirty}
-              loading={isLoading}
-            >
-              Save
-            </LoadingButton>
-          </Grid2>
-        </Grid2>
+    <ThemeProvider theme={mohColors}>
+      <Box display={'flex'} justifyContent={'center'}>
+        <Box
+          sx={{
+            padding: '20px',
+            margin: '20px',
+            border: '1px solid #00000030',
+            borderRadius: '10px',
+            width: '60vw',
+            boxShadow: '0px 4px 4px 0px #00000040',
+          }}
+        >
+          <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
+            User Settings
+          </Typography>
+          <Divider
+            sx={{
+              backgroundColor: '#379541',
+            }}
+          ></Divider>
+          <Box sx={{ mt: 1, pl: 2, pr: 2 }}>
+            <Grid2 xs={12}>
+              <Typography variant="h6">Admins</Typography>
+            </Grid2>
+            <Grid2 xs={12} md={6}>
+              <UserList users={adminUsers} onUserDelete={handleRemoveAdmin} />
+            </Grid2>
+            <Grid2 xs={12} sx={{ mt: 2 }}>
+              <Typography variant="subtitle1">Add admins</Typography>
+            </Grid2>
+            <Grid2 xs={12} md={6} sx={{ mt: 1 }}>
+              <AdminAutocomplete
+                value={newAdmins}
+                users={normalUsers}
+                onChange={setNewAdmins}
+              />
+            </Grid2>
+            <Grid2 xs={12} sx={{ mt: 3 }}>
+              <Typography variant="h6">Users</Typography>
+            </Grid2>
+            <Grid2 xs={12} sx={{ mt: 2 }}>
+              <Typography variant="subtitle1">
+                Emails allowed to log in
+              </Typography>
+            </Grid2>
+            <Grid2 xs={12} md={6} sx={{ mt: 1 }}>
+              <MuiChipsInput
+                validate={(email) => {
+                  const emailSchema = z.string().email();
+                  return (
+                    emailSchema.safeParse(email).success &&
+                    !allowedEmails.includes(email)
+                  );
+                }}
+                value={allowedEmails}
+                onChange={setAllowedEmails}
+                fullWidth
+                hideClearAll
+              />
+            </Grid2>
+            <Grid2 xs={12} sx={{ mt: 2 }}>
+              {/* TODO: update to loading button when ready */}
+              <LoadingButton
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={newAdmins.length === 0 && !allowedEmailsDirty}
+                loading={isLoading}
+              >
+                Save
+              </LoadingButton>
+            </Grid2>
+          </Box>
+        </Box>
       </Box>
-    </Container>
+    </ThemeProvider>
   );
 }
