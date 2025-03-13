@@ -1,11 +1,7 @@
 import { DonationResponse, zUpdateDonationRequest } from '@/types/donation';
-import { z } from 'zod';
+import { zObjectId } from '@/types/objectId';
 import { NextResponse, NextRequest } from 'next/server';
 import { updateDonation } from '../../../../server/actions/donations';
-
-const donationIdSchema = z
-  .string()
-  .regex(/^[a-fA-F0-9]{24}$/, 'Invalid donation ID format');
 
 export async function PUT(
   request: NextRequest,
@@ -13,7 +9,7 @@ export async function PUT(
 ) {
   try {
     // Parse and validate the string from the params
-    const validationId = donationIdSchema.safeParse(params.donationId);
+    const validationId = zObjectId.safeParse(params.donationId);
     if (!validationId.success) {
       return NextResponse.json({ error: validationId.error }, { status: 400 });
     }
