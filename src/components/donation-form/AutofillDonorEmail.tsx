@@ -6,6 +6,7 @@ import { useState } from 'react';
 interface Donor {
   DonorOptions: DonorResponse[];
   DonorForm: DonorFormData;
+  disable?: boolean;
   onDonorSelect: (donor: DonorResponse) => void;
   onChange: (donor: DonorFormData) => void;
   onClear: () => void;
@@ -32,6 +33,7 @@ export default function AutofillDonorEmail(props: Donor) {
   }
 
   function clear_form() {
+    if (props.disable) return;
     props.onChange({
       firstName: '',
       lastName: '',
@@ -51,11 +53,13 @@ export default function AutofillDonorEmail(props: Donor) {
       autoComplete
       value={props.DonorForm.email ?? ''}
       options={donorOptions}
+      disableClearable={props.disable}
+      disabled={props.disable}
       isOptionEqualToValue={(option, value) => option._id === value._id}
       getOptionLabel={(don) => (typeof don === 'string' ? don : don.email)}
-      renderOption={(props, option) => {
+      renderOption={(optionProps, option) => {
         return (
-          <li {...props} key={option._id}>
+          <li {...optionProps} key={option._id}>
             {option.email}
           </li>
         );
@@ -67,6 +71,11 @@ export default function AutofillDonorEmail(props: Donor) {
           id="outlined-required"
           value={''}
           type="email"
+          disabled={props.disable}
+          inputProps={{
+            ...params.inputProps,
+            readOnly: props.disable, // Prevents dropdown when disable
+          }}
         />
       )}
       onInputChange={(_, value) => {

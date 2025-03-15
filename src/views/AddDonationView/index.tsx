@@ -17,6 +17,7 @@ import {
   ThemeProvider,
   Tooltip,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 import React, { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
@@ -51,6 +52,7 @@ export default function AddDonationView({
   >([{} as DonationItemFormData] as DonationItemFormData[]);
   const [prevDonated, setPrevDonated] = useState(false);
   const [donorInfoFormDisabled, setDonorInfoFormDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // For the loading wheel
 
   const { validate: validateDonation } = useValidation(zDonationFormData);
   const { validate: validateDonor } = useValidation(zDonorFormData);
@@ -94,6 +96,7 @@ export default function AddDonationView({
   };
 
   const handleAddDonation = async () => {
+    setIsLoading(true);
     const createDonation: CreateDonationRequest = {
       entryDate: new Date(donationData.donationDate),
       user: '661dc544ed3579f193bb008c',
@@ -118,6 +121,8 @@ export default function AddDonationView({
       } as DonationFormData);
     } catch (error) {
       showSnackbar(`Error:'${error}`, 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -299,6 +304,7 @@ export default function AddDonationView({
               <AutofillDonorEmail
                 DonorOptions={donorOptions}
                 DonorForm={donorFormData}
+                disable={isLoading}
                 onDonorSelect={handleDonorSelect}
                 onChange={setDonorFormData}
                 onClear={() => setDonorInfoFormDisabled(false)}
@@ -310,6 +316,7 @@ export default function AddDonationView({
                 id="outlined-required"
                 label="Donation Date"
                 type="date"
+                disabled={isLoading}
                 value={
                   donationData?.donationDate?.toISOString()?.split('T')[0] || ''
                 }
@@ -329,7 +336,7 @@ export default function AddDonationView({
             <DonorForm
               donorData={donorFormData}
               onChange={setDonorFormData}
-              disabled={donorInfoFormDisabled}
+              disabled={donorInfoFormDisabled || isLoading}
             />
 
             <Grid item xs={12}>
@@ -338,6 +345,7 @@ export default function AddDonationView({
                 id="outlined-required"
                 label="Receipt"
                 value={donationData.receipt}
+                disabled={isLoading}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const re = /^[0-9\b]+$/;
                   // if value is not blank, then test the regex
@@ -355,6 +363,7 @@ export default function AddDonationView({
                 InputProps={{
                   endAdornment: (
                     <GenerateReceiptButton
+                      disabled={isLoading}
                       onChange={async (Res: Response) => {
                         if (Res.ok) {
                           const receipt = await Res.json();
@@ -394,7 +403,7 @@ export default function AddDonationView({
                     handleDonationItemFormChange(value, index)
                   }
                   key={index}
-                  disabled={false}
+                  disabled={isLoading}
                   // validationErrors={}
                 />
                 <Grid
@@ -407,6 +416,7 @@ export default function AddDonationView({
                 >
                   <Tooltip title="Remove">
                     <IconButton
+                      disabled={isLoading}
                       onClick={() => {
                         donationItemFormDatas.splice(index, 1);
                         setDonationItemFormDatas([...donationItemFormDatas]);
@@ -425,6 +435,7 @@ export default function AddDonationView({
                 variant="outlined"
                 startIcon={<AddIcon></AddIcon>}
                 color="moh"
+                disabled={isLoading}
                 onClick={() =>
                   setDonationItemFormDatas([
                     ...donationItemFormDatas,
@@ -443,9 +454,17 @@ export default function AddDonationView({
                 sx={{ height: '40px' }}
                 onClick={() => handleAddDonation()}
                 color="moh"
+                disabled={isLoading}
                 fullWidth
               >
-                Submit Donation
+                {isLoading ? (
+                  <CircularProgress
+                    size={30}
+                    color="inherit"
+                  ></CircularProgress>
+                ) : (
+                  'Submit Donation'
+                )}
               </Button>
             </Grid>
           </Grid>
