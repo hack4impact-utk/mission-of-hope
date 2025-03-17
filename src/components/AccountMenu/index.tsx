@@ -64,14 +64,7 @@ export default function AccountMenu() {
         disableScrollLock // Prevents MUI from managing scroll behavior
       >
         {session?.user ? (
-          <>
-            <MenuItem onClick={handleNavigateToPages}>
-              <Link href="/settings" underline="none" color="#000">
-                Settings
-              </Link>
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          </>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         ) : (
           <MenuItem onClick={handleNavigateToPages}>
             <Link href="/signin" underline="none" color="#000">

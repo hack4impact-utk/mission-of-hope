@@ -49,6 +49,16 @@ export async function addAdmins(userIds: string[]): Promise<void> {
   }
 }
 
+export async function removeAdmin(userId: string): Promise<void> {
+  try {
+    await dbConnect();
+
+    await UserSchema.updateOne({ _id: userId }, { isAdmin: false });
+  } catch (error) {
+    throw new Error('500 Admin could not be removed');
+  }
+}
+
 export async function updateAllowedUsers(req: UpdateAllowedUsersRequest) {
   try {
     await dbConnect();
