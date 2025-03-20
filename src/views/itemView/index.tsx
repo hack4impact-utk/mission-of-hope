@@ -33,7 +33,6 @@ export default function ItemView({ items }: ItemViewProps) {
   });
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    'id',
     'name',
     'category',
     'high',
@@ -42,7 +41,6 @@ export default function ItemView({ items }: ItemViewProps) {
   ]);
 
   const allColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', maxWidth: 30, flex: 0.5 },
     { field: 'name', headerName: 'Name', maxWidth: 300, flex: 0.5 },
     { field: 'category', headerName: 'Category', maxWidth: 300, flex: 0.5 },
     {
@@ -94,7 +92,7 @@ export default function ItemView({ items }: ItemViewProps) {
 
   const rows = items
     .map((item, index) => ({
-      id: index + 1,
+      id: index, // Keep this 'id' because each item need an index to map
       name: item.name,
       category: item.category,
       high: item.high,
