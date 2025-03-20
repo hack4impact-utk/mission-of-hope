@@ -8,18 +8,15 @@ import {
   TextField,
   ThemeProvider,
 } from '@mui/material';
-import { CustomTabPanel, ap } from '@/components/tab-panel';
-import { useEffect, useState } from 'react';
-import 'react-quill/dist/quill.snow.css';
-import EmailParserCard from '@/components/email-card';
-import QuillToolBar, { modules, formats } from '@/components/tool-bar';
-import '@/components/tool-bar/style.css';
-import React from 'react';
 import { DonationResponse, DonationItemResponse } from '@/types/donation';
-import { useMemo } from 'react';
-import dynamic from 'next/dynamic';
 import mohColors from '@/utils/moh-theme';
 import useSnackbar from '@/hooks/useSnackbar';
+import { CustomTabPanel, ap } from '@/components/tab-panel';
+import QuillToolBar, { modules, formats } from '@/components/tool-bar';
+import EmailParserCard from '@/components/email-card';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import React, { useEffect, useState } from 'react';
 
 interface mailMergeProps {
   exampleDonation: DonationResponse;
@@ -32,13 +29,9 @@ export default function EmailEditor({
   exampleDonationItems,
   template,
 }: mailMergeProps) {
-  const ReactQuill = useMemo(
-    () => dynamic(() => import('react-quill'), { ssr: false }),
-    []
-  );
   const [body, setBody] = useState('');
   const [subject, setSubject] = useState('');
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
