@@ -165,12 +165,11 @@ export default function DonorView({ donors }: DonorViewProps) {
         </Button>
       </Box>
       <GridToolbarQuickFilter
-        quickFilterProps={{
-          debounceMs: 100,
-          value: searchString,
-          onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-            setSearchQuery(event.target.value),
-        }}
+        debounceMs={100}
+        value={searchString}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          setSearchQuery(event.target.value)
+        }
       />
     </Box>
   );
