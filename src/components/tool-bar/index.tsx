@@ -1,18 +1,16 @@
-import AddIcon from '@mui/icons-material/Add';
 import { useRef } from 'react';
-import ReactQuill, { Quill } from 'react-quill';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { Quill } from 'react-quill-new';
 
-export const quillRef = () => {
+export const useQuillRef = () => {
   return useRef();
 };
 
-function insertDonor(value) {
-  if (value) {
-    const cursorPos = this.quill.getSelection().index;
-    this.quill.insertText(cursorPos, value);
-    this.quill.setSelection(cursorPos + value.length);
+function insertDonor(this: Quill, value: string): void {
+  const selection = this.getSelection();
+  if (!!selection && !!value) {
+    const cursorPos = selection.index;
+    this.insertText(cursorPos, value);
+    this.setSelection(cursorPos + value.length);
   }
 }
 
@@ -33,11 +31,9 @@ export const formats = [
   'underline',
   'strike',
   'list',
-  'bullet',
   'indent',
   'link',
   'color',
-  'clean',
   'image',
 ];
 
