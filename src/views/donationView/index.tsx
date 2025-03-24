@@ -26,8 +26,11 @@ interface DonationViewProps {
   donations: DonationResponse[];
 }
 
+const START_YEAR = 2024;
+
 export default function DonationView({ donations }: DonationViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
+  const { selectedYear, yearQuery, setYearQuery } = useYear();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
@@ -38,21 +41,14 @@ export default function DonationView({ donations }: DonationViewProps) {
     'edit',
   ]);
 
-  if (selectedMonth === '') {
-    setMonthQuery((new Date().getMonth() + 1).toString()); // Default to current month
-  }
-
-  const { selectedYear, yearQuery, setYearQuery } = useYear();
-  const startYear = 2024;
+  // Function to handle year selection change
+  const handleYearChange = (year: string) => {
+    setYearQuery(year);
+  };
 
   // Function to handle month selection change
   const handleMonthChange = (month: string) => {
     setMonthQuery(month);
-  };
-
-  // Function to handle year selection change
-  const handleYearChange = (year: string) => {
-    setYearQuery(year);
   };
 
   const filteredDonations = donations.filter((donation) => {
@@ -60,11 +56,10 @@ export default function DonationView({ donations }: DonationViewProps) {
     const month = (donation.entryDate.getMonth() + 1).toString();
 
     // Check if monthQuery and yearQuery are defined and not empty
+    const matchesYear = !yearQuery || year === yearQuery;
     const matchesMonth = !monthQuery || month === monthQuery;
 
-    const matchesYear = !yearQuery || year === yearQuery;
-
-    return matchesMonth && matchesYear;
+    return matchesYear && matchesMonth;
   });
 
   const rows = filteredDonations
@@ -242,10 +237,10 @@ export default function DonationView({ donations }: DonationViewProps) {
             >
               <MenuItem value="0">All Years</MenuItem>
               {/* Generate year options */}
-              {[...Array(new Date().getFullYear() - startYear + 2).keys()].map(
+              {[...Array(new Date().getFullYear() - START_YEAR + 2).keys()].map(
                 (yearIndex) => (
-                  <MenuItem key={yearIndex} value={startYear + yearIndex}>
-                    {startYear + yearIndex}
+                  <MenuItem key={yearIndex} value={START_YEAR + yearIndex}>
+                    {START_YEAR + yearIndex}
                   </MenuItem>
                 )
               )}
