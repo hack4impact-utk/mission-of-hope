@@ -16,7 +16,7 @@ export default function SignInView() {
         alignContent: 'center',
         justifyContent: 'space-around;',
         alignItems: 'center',
-        padding: 5,
+        marginTop: 5,
       }}
     >
       <Image
@@ -25,7 +25,7 @@ export default function SignInView() {
         alt="logo"
         src={logo}
         style={{
-          width: '50%', // 768px
+          width: '30%', // 768px
           height: 'auto', // 393px
         }}
       />
@@ -38,7 +38,7 @@ export default function SignInView() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-between',
-          width: '25%',
+          width: '20%',
         }}
       >
         <Typography
