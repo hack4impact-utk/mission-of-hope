@@ -27,6 +27,8 @@ interface ItemViewProps {
 
 export default function ItemView({ items }: ItemViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
+  const [columnSelectorOpen, setColumnSelectorOpen] = useState<boolean>(false);
+
   const currency = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -158,6 +160,9 @@ export default function ItemView({ items }: ItemViewProps) {
           <InputLabel></InputLabel>
           <Select
             multiple
+            open={columnSelectorOpen}
+            onOpen={() => setColumnSelectorOpen(true)}
+            onClose={() => setColumnSelectorOpen(false)}
             value={visibleColumns}
             onChange={handleColumnSelectionChange}
             renderValue={(selected) =>
