@@ -181,12 +181,10 @@ export default function DonationView({ donations }: DonationViewProps) {
         </Button>
       </Box>
       <GridToolbarQuickFilter
-        quickFilterProps={{
-          debounceMs: 100,
-          value: searchString,
-          onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-            setSearchQuery(event.target.value);
-          },
+        debounceMs={100}
+        value={searchString}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setSearchQuery(event.target.value);
         }}
       />
     </Box>
@@ -235,15 +233,19 @@ export default function DonationView({ donations }: DonationViewProps) {
               displayEmpty
               inputProps={{ 'aria-label': 'Select year' }}
             >
-              <MenuItem value="0">All Years</MenuItem>
               {/* Generate year options */}
-              {[...Array(new Date().getFullYear() - START_YEAR + 2).keys()].map(
-                (yearIndex) => (
+              {[
+                <MenuItem key="all-years" value="0">
+                  All Years
+                </MenuItem>,
+                ...[
+                  ...Array(new Date().getFullYear() - START_YEAR + 2).keys(),
+                ].map((yearIndex) => (
                   <MenuItem key={yearIndex} value={START_YEAR + yearIndex}>
                     {START_YEAR + yearIndex}
                   </MenuItem>
-                )
-              )}
+                )),
+              ]}
             </Select>
           </Grid>
           <Grid item xs={2}>
@@ -255,16 +257,19 @@ export default function DonationView({ donations }: DonationViewProps) {
               displayEmpty
               inputProps={{ 'aria-label': 'Select month' }}
             >
-              <MenuItem value="0">All Months</MenuItem>
               {/* Generate month options */}
-
-              {[...Array(12).keys()].map((month) => (
-                <MenuItem key={month} value={month + 1}>
-                  {new Date(2000, month).toLocaleString('default', {
-                    month: 'long',
-                  })}
-                </MenuItem>
-              ))}
+              {[
+                <MenuItem key="all-months" value="0">
+                  All Months
+                </MenuItem>,
+                ...[...Array(12).keys()].map((month) => (
+                  <MenuItem key={month} value={month + 1}>
+                    {new Date(2000, month).toLocaleString('default', {
+                      month: 'long',
+                    })}
+                  </MenuItem>
+                )),
+              ]}
             </Select>
           </Grid>
         </Grid>
