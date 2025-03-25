@@ -21,10 +21,10 @@ export function populateEmailTemplate(
   const replacementMap = new Map<string, string>([
     ['[LDONOR]', donor.lastName],
   ]);
-  if (!!donor.firstName) {
+  if (donor.firstName) {
     replacementMap.set('[FDONOR]', donor.firstName);
   }
-  if (!!date) {
+  if (date) {
     // If we received an invalid Data object, convert it to Date
     const parsedDate = date instanceof Date ? date : new Date(date);
     replacementMap.set('[DATE]', parsedDate.toDateString());
