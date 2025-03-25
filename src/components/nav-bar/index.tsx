@@ -78,7 +78,7 @@ export default function Navbar() {
     // The Box container of the Navbar
     <Box
       flexDirection="column"
-      width="230px"
+      width="17vw"
       height="100vh"
       position="sticky" // always stays at top
       top={0}
