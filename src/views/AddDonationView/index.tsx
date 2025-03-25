@@ -43,6 +43,7 @@ export default function AddDonationView({
 }: AddDonationViewProps) {
   const [donationData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(),
+    receipt: '',
   } as DonationFormData);
   const [donorFormData, setDonorFormData] = useState<DonorFormData>(
     {} as DonorFormData
@@ -387,7 +388,7 @@ export default function AddDonationView({
             </Grid>
 
             {donationItemFormDatas.map((_, index) => (
-              <>
+              <React.Fragment key={index}>
                 <Grid item xs={12}>
                   <Divider
                     sx={{
@@ -427,7 +428,7 @@ export default function AddDonationView({
                     </IconButton>
                   </Tooltip>
                 </Grid>
-              </>
+              </React.Fragment>
             ))}
             <Grid item xs={12}>
               <Button
