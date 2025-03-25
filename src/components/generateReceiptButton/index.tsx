@@ -2,6 +2,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 
 interface receiptButtonProps {
+  disabled?: boolean;
   onChange: (receipt: Response) => void;
 }
 
@@ -19,7 +20,7 @@ export default function GenerateReceiptButton(props: receiptButtonProps) {
 
   return (
     <Tooltip title="Generate Receipt" placement="top">
-      <IconButton onClick={handleButton}>
+      <IconButton disabled={props.disabled} onClick={handleButton}>
         <CachedIcon></CachedIcon>
       </IconButton>
     </Tooltip>
