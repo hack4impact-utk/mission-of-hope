@@ -25,7 +25,9 @@ export function populateEmailTemplate(
     replacementMap.set('[FDONOR]', donor.firstName);
   }
   if (date) {
-    replacementMap.set('[DATE]', date.toDateString());
+    // If we received an invalid Data object, convert it to Date
+    const parsedDate = date instanceof Date ? date : new Date(date);
+    replacementMap.set('[DATE]', parsedDate.toDateString());
   }
   return replaceMultiple(body, replacementMap);
 }
