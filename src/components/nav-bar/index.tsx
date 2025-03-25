@@ -66,7 +66,7 @@ export default function Navbar() {
       icon: <MiscellaneousServices />,
       buttons: [
         { href: '/mailMerge', icon: <Email />, label: 'Emails' },
-        { href: '/user', icon: <Group />, label: 'Users' },
+        { href: '/settings/users', icon: <Group />, label: 'Users' },
         { href: '#', icon: <Equalizer />, label: 'Reports' },
       ],
     },
