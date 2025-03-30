@@ -26,6 +26,7 @@ interface DonorViewProps {
 
 export default function DonorView({ donors }: DonorViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
+  const [columnSelectorOpen, setColumnSelectorOpen] = useState<boolean>(false);
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     'name',
@@ -139,6 +140,9 @@ export default function DonorView({ donors }: DonorViewProps) {
           <InputLabel></InputLabel>
           <Select
             multiple
+            open={columnSelectorOpen}
+            onOpen={() => setColumnSelectorOpen(true)}
+            onClose={() => setColumnSelectorOpen(false)}
             value={visibleColumns}
             onChange={handleColumnSelectionChange}
             renderValue={(selected) =>

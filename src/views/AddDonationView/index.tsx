@@ -110,7 +110,7 @@ export default function AddDonationView({
       createDonation.items = (await addDonationItems()).map((item) => {
         return item._id;
       });
-      //Get user
+
       await addDonation(createDonation);
 
       setDonorFormData({} as DonorFormData);
@@ -120,7 +120,7 @@ export default function AddDonationView({
         receipt: '',
       } as DonationFormData);
     } catch (error) {
-      showSnackbar(`Error:'${error}`, 'error');
+      showSnackbar(`Error: '${error}`, 'error');
     } finally {
       setIsLoading(false);
     }
