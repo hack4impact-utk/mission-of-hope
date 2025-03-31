@@ -59,7 +59,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           onClose={handleClose}
           severity={snackbar.color}
-          sx={{ width: '100%' }}
+          sx={{ width: '100%', whiteSpace: 'pre-line' }}
           elevation={8}
         >
           {snackbar.msg}

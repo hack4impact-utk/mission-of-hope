@@ -120,7 +120,7 @@ export default function AddDonationView({
         receipt: '',
       } as DonationFormData);
     } catch (error) {
-      showSnackbar(`Error:'${error}`, 'error');
+      showSnackbar(`Error:${error}`, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -147,28 +147,18 @@ export default function AddDonationView({
                 : 'Low',
           },
         };
-
-        try {
-          const donationItemRes = await fetch('/api/donationItems', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(donationItem),
-          });
-          if (donationItemRes.ok) {
-            console.log('Donation item added successfully');
-            return await donationItemRes.json();
-          } else {
-            showSnackbar(
-              `Error adding donation item, status: ${donationItemRes.status}`,
-              'error'
-            );
-            throw `Error adding donation item, status: ${donationItemRes.status}`;
-          }
-        } catch (error) {
-          showSnackbar(`Error:'${error}`, 'error');
-          throw `Error:'${error}`;
+        const donationItemRes = await fetch('/api/donationItems', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(donationItem),
+        });
+        if (donationItemRes.ok) {
+          console.log('Donation item added successfully');
+          return await donationItemRes.json();
+        } else {
+          throw `Failed to add donation item, status: ${donationItemRes.status}`;
         }
       }
     );
@@ -184,24 +174,18 @@ export default function AddDonationView({
       category: itemForm.category,
     };
 
-    try {
-      const itemRes = await fetch('/api/items', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(item),
-      });
-      if (itemRes.ok) {
-        console.log('Item added successfully');
-        return await itemRes.json();
-      } else {
-        showSnackbar(`Error adding item, status: ${itemRes.status}`, 'error');
-        throw `Error adding item, status: ${itemRes.status}`;
-      }
-    } catch (error) {
-      showSnackbar(`Error:'${error}`, 'error');
-      throw `Error:'${error}`;
+    const itemRes = await fetch('/api/items', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    });
+    if (itemRes.ok) {
+      console.log('Item added successfully');
+      return await itemRes.json();
+    } else {
+      throw `Failed to add item, status: ${itemRes.status}`;
     }
   };
 
@@ -224,29 +208,27 @@ export default function AddDonationView({
     const errors = validateDonor(donorFormData);
     if (errors) {
       setValidationErrors(errors);
-      throw `Error adding donor`;
+      console.log(errors);
+      throw `Invalid donor form data\n${Object.entries(errors)
+        .map(([field, issue]) => `${field}: ${issue}`)
+        .join('\n')}`;
     }
     setValidationErrors(undefined);
-    try {
-      // fetch request to add donor
-      const donorRes = await fetch('/api/donors', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(donor),
-      });
 
-      if (donorRes.ok) {
-        console.log('Donor added successfully');
-        return await donorRes.json();
-      } else {
-        showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
-        throw `Error adding donor, status: ${donorRes.status}`;
-      }
-    } catch (error) {
-      showSnackbar(`Error:'${error}`, 'error');
-      throw `Error:'${error}`;
+    // fetch request to add donor
+    const donorRes = await fetch('/api/donors', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(donor),
+    });
+
+    if (donorRes.ok) {
+      console.log('Donor added successfully');
+      return await donorRes.json();
+    } else {
+      throw `Failed to add donor, status: ${donorRes.status}`;
     }
   };
 
@@ -255,26 +237,25 @@ export default function AddDonationView({
     const errors = validateDonation(donationData);
     if (errors) {
       setValidationErrors(errors);
-      throw 'Cannot add donation';
+      throw `Invalid donation form data\n${Object.entries(errors)
+        .map(([field, issue]) => `${field}: ${issue}`)
+        .join('\n')}`;
     }
     setValidationErrors(undefined);
-    try {
-      // fetch request to add donor
-      const donationRes = await fetch('/api/donations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(createDonation),
-      });
 
-      if (donationRes.ok) {
-        showSnackbar('Donation added successfully.', 'success');
-      } else {
-        throw `Error adding donor, status: ${donationRes.status}`;
-      }
-    } catch (error) {
-      throw `Error:'${error}`;
+    // fetch request to add donor
+    const donationRes = await fetch('/api/donations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(createDonation),
+    });
+
+    if (donationRes.ok) {
+      showSnackbar('Donation added successfully.', 'success');
+    } else {
+      throw `Failed to add donation, status: ${donationRes.status}`;
     }
   };
 
