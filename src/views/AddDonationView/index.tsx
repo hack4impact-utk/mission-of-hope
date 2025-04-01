@@ -77,7 +77,7 @@ export default function AddDonationView({
       setPrevDonated(true);
       setDonorInfoFormDisabled(true);
     } else {
-      setDonorFormData({} as DonorFormData); // Clear form when donor is deselected
+      setDonorFormData({ _id: '' } as DonorFormData); // Clear form when donor is deselected
       setDonorInfoFormDisabled(false);
       setPrevDonated(false);
     }
