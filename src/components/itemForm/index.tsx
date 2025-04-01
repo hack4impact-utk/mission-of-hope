@@ -36,7 +36,6 @@ export default function ItemForm(props: itemFormProps) {
     <>
       <Grid mt={2} item xs={12}>
         <TextField
-          required
           label="Item Name"
           variant="outlined"
           fullWidth
@@ -58,7 +57,6 @@ export default function ItemForm(props: itemFormProps) {
           renderInput={(params) => (
             <TextField
               {...params}
-              required
               label="Category"
               variant="outlined"
               fullWidth
