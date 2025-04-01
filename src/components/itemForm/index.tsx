@@ -9,7 +9,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
 
 interface itemFormProps {
   itemForm: ItemFormData;
@@ -19,23 +18,10 @@ interface itemFormProps {
 }
 
 export default function ItemForm(props: itemFormProps) {
-  const [highValueError, setHighValueError] = useState('');
-  const [lowValueError, setLowValueError] = useState('');
-
   const formatPriceFields = (
     value: string,
-    onChange: (value: string) => void,
-    setError: (error: string) => void
+    onChange: (value: string) => void
   ): string | void => {
-    if (value === '') return;
-    // Validate high and low values
-    if (Number(value) < 0 || isNaN(Number(value))) {
-      setError('value must be a positive number');
-      return;
-    } else {
-      setError('');
-    }
-
     const formattedValue = Number(value).toFixed(2);
     onChange(formattedValue);
   };
@@ -90,7 +76,6 @@ export default function ItemForm(props: itemFormProps) {
         <FormControl fullWidth disabled={props.disabled}>
           <InputLabel htmlFor="highValue">High Value</InputLabel>
           <OutlinedInput
-            error={!!highValueError}
             label="High Value"
             id="highValue"
             type="number"
@@ -103,28 +88,18 @@ export default function ItemForm(props: itemFormProps) {
               })
             }
             onBlur={(e) => {
-              return formatPriceFields(
-                e.target.value,
-                (value) => {
-                  props.onChange({ ...props.itemForm, highString: value });
-                },
-                setHighValueError
-              );
+              return formatPriceFields(e.target.value, (value) => {
+                props.onChange({ ...props.itemForm, highString: value });
+              });
             }}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
           />
-          {highValueError && (
-            <Typography variant="caption" color="error">
-              {highValueError}
-            </Typography>
-          )}
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={6}>
         <FormControl fullWidth disabled={props.disabled}>
           <InputLabel htmlFor="lowValue">Low Value</InputLabel>
           <OutlinedInput
-            // error={!!lowValueError}
             label="Low Value"
             id="lowValue"
             type="number"
@@ -137,20 +112,12 @@ export default function ItemForm(props: itemFormProps) {
               });
             }}
             onBlur={(e) => {
-              formatPriceFields(
-                e.target.value,
-                (value) =>
-                  props.onChange({ ...props.itemForm, lowString: value }),
-                setLowValueError
+              formatPriceFields(e.target.value, (value) =>
+                props.onChange({ ...props.itemForm, lowString: value })
               );
             }}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
           />
-          {lowValueError && (
-            <Typography variant="caption" color="error">
-              {lowValueError}
-            </Typography>
-          )}
         </FormControl>
       </Grid>
     </>
