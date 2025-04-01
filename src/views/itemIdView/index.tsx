@@ -58,9 +58,45 @@ export default function ItemIdView(props: itemProps) {
     setEditSwitch(false); // Optionally turn off edit mode
   };
 
+  const validateForm = (): boolean => {
+    if (!itemForm.name.trim()) {
+      showSnackbar('Item name cannot be empty', 'error');
+      return false;
+    }
+
+    if (!itemForm.category.trim()) {
+      showSnackbar('Category cannot be empty', 'error');
+      return false;
+    }
+
+    if (itemForm.high < 0 || isNaN(itemForm.high)) {
+      showSnackbar('High value must be a positive number', 'error');
+      return false;
+    }
+
+    if (itemForm.low < 0 || isNaN(itemForm.low)) {
+      showSnackbar('Low value must be a positive number', 'error');
+      return false;
+    }
+
+    if (itemForm.high < itemForm.low) {
+      showSnackbar(
+        'High value must be greater than or equal to Low value',
+        'error'
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleUpdate = async () => {
     if (!props.item._id) {
       showSnackbar(`Item ID is missing`, 'error');
+      return;
+    }
+
+    if (!validateForm()) {
       return;
     }
 
@@ -99,7 +135,7 @@ export default function ItemIdView(props: itemProps) {
       setItemFormWithItem(updatedItem);
       setEditSwitch(false); // Optionally turn off edit mode
     } catch (error) {
-      showSnackbar(`Error updating item:, ${error}`, 'error');
+      showSnackbar(`Error updating item: ${error}`, 'error');
     }
   };
 

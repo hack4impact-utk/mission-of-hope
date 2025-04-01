@@ -98,7 +98,13 @@ export default function DonationIdView(props: donationProps) {
 
   const handleUpdate = async () => {
     if (!props.donation._id) {
-      console.error('Donation ID is missing');
+      showSnackbar(`Donation ID is missing`, 'error');
+      return;
+    }
+
+    // Validate receipt is not empty or whitespace-only
+    if (!donationFormData.receipt?.trim()) {
+      showSnackbar('Receipt cannot be empty', 'error');
       return;
     }
 
@@ -132,9 +138,15 @@ export default function DonationIdView(props: donationProps) {
         throw new Error('Failed to update donation');
       }
 
-      showSnackbar('Donation updated successfully!', 'success');
+      const updatedDonation = await response.json();
+      showSnackbar('Donation updated successfully.', 'success');
+      setDonationFormData({
+        donationDate: new Date(updatedDonation.entryDate),
+        receipt: updatedDonation.receipt,
+        prevDonated: updatedDonation.entryDate ? true : false,
+      } as DonationFormData);
     } catch (error) {
-      showSnackbar(`Error updating donor: ${error}`, 'error');
+      showSnackbar(`Error updating donation: ${error}`, 'error');
     }
   };
 
