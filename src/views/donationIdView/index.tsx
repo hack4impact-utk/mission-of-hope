@@ -198,6 +198,15 @@ export default function DonationIdView(props: donationProps) {
                           ?.split('T')[0] || ''
                       }
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const date = new Date(e.target.value);
+                        const today = new Date();
+                        if (date > today) {
+                          showSnackbar(
+                            `Error: Pick a day not in the future`,
+                            'error'
+                          );
+                          return;
+                        }
                         setDonationFormData({
                           ...donationFormData,
                           donationDate: new Date(e.target.value),

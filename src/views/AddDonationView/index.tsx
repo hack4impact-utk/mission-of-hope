@@ -143,8 +143,8 @@ export default function AddDonationView({
               itemForm.newOrUsed === 'New'
                 ? 'New'
                 : itemForm.highOrLow === 'High'
-                ? 'High'
-                : 'Low',
+                  ? 'High'
+                  : 'Low',
           },
         };
 
@@ -322,6 +322,14 @@ export default function AddDonationView({
                 }
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const date = new Date(e.target.value);
+                  const today = new Date();
+                  if (date > today) {
+                    showSnackbar(
+                      `Error: Pick a day not in the future`,
+                      'error'
+                    );
+                    return;
+                  }
                   setDonationFormData({ ...donationData, donationDate: date });
                 }}
                 InputLabelProps={{
