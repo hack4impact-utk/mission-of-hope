@@ -96,20 +96,63 @@ export default function DonationItemView({ donations }: DonationItemProps) {
         )
       : donations;
 
-  const uniqueDonationItems = Array.from(
-    new Set(filteredDonations.map((donation) => donation.items).flat(1))
+  // Grab all donation items from all donations and make a single flat array
+  const flatItems = filteredDonations.flatMap((donation) => donation.items);
+
+  // Then, group items by name and aggregate quantities and values
+  const groupedItems = flatItems.reduce(
+    (
+      acc: Record<
+        string,
+        {
+          item: { name: string; category: string; _id: string };
+          quantity: number;
+          totalValue: number;
+          barcode?: string;
+          evaluation: string;
+          itemIds: string[];
+        }
+      >,
+      item
+    ) => {
+      const key = item.item.name;
+
+      // If an item name hasn't been added yet, create a new entry
+      if (!acc[key]) {
+        acc[key] = {
+          item: item.item,
+          quantity: 0,
+          totalValue: 0,
+          barcode: item.barcode,
+          evaluation: item.value.evaluation,
+          itemIds: [],
+        };
+      }
+
+      // Add values
+      acc[key].quantity += item.quantity;
+      acc[key].totalValue += item.value.price * item.quantity;
+
+      // Only add each item ID once
+      if (!acc[key].itemIds.includes(item._id)) {
+        acc[key].itemIds.push(item._id);
+      }
+
+      return acc;
+    },
+    {}
   );
 
-  const formattedRows = uniqueDonationItems
-    .map((row, index) => ({
+  const formattedRows = Object.values(groupedItems)
+    .map((groupedItem, index) => ({
       id: index + 1,
-      product: row.item.name,
-      category: row.item.category,
-      quantity: row.quantity,
-      evaluation: row.value.evaluation,
-      barcode: row.barcode,
-      price: `$${row.value.price}`,
-      edit: row._id,
+      product: groupedItem.item.name,
+      category: groupedItem.item.category,
+      quantity: groupedItem.quantity,
+      evaluation: groupedItem.evaluation,
+      barcode: groupedItem.barcode,
+      price: `$${groupedItem.totalValue.toFixed(2)}`,
+      edit: groupedItem.itemIds[0], // Use the first item ID for editing
     }))
     .filter((row) =>
       Object.entries(row)
