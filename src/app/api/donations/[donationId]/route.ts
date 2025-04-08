@@ -2,6 +2,7 @@ import { DonationResponse, zUpdateDonationRequest } from '@/types/donation';
 import { zObjectId } from '@/types/objectId';
 import { NextResponse, NextRequest } from 'next/server';
 import { updateDonation } from '../../../../server/actions/donations';
+import { MongoError } from 'mongodb';
 
 export async function PUT(
   request: NextRequest,
@@ -31,13 +32,12 @@ export async function PUT(
       );
     }
 
-    // Create a DonationResponse object
+    // Update donation
     const donationRes: DonationResponse | null = await updateDonation(
       params.donationId,
       validationResult.data
     );
 
-    // Validate the object
     if (!donationRes) {
       return NextResponse.json(
         { error: 'Donation not found' },
@@ -47,6 +47,13 @@ export async function PUT(
 
     return NextResponse.json(donationRes, { status: 200 });
   } catch (error) {
+    // Check for duplicate key error (unique constraint violation)
+    if ((error as MongoError).code === 11000) {
+      return NextResponse.json(
+        { error: 'A donation with that receipt already exists.' },
+        { status: 409 }
+      );
+    }
     const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
       { error: 'Failed to update donation information', details: message },

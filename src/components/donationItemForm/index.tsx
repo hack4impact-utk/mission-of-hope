@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Autocomplete,
   FormControl,
   Grid,
   InputAdornment,
@@ -9,11 +10,10 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import AutofillCategory from '../donation-form/AutofillCategory';
-import AutofillItem from '../donation-form/AutofillItem';
 import { ItemResponse } from '@/types/items';
 import { DonationItemFormData } from '@/types/forms/donationItem';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import ApiAutoComplete, { ApiAutocompleteOption } from '../ApiAutoComplete';
 
 function getPriceFormatted(value: string): number {
   const numberValue = Number(value);
@@ -26,30 +26,24 @@ function getPriceFormatted(value: string): number {
   return formattedValue;
 }
 
-/*
-  Return false if the string is either: empty, space-only, undefined, or null
-  Return true otherwise
-*/
-const isValidString = (value: string): boolean => {
-  return typeof value === 'string' && value.trim().length > 0;
-};
-
 interface DonationItemFormProps {
-  itemOptions: ItemResponse[];
   donationItemData: DonationItemFormData;
+  categoryOptions: { label: string }[];
   onChange: (donationItemDatas: DonationItemFormData) => void;
   disabled?: boolean;
   // validationErrors: Record<string, string> | undefined;
 }
-
 export default function DonationItemForm({
-  itemOptions,
   donationItemData,
   onChange,
   disabled,
+  categoryOptions,
 }: DonationItemFormProps) {
   // Tracking the value of newOrUsed to render Price or highOrLow
   const [isNew, setIsNew] = useState<boolean>(false);
+  const [itemOption, setItemOption] = useState<ApiAutocompleteOption | null>(
+    null
+  );
 
   // Tracking the current high/low values to show it instantly
   const [highLowVals, setHighLowVals] = useState<[string, string]>([
@@ -57,67 +51,89 @@ export default function DonationItemForm({
     'Low',
   ]);
 
-  useEffect(() => {
-    if (donationItemData.newOrUsed === 'Used') {
-      if (donationItemData.highOrLow === 'High') {
-        onChange({
-          ...donationItemData,
-          price: donationItemData.itemRes.high ?? 0,
-        });
-      }
-      if (donationItemData.highOrLow === 'Low') {
-        onChange({
-          ...donationItemData,
-          price: donationItemData.itemRes.low ?? 0,
-        });
-      }
-    }
-  });
-
   // Show/clear the High/Low values based on existence of the ItemResponse
-  const updateHighLowVals = (newOrUsed: string, itemRes?: ItemResponse) => {
-    if (newOrUsed === 'Used' && itemRes) {
-      setHighLowVals([`High ($${itemRes?.high})`, `Low ($${itemRes?.low})`]);
+  const updateHighLowVals = (newOrUsed: string) => {
+    if (newOrUsed === 'Used' && donationItemData.item) {
+      setHighLowVals([
+        `High ($${donationItemData.item.high})`,
+        `Low ($${donationItemData.item.low})`,
+      ]);
     } else if (newOrUsed === 'Used') {
       setHighLowVals(['High', 'Low']);
     }
   };
 
-  const handleItemSelect = (name: string | ItemResponse) => {
-    if (typeof name === 'string') {
-      onChange({ ...donationItemData, name: name });
-      updateHighLowVals(donationItemData.newOrUsed);
+  const handleItemChange = async (newItem: ApiAutocompleteOption | null) => {
+    if (!newItem) {
+      setHighLowVals(['High', 'Low']);
+      onChange({
+        ...donationItemData,
+        item: undefined,
+      });
+      setIsNew(false);
+      return;
+    }
+
+    if (newItem.created) {
+      onChange({
+        ...donationItemData,
+        item: {
+          ...donationItemData.item,
+          name: newItem.value,
+          category: '',
+          _id: undefined,
+        },
+        newOrUsed: 'New',
+      });
+      setIsNew(true);
     } else {
-      onChange({ ...donationItemData, name: name.name, itemRes: name });
-      updateHighLowVals(donationItemData.newOrUsed, name);
+      const itemRes = await fetch('/api/items/' + newItem.value);
+      const itemData: ItemResponse = await itemRes.json();
+      onChange({
+        ...donationItemData,
+        item: itemData,
+      });
+      setIsNew(false);
     }
   };
 
-  const handleCategorySelect = (category: string | ItemResponse) => {
-    if (typeof category === 'string') {
-      onChange({ ...donationItemData, category: category });
-      updateHighLowVals(donationItemData.newOrUsed);
+  const handleCategoryChange = (newCategory: { label: string } | null) => {
+    if (!newCategory) {
+      onChange({
+        ...donationItemData,
+        item: {
+          ...donationItemData.item,
+          name: donationItemData.item?.name || '',
+          category: '',
+        },
+      });
     } else {
       onChange({
         ...donationItemData,
-        category: category.category,
-        itemRes: category,
+        item: {
+          ...donationItemData.item,
+          name: donationItemData.item?.name || '',
+          category: newCategory.label,
+        },
       });
-      updateHighLowVals(donationItemData.newOrUsed, category);
     }
   };
 
   return (
     <>
       <Grid item xs={12} sm={8}>
-        <AutofillItem
-          ItemOptions={itemOptions}
-          onItemSelect={handleItemSelect}
-          category={donationItemData.category}
-          value={donationItemData.name}
-          disabled={disabled}
-          // error={!!validationErrors?.donatedItemName}
-          // helperText={validationErrors?.donatedItemName}
+        <ApiAutoComplete
+          apiUrl="/api/items/autocomplete"
+          value={itemOption}
+          onChange={(newItem) => {
+            setItemOption(newItem);
+            handleItemChange(newItem);
+          }}
+          label="Item"
+          TextFieldProps={{
+            required: true,
+          }}
+          creatable
         />
       </Grid>
       <Grid item xs={12} sm={4}>
@@ -126,6 +142,7 @@ export default function DonationItemForm({
           id="outlined-required"
           label="Quantity"
           type="number"
+          required
           value={donationItemData.quantity ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             onChange({
@@ -151,73 +168,91 @@ export default function DonationItemForm({
               barcode: e.target.value,
             });
           }}
+          required
           disabled={disabled}
           // error={!!validationErrors?.quantity}
           // helperText={validationErrors?.quantity}
         />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <AutofillCategory
-          categoryOptions={itemOptions}
-          onCategorySelect={handleCategorySelect}
-          name={donationItemData.name}
-          value={donationItemData.category}
-          disabled={disabled}
-          // error={!!validationErrors?.category}
-          // helperText={validationErrors?.category}
+        <Autocomplete
+          value={
+            donationItemData.item?.category
+              ? {
+                  label: donationItemData.item.category,
+                }
+              : null
+          }
+          isOptionEqualToValue={(option, value) => option.label == value.label}
+          disabled={!isNew}
+          disablePortal
+          options={categoryOptions}
+          renderInput={(params) => (
+            <TextField {...params} label="Category" required />
+          )}
+          onChange={(_, newCategory) => handleCategoryChange(newCategory)}
         />
       </Grid>
-      <Grid item xs={12} sm={5.5}>
-        <FormControl
-          fullWidth
-          // Disable if Item or Category is not selected or invalid
-          disabled={
-            disabled ||
-            !isValidString(donationItemData.name) ||
-            !isValidString(donationItemData.category)
-          }
-        >
-          <InputLabel>New or Used?</InputLabel>
-          <Select
-            value={donationItemData.newOrUsed ?? ''}
-            onChange={(e) => {
-              if (e.target.value === 'New') {
-                setIsNew(true);
-              } else {
-                setIsNew(false);
-              }
-              onChange({ ...donationItemData, newOrUsed: e.target.value });
-              updateHighLowVals(e.target.value, donationItemData.itemRes);
-            }}
-            label="New or Used?"
-            id="new-or-used"
-            // error={!!validationErrors?.newOrUsed}
-          >
-            <MenuItem value="New">New</MenuItem>
-            <MenuItem value="Used">Used</MenuItem>
-          </Select>
-          {/* <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText> */}
-        </FormControl>
-      </Grid>
+      {donationItemData.item && (
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth required>
+            <InputLabel>New or Used?</InputLabel>
+            <Select
+              value={donationItemData.newOrUsed ?? ''}
+              onChange={(e) => {
+                if (e.target.value === 'New') {
+                  setIsNew(true);
+                } else {
+                  setIsNew(false);
+                }
+                onChange({
+                  ...donationItemData,
+                  value: {
+                    ...donationItemData.value,
+                    evaluation: e.target.value == 'New' ? 'New' : 'High',
+                  },
+                  newOrUsed: e.target.value,
+                });
+                updateHighLowVals(e.target.value);
+              }}
+              label="New or Used?"
+              id="new-or-used"
+              disabled={disabled || !donationItemData.item._id}
+              // error={!!validationErrors?.newOrUsed}
+            >
+              <MenuItem value="New">New</MenuItem>
+              <MenuItem value="Used">Used</MenuItem>
+            </Select>
+            {/* <FormHelperText>{validationErrors?.newOrUsed}</FormHelperText> */}
+          </FormControl>
+        </Grid>
+      )}
 
-      <Grid item xs={12} sm={5.5}>
-        {isNew ? ( // Display Price field if the item is "New"
+      <Grid item xs={12} sm={6}>
+        {donationItemData.newOrUsed == 'New' && ( // Display Price field if the item is "New"
           <FormControl fullWidth>
             <TextField
               id="price"
               label="Price"
               type="number"
-              value={donationItemData.price ?? ''}
+              required
+              value={donationItemData.value?.price ?? ''}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange({
                   ...donationItemData,
-                  price: Number(e.target.value),
+                  value: {
+                    ...donationItemData.value,
+                    price: Number(e.target.value),
+                  },
                 });
               }}
               onBlur={(e) =>
                 onChange({
                   ...donationItemData,
-                  price: getPriceFormatted(e.target.value),
+                  value: {
+                    ...donationItemData.value,
+                    price: getPriceFormatted(e.target.value),
+                  },
                 })
               }
               InputProps={{
@@ -225,28 +260,15 @@ export default function DonationItemForm({
                   <InputAdornment position="start">$</InputAdornment>
                 ),
               }}
-              // Disable if Item or Category is not selected or invalid
-              disabled={
-                disabled ||
-                donationItemData.newOrUsed !== 'New' ||
-                !isValidString(donationItemData.name) ||
-                !isValidString(donationItemData.category)
-              }
-              // error={!!validationErrors?.price}
-              // helperText={validationErrors?.price}
             />
           </FormControl>
-        ) : (
+        )}
+        {donationItemData.newOrUsed == 'Used' && (
           // Display HighLow field if the item is "Used"
           <FormControl
             fullWidth
             // Disable if Item or Category is not selected or invalid
-            disabled={
-              disabled ||
-              donationItemData.newOrUsed !== 'Used' ||
-              !isValidString(donationItemData.name) ||
-              !isValidString(donationItemData.category)
-            }
+            required
           >
             <InputLabel id="high-or-low-value-label">
               High or Low Value?
@@ -258,6 +280,14 @@ export default function DonationItemForm({
                 onChange({
                   ...donationItemData,
                   highOrLow: e.target.value,
+                  value: {
+                    evaluation: e.target.value.toLowerCase().includes('high')
+                      ? 'High'
+                      : 'Low',
+                    price: (e.target.value.toLowerCase().includes('high')
+                      ? donationItemData.item?.high
+                      : donationItemData.item?.low) as number,
+                  },
                 });
               }}
               label="High or Low Value"

@@ -36,6 +36,7 @@ export async function getAllDonations(): Promise<DonationResponse[]> {
 
     const response: DonationResponse[] = await DonationSchema.find()
       .populate(['user', 'donor'])
+      .sort([['entryDate', 'descending']])
       .populate({ path: 'items', populate: { path: 'item' } })
       .lean();
 

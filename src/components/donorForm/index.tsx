@@ -17,6 +17,7 @@ export default function DonorForm(props: donorProps) {
           id="outlined-required"
           disabled={props.disabled}
           label="First Name"
+          required
           value={props.donorData.firstName ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, firstName: e.target.value });
@@ -29,6 +30,7 @@ export default function DonorForm(props: donorProps) {
           id="outlined-required"
           disabled={props.disabled}
           label="Last Name"
+          required
           value={props.donorData.lastName ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({ ...props.donorData, lastName: e.target.value });

@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import useItemCategoryOptions from '@/hooks/useItemCategories';
 
 interface donationProps {
   id: string;
@@ -30,12 +31,18 @@ interface donationProps {
 
 export default function DonationIdView(props: donationProps) {
   const { showSnackbar } = useSnackbar();
+  // useRouter to go back in "ViewDonation" button
+  const router = useRouter();
+
+  // Track if component is mounted
+  const [isMounted, setIsMounted] = useState(false);
 
   const [donationFormData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(props.donation.entryDate),
     receipt: props.donation.receipt ?? '',
     prevDonated: !!props.donation.entryDate,
   } as DonationFormData);
+  const categoryOptions = useItemCategoryOptions();
 
   const [donationItemFormData, setDonationItemFormData] = useState<
     DonationItemFormData[]
@@ -43,47 +50,16 @@ export default function DonationIdView(props: donationProps) {
     props.donation.items.map(
       (item) =>
         ({
-          itemRes: item.item,
+          item: item.item,
           name: item.item.name,
           category: item.item.category,
           quantity: item.quantity,
-          newOrUsed: item.value.evaluation === 'New' ? 'New' : 'Used',
-          highOrLow:
-            item.value.evaluation === 'New' ? '' : item.value.evaluation,
-          price: item.value.price,
+          value: item.value,
+          barcode: item.barcode,
+          newOrUsed: item.value.evaluation == 'New' ? 'New' : 'Used',
         }) as DonationItemFormData
     )
   );
-
-  // Update the donation (Call 2 set-state functions)
-  // Used for updating items - skip for now
-  /*
-  const updateDonation = (donationRes: DonationResponse) => {
-    // Step 1: Update items array
-    setDonationItemFormData(
-      donationRes.items.map(
-        (item) =>
-          ({
-            itemRes: item.item,
-            name: item.item.name,
-            category: item.item.category,
-            quantity: item.quantity,
-            newOrUsed: item.value.evaluation === 'New' ? 'New' : 'Used',
-            highOrLow:
-              item.value.evaluation === 'New' ? '' : item.value.evaluation,
-            price: item.value.price,
-          }) as DonationItemFormData
-      )
-    );
-
-    // Step 2: Update the donation with the new item array
-    setDonationFormData({
-      donationDate: new Date(donationRes.entryDate),
-      receipt: donationRes.receipt,
-      prevDonated: donationRes.entryDate ? true : false,
-    } as DonationFormData);
-  };
-  */
 
   const handleDonationItemFormChange = (
     updatedDonationItem: DonationItemFormData,
@@ -129,7 +105,8 @@ export default function DonationIdView(props: donationProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update donation');
+        const { error } = await response.json();
+        throw new Error(error || 'Failed to update donation');
       }
 
       showSnackbar('Donation updated successfully!', 'success');
@@ -137,12 +114,6 @@ export default function DonationIdView(props: donationProps) {
       showSnackbar(`Error updating donor: ${error}`, 'error');
     }
   };
-
-  // useRouter to go back in "ViewDonation" button
-  const router = useRouter();
-
-  // Track if component is mounted
-  const [isMounted, setIsMounted] = useState(false);
 
   // Ensure the component is mounted (runs only on the client)
   useEffect(() => {
@@ -211,7 +182,7 @@ export default function DonationIdView(props: donationProps) {
                   </Grid>
                   {donationItemFormData.map((_, index) => (
                     <DonationItemForm
-                      itemOptions={props.itemOptions}
+                      categoryOptions={categoryOptions}
                       donationItemData={donationItemFormData[index]}
                       onChange={(value: DonationItemFormData) =>
                         handleDonationItemFormChange(value, index)

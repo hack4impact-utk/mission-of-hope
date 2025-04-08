@@ -13,7 +13,6 @@ export default async function DonorEditPage({
     JSON.stringify(await getDonationById(params.donationId))
   );
   const items: ItemResponse[] = JSON.parse(JSON.stringify(await getAllItems()));
-
   return (
     <DonationIdView
       id={params.donationId}
