@@ -15,7 +15,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
 import DonationItemForm from '@/components/donationItemForm';
 import { DonationItemFormData } from '@/types/forms/donationItem';
@@ -24,6 +24,8 @@ import GenerateReceiptButton from '@/components/generateReceiptButton';
 import ApiAutoComplete, {
   ApiAutocompleteOption,
 } from '@/components/ApiAutoComplete';
+import { useSession } from 'next-auth/react';
+import useItemCategoryOptions from '@/hooks/useItemCategories';
 
 export default function AddDonationView() {
   const [isLoading, setIsLoading] = useState(false);
@@ -40,10 +42,8 @@ export default function AddDonationView() {
   const [donorOption, setDonorOption] = useState<ApiAutocompleteOption | null>(
     null
   );
-  const [categoryOptions, setCategoryOptions] = useState<
-    ApiAutocompleteOption[]
-  >([]);
-  const categoriesLoadedRef = useRef<boolean>(false);
+  const categoryOptions = useItemCategoryOptions();
+  const session = useSession();
   const { showSnackbar } = useSnackbar();
   const handleDonorOptionChange = async (
     newDonorOption: ApiAutocompleteOption | null
@@ -98,7 +98,7 @@ export default function AddDonationView() {
     setIsLoading(true);
     const createDonationFormData = {
       entryDate: new Date(donationData.donationDate),
-      user: '661dc544ed3579f193bb008c',
+      user: session.data?.user._id,
       donationItems: donationItemFormDatas.map((donationItem) => ({
         item: donationItem.item?._id
           ? donationItem.item._id
@@ -144,21 +144,6 @@ export default function AddDonationView() {
       showSnackbar(message || 'Donation submission failed', 'error');
     }
   };
-
-  const loadCategories = useCallback(async () => {
-    const categoryRes = await fetch('/api/categories');
-    const categories = await categoryRes.json();
-    setCategoryOptions(
-      categories.map((categoryName: string) => ({ label: categoryName }))
-    );
-  }, []);
-
-  useEffect(() => {
-    if (!categoriesLoadedRef.current) {
-      loadCategories();
-      categoriesLoadedRef.current = true;
-    }
-  }, [loadCategories]);
 
   return (
     <ThemeProvider theme={mohColors}>

@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
     const validationResult = zCreateDonationRequest.safeParse(requestBody);
 
     if (!validationResult.success) {
+      console.log(validationResult.error);
       return NextResponse.json(
         { message: validationResult.error },
         { status: 400 }

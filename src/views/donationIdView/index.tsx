@@ -19,9 +19,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ApiAutocompleteOption } from '@/components/ApiAutoComplete';
+import useItemCategoryOptions from '@/hooks/useItemCategories';
 
 interface donationProps {
   id: string;
@@ -42,11 +42,7 @@ export default function DonationIdView(props: donationProps) {
     receipt: props.donation.receipt ?? '',
     prevDonated: !!props.donation.entryDate,
   } as DonationFormData);
-
-  const [categoryOptions, setCategoryOptions] = useState<
-    ApiAutocompleteOption[]
-  >([]);
-  const categoriesLoadedRef = useRef<boolean>(false);
+  const categoryOptions = useItemCategoryOptions();
 
   const [donationItemFormData, setDonationItemFormData] = useState<
     DonationItemFormData[]
@@ -118,20 +114,6 @@ export default function DonationIdView(props: donationProps) {
       showSnackbar(`Error updating donor: ${error}`, 'error');
     }
   };
-
-  const loadCategories = useCallback(async () => {
-    const categoryRes = await fetch('/api/categories');
-    const categories = await categoryRes.json();
-    setCategoryOptions(
-      categories.map((categoryName: string) => ({ label: categoryName }))
-    );
-  }, []);
-  useEffect(() => {
-    if (!categoriesLoadedRef.current) {
-      loadCategories();
-      categoriesLoadedRef.current = true;
-    }
-  }, [loadCategories]);
 
   // Ensure the component is mounted (runs only on the client)
   useEffect(() => {

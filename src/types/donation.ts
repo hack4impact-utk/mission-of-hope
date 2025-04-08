@@ -40,7 +40,6 @@ export interface UpdateDonationItemRequest
   extends z.infer<typeof zUpdateDonationItemRequest> {}
 
 export const zDonationBase = z.object({
-  _id: zObjectId,
   user: zObjectId,
   donationItems: z.array(zObjectId),
   entryDate: z.coerce.date(),
@@ -56,6 +55,7 @@ export const zCreateDonationRequest = zDonationBase.extend({
 });
 
 export const zDonationResponse = zDonationEntity.extend({
+  _id: zObjectId,
   user: zUserResponse,
   donor: zDonorResponse,
   items: z.array(zDonationItemResponse),
