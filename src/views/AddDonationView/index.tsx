@@ -26,7 +26,7 @@ import ApiAutoComplete, {
 } from '@/components/ApiAutoComplete';
 
 export default function AddDonationView() {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [donationData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(),
   } as DonationFormData);
@@ -95,7 +95,7 @@ export default function AddDonationView() {
   };
 
   const handleAddDonation = async () => {
-    setLoading(true);
+    setIsLoading(true);
     const createDonationFormData = {
       entryDate: new Date(donationData.donationDate),
       user: '661dc544ed3579f193bb008c',
@@ -131,7 +131,7 @@ export default function AddDonationView() {
       },
       body: JSON.stringify(createDonationFormData),
     });
-    setLoading(false);
+    setIsLoading(false);
     if (response.ok) {
       showSnackbar('Donation created!', 'success');
       setTimeout(() => {
@@ -180,7 +180,7 @@ export default function AddDonationView() {
         >
           <Box
             sx={{
-              display: loading ? 'flex' : 'none',
+              display: isLoading ? 'flex' : 'none',
               position: 'fixed',
               top: 0,
               left: 0,
@@ -225,6 +225,7 @@ export default function AddDonationView() {
                 id="outlined-required"
                 label="Donation Date"
                 type="date"
+                disabled={isLoading}
                 value={
                   donationData?.donationDate?.toISOString()?.split('T')[0] || ''
                 }
@@ -243,7 +244,7 @@ export default function AddDonationView() {
             <DonorForm
               donorData={donorFormData}
               onChange={setDonorFormData}
-              disabled={donorInfoFormDisabled}
+              disabled={donorInfoFormDisabled || isLoading}
             />
 
             <Grid item xs={12}>
@@ -270,6 +271,7 @@ export default function AddDonationView() {
                 InputProps={{
                   endAdornment: (
                     <GenerateReceiptButton
+                      disabled={isLoading}
                       onChange={async (Res: Response) => {
                         if (Res.ok) {
                           const receipt = await Res.json();
@@ -346,6 +348,7 @@ export default function AddDonationView() {
                 variant="outlined"
                 startIcon={<AddIcon></AddIcon>}
                 color="moh"
+                disabled={isLoading}
                 onClick={() =>
                   setDonationItemFormDatas([
                     ...donationItemFormDatas,
@@ -366,9 +369,17 @@ export default function AddDonationView() {
                 sx={{ height: '40px' }}
                 type="submit"
                 color="moh"
+                disabled={isLoading}
                 fullWidth
               >
-                Submit Donation
+                {isLoading ? (
+                  <CircularProgress
+                    size={30}
+                    color="inherit"
+                  ></CircularProgress>
+                ) : (
+                  'Submit Donation'
+                )}
               </Button>
             </Grid>
           </Grid>

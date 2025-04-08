@@ -22,13 +22,14 @@
     "lodash.debounce": "^4.0.8",
     "mongodb": "^5.9.1",
     "mongoose": "^7.4.5",
+    "mui-chips-input": "^2.1.4",
     "next": "13.4.19",
     "next-auth": "^4.24.7",
     "nodemailer": "^6.9.15",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-google-button": "^0.7.2",
-    "react-quill": "^2.0.0",
+    "react-quill-new": "^3.4.2",
     "zod": "^3.22.2"
   },
   "devDependencies": {

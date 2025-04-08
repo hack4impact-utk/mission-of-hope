@@ -26,6 +26,7 @@ export default function Navbar() {
     setExpandedSection((prev) => (prev === section ? null : section));
   };
 
+  // Reusable buttonStyles
   const buttonStyles: React.CSSProperties = {
     color: '#ff8a65',
     textTransform: 'none',
@@ -34,6 +35,7 @@ export default function Navbar() {
     padding: '10px 10px',
   };
 
+  // Menu of the Navbar
   const sections = [
     {
       title: 'Donations',
@@ -66,14 +68,22 @@ export default function Navbar() {
       icon: <MiscellaneousServices />,
       buttons: [
         { href: '/mailMerge', icon: <Email />, label: 'Emails' },
-        { href: '/user', icon: <Group />, label: 'Users' },
+        { href: '/settings/users', icon: <Group />, label: 'Users' },
         { href: '#', icon: <Equalizer />, label: 'Reports' },
       ],
     },
   ];
 
   return (
-    <Box flexDirection="column" height="100vh" borderRight="1px solid #ddd">
+    // The Box container of the Navbar
+    <Box
+      flexDirection="column"
+      width="17vw"
+      height="100vh"
+      position="sticky" // always stays at top
+      top={0}
+      borderRight="1px solid #ddd"
+    >
       {/* Logo Section */}
       <Box display="flex" justifyContent="center" p={2}>
         <Button href="/">
