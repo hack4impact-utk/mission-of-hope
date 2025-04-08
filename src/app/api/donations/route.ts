@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { zCreateDonationRequest } from '@/types/donation';
-import { createDonation, getAllDonations } from '@/server/actions/donations';
+import { getAllDonations } from '@/server/actions/donations';
 import { getDonorById } from '@/server/actions/donors';
 import { getAllMailMerge } from '@/server/actions/mailMerge';
 import { populateEmailTemplate } from '@/utils/string';
+import { MongoError } from 'mongodb';
+import mongoose, { ClientSession } from 'mongoose';
+import Donation from '@/server/models/donations';
+import DonationItem from '@/server/models/donationItem';
+import Donor from '@/server/models/donors';
+import Item from '@/server/models/items';
 import { sendEmail } from '@/server/actions/email';
 
 export async function GET() {
@@ -17,9 +23,13 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session: ClientSession = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const requestBody = await request.json();
     const validationResult = zCreateDonationRequest.safeParse(requestBody);
+
     if (!validationResult.success) {
       return NextResponse.json(
         { message: validationResult.error },
@@ -27,11 +37,77 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create donation
-    const result = await createDonation(validationResult.data);
+    const {
+      user,
+      donationItems,
+      entryDate,
+      donor: donorField,
+      receipt,
+    } = validationResult.data;
+
+    if (donationItems.length === 0) {
+      return NextResponse.json(
+        { message: 'donationItems array cannot be empty' },
+        { status: 400 }
+      );
+    }
+
+    // 1. Handle donor
+    let donorId: mongoose.Types.ObjectId;
+    if (typeof donorField === 'string') {
+      donorId = new mongoose.Types.ObjectId(donorField);
+    } else {
+      const donorDoc = await Donor.create([donorField], { session });
+      donorId = donorDoc[0]._id;
+    }
+
+    // 2. Handle donation items
+    const donationItemIds: mongoose.Types.ObjectId[] = [];
+
+    for (const donationItem of donationItems) {
+      let itemId: mongoose.Types.ObjectId;
+      if (typeof donationItem.item === 'string') {
+        itemId = new mongoose.Types.ObjectId(donationItem.item);
+      } else {
+        const itemDoc = await Item.create([donationItem.item], { session });
+        itemId = itemDoc[0]._id;
+      }
+
+      const donationItemDoc = await DonationItem.create(
+        [
+          {
+            item: itemId,
+            quantity: donationItem.quantity,
+            barcode: donationItem.barcode,
+            value: donationItem.value,
+          },
+        ],
+        { session }
+      );
+
+      donationItemIds.push(donationItemDoc[0]._id);
+    }
+
+    // 3. Create donation
+    await Donation.create(
+      [
+        {
+          user,
+          items: donationItemIds,
+          entryDate,
+          donor: donorId,
+          receipt,
+        },
+      ],
+      { session }
+    );
+
+    // 4. Commit transaction
+    await session.commitTransaction();
+    session.endSession();
 
     // Send email to donor
-    const donor = await getDonorById(result.donor);
+    const donor = await getDonorById(donorId.toString());
     if (donor) {
       const receiptTemplate = (await getAllMailMerge()).find(
         (value) => value.type === 'Receipt'
@@ -40,14 +116,24 @@ export async function POST(request: NextRequest) {
         const body = populateEmailTemplate(
           receiptTemplate.body,
           donor,
-          result.entryDate
+          entryDate
         );
         await sendEmail([donor.email], receiptTemplate.subject, body);
       }
     }
+    return NextResponse.json({ message: 'Success' }, { status: 201 });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
 
-    return NextResponse.json({ _id: result._id }, { status: 201 });
-  } catch {
-    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
+    if ((error as MongoError).code === 11000) {
+      return NextResponse.json(
+        { message: 'A donation with that receipt already exists.' },
+        { status: 409 }
+      );
+    }
+
+    console.error('[DONATION_CREATE_ERROR]', error);
+    return NextResponse.json({ error: 'Unknown Error' }, { status: 500 });
   }
 }

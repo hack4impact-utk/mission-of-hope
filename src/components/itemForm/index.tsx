@@ -94,19 +94,21 @@ export default function ItemForm(props: itemFormProps) {
             label="High Value"
             id="highValue"
             type="number"
-            value={props.itemForm.highString}
+            value={props.itemForm.high?.toString() || ''}
             onChange={(e) =>
               props.onChange({
                 ...props.itemForm,
                 high: Number(e.target.value),
-                highString: e.target.value,
               })
             }
             onBlur={(e) => {
               return formatPriceFields(
                 e.target.value,
                 (value) => {
-                  props.onChange({ ...props.itemForm, highString: value });
+                  props.onChange({
+                    ...props.itemForm,
+                    high: parseFloat(value),
+                  });
                 },
                 setHighValueError
               );
@@ -128,19 +130,18 @@ export default function ItemForm(props: itemFormProps) {
             label="Low Value"
             id="lowValue"
             type="number"
-            value={props.itemForm.lowString}
+            value={props.itemForm.low?.toString() || ''}
             onChange={(e) => {
               props.onChange({
                 ...props.itemForm,
                 low: Number(e.target.value),
-                lowString: e.target.value,
               });
             }}
             onBlur={(e) => {
               formatPriceFields(
                 e.target.value,
                 (value) =>
-                  props.onChange({ ...props.itemForm, lowString: value }),
+                  props.onChange({ ...props.itemForm, low: parseFloat(value) }),
                 setLowValueError
               );
             }}

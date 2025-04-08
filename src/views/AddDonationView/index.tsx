@@ -1,45 +1,32 @@
 'use client';
-import AutofillDonorEmail from '@/components/donation-form/AutofillDonorEmail';
 import DonorForm from '@/components/donorForm';
-import useValidation from '@/hooks/useValidation';
-import { DonationFormData, zDonationFormData } from '@/types/forms/donation';
-import { DonorFormData, zDonorFormData } from '@/types/forms/donor';
-import { CreateDonorRequest, DonorResponse } from '@/types/donors';
+import { DonationFormData } from '@/types/forms/donation';
+import { DonorFormData } from '@/types/forms/donor';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
-  IconButton,
   TextField,
   ThemeProvider,
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useSnackbar from '@/hooks/useSnackbar';
-import { CreateItemRequest, ItemResponse } from '@/types/items';
 import DonationItemForm from '@/components/donationItemForm';
 import { DonationItemFormData } from '@/types/forms/donationItem';
 import mohColors from '@/utils/moh-theme';
-import {
-  CreateDonationItemRequest,
-  CreateDonationRequest,
-  DonationItemResponse,
-} from '@/types/donation';
 import GenerateReceiptButton from '@/components/generateReceiptButton';
+import ApiAutoComplete, {
+  ApiAutocompleteOption,
+} from '@/components/ApiAutoComplete';
 
-interface AddDonationViewProps {
-  donorOptions: DonorResponse[];
-  itemOptions: ItemResponse[];
-}
-
-export default function AddDonationView({
-  donorOptions,
-  itemOptions,
-}: AddDonationViewProps) {
+export default function AddDonationView() {
+  const [loading, setLoading] = useState(false);
   const [donationData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(),
   } as DonationFormData);
@@ -48,38 +35,52 @@ export default function AddDonationView({
   );
   const [donationItemFormDatas, setDonationItemFormDatas] = useState<
     DonationItemFormData[]
-  >([{} as DonationItemFormData] as DonationItemFormData[]);
-  const [prevDonated, setPrevDonated] = useState(false);
+  >([{}] as DonationItemFormData[]);
   const [donorInfoFormDisabled, setDonorInfoFormDisabled] = useState(false);
-
-  const { validate: validateDonation } = useValidation(zDonationFormData);
-  const { validate: validateDonor } = useValidation(zDonorFormData);
-  const [validationErrors, setValidationErrors] = useState<
-    Record<string, string> | undefined
-  >(undefined);
+  const [donorOption, setDonorOption] = useState<ApiAutocompleteOption | null>(
+    null
+  );
+  const [categoryOptions, setCategoryOptions] = useState<
+    ApiAutocompleteOption[]
+  >([]);
+  const categoriesLoadedRef = useRef<boolean>(false);
   const { showSnackbar } = useSnackbar();
-
-  const handleDonorSelect = (selectedDonor: DonorResponse) => {
-    if (selectedDonor) {
+  const handleDonorOptionChange = async (
+    newDonorOption: ApiAutocompleteOption | null
+  ) => {
+    if (newDonorOption && !newDonorOption.created) {
+      const donorResponse = await fetch('/api/donors/' + newDonorOption.value);
+      const donorData = await donorResponse.json();
       setDonorFormData({
         ...donorFormData,
-        _id: selectedDonor._id,
-        firstName: selectedDonor.firstName ?? '',
-        lastName: selectedDonor.lastName ?? '',
-        address: selectedDonor.address ?? '',
-        city: selectedDonor.city ?? '',
-        email: selectedDonor.email ?? '',
-        state: selectedDonor.state ?? '',
-        zip: selectedDonor.zip ?? 0,
+        _id: donorData._id,
+        firstName: donorData.firstName ?? '',
+        lastName: donorData.lastName ?? '',
+        address: donorData.address ?? '',
+        city: donorData.city ?? '',
+        state: donorData.state ?? '',
+        zip: donorData.zip ?? 0,
       });
-      setPrevDonated(true);
       setDonorInfoFormDisabled(true);
-    } else {
-      setDonorFormData({} as DonorFormData); // Clear form when donor is deselected
+    } else if (newDonorOption && newDonorOption.created) {
+      setDonorFormData({
+        ...donorFormData,
+        email: newDonorOption.value,
+      });
       setDonorInfoFormDisabled(false);
-      setPrevDonated(false);
+    } else {
+      setDonorFormData({
+        ...donorFormData,
+        _id: undefined,
+        firstName: '',
+        lastName: '',
+        address: '',
+        city: '',
+        state: '',
+        zip: '',
+      });
+      setDonorInfoFormDisabled(false);
     }
-    // if donr is cleared after selecting a donor, set prevDonated to false
   };
 
   const handleDonationItemFormChange = (
@@ -94,189 +95,80 @@ export default function AddDonationView({
   };
 
   const handleAddDonation = async () => {
-    const createDonation: CreateDonationRequest = {
+    setLoading(true);
+    const createDonationFormData = {
       entryDate: new Date(donationData.donationDate),
       user: '661dc544ed3579f193bb008c',
-      items: [],
-      donor: '',
+      donationItems: donationItemFormDatas.map((donationItem) => ({
+        item: donationItem.item?._id
+          ? donationItem.item._id
+          : {
+              name: donationItem.item?.name,
+              category: donationItem.item?.category,
+              high: donationItem.item?.high,
+              low: donationItem.item?.low,
+            },
+        quantity: donationItem.quantity,
+        barcode: donationItem.barcode,
+        value: {
+          price: donationItem.value.price,
+          evaluation:
+            donationItem.newOrUsed === 'New'
+              ? 'New'
+              : donationItem.highOrLow === 'High'
+                ? 'High'
+                : 'Low',
+        },
+      })),
+      donor: donorFormData._id ? donorFormData._id : donorFormData,
       receipt: donationData.receipt,
     };
 
-    try {
-      createDonation.donor = (await addDonor())._id;
-      createDonation.items = (await addDonationItems()).map((item) => {
-        return item._id;
-      });
-      //Get user
-      await addDonation(createDonation);
-
-      setDonorFormData({} as DonorFormData);
-      setDonationItemFormDatas([{} as DonationItemFormData]);
-      setDonationFormData({
-        donationDate: new Date(),
-        receipt: '',
-      } as DonationFormData);
-    } catch (error) {
-      showSnackbar(`Error:'${error}`, 'error');
+    const response = await fetch('/api/donations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(createDonationFormData),
+    });
+    setLoading(false);
+    if (response.ok) {
+      showSnackbar('Donation created!', 'success');
+      setTimeout(() => {
+        const month = new Date().getMonth() + 1;
+        const year = new Date().getFullYear();
+        window.location.assign(`/donation?month=${month}&year=${year}`);
+      }, 500);
+    } else {
+      const { message } = await response.json();
+      showSnackbar(message || 'Donation submission failed', 'error');
     }
   };
 
-  const addDonationItems = async (): Promise<DonationItemResponse[]> => {
-    const donationItemResponces = donationItemFormDatas.map(
-      async (itemForm): Promise<DonationItemResponse> => {
-        if (!itemForm.itemRes) {
-          itemForm.itemRes = await addItem(itemForm);
-        }
-
-        const donationItem: CreateDonationItemRequest = {
-          item: itemForm.itemRes._id,
-          quantity: itemForm.quantity,
-          barcode: itemForm?.barcode,
-          value: {
-            price: itemForm.price,
-            evaluation:
-              itemForm.newOrUsed === 'New'
-                ? 'New'
-                : itemForm.highOrLow === 'High'
-                ? 'High'
-                : 'Low',
-          },
-        };
-
-        try {
-          const donationItemRes = await fetch('/api/donationItems', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(donationItem),
-          });
-          if (donationItemRes.ok) {
-            console.log('Donation item added successfully');
-            return await donationItemRes.json();
-          } else {
-            showSnackbar(
-              `Error adding donation item, status: ${donationItemRes.status}`,
-              'error'
-            );
-            throw `Error adding donation item, status: ${donationItemRes.status}`;
-          }
-        } catch (error) {
-          showSnackbar(`Error:'${error}`, 'error');
-          throw `Error:'${error}`;
-        }
-      }
+  const loadCategories = useCallback(async () => {
+    const categoryRes = await fetch('/api/categories');
+    const categories = await categoryRes.json();
+    setCategoryOptions(
+      categories.map((categoryName: string) => ({ label: categoryName }))
     );
+  }, []);
 
-    return Promise.all(donationItemResponces);
-  };
-
-  const addItem = async (
-    itemForm: DonationItemFormData
-  ): Promise<ItemResponse> => {
-    const item: CreateItemRequest = {
-      name: itemForm.name,
-      category: itemForm.category,
-    };
-
-    try {
-      const itemRes = await fetch('/api/items', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(item),
-      });
-      if (itemRes.ok) {
-        console.log('Item added successfully');
-        return await itemRes.json();
-      } else {
-        showSnackbar(`Error adding item, status: ${itemRes.status}`, 'error');
-        throw `Error adding item, status: ${itemRes.status}`;
-      }
-    } catch (error) {
-      showSnackbar(`Error:'${error}`, 'error');
-      throw `Error:'${error}`;
+  useEffect(() => {
+    if (!categoriesLoadedRef.current) {
+      loadCategories();
+      categoriesLoadedRef.current = true;
     }
-  };
-
-  const addDonor = async (): Promise<DonorResponse> => {
-    // If donor has previously donated, don't add them to the database
-    if (prevDonated) {
-      return donorFormData as DonorResponse;
-    }
-
-    const donor: CreateDonorRequest = {
-      firstName: donorFormData.firstName,
-      lastName: donorFormData.lastName,
-      email: donorFormData.email,
-      address: donorFormData.address,
-      state: donorFormData.state,
-      city: donorFormData.city,
-      zip: donorFormData.zip,
-    };
-
-    const errors = validateDonor(donorFormData);
-    if (errors) {
-      setValidationErrors(errors);
-      throw `Error adding donor`;
-    }
-    setValidationErrors(undefined);
-    try {
-      // fetch request to add donor
-      const donorRes = await fetch('/api/donors', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(donor),
-      });
-
-      if (donorRes.ok) {
-        console.log('Donor added successfully');
-        return await donorRes.json();
-      } else {
-        showSnackbar(`Error adding donor, status: ${donorRes.status}`, 'error');
-        throw `Error adding donor, status: ${donorRes.status}`;
-      }
-    } catch (error) {
-      showSnackbar(`Error:'${error}`, 'error');
-      throw `Error:'${error}`;
-    }
-  };
-
-  const addDonation = async (createDonation: CreateDonationRequest) => {
-    donationData.prevDonated = prevDonated;
-    const errors = validateDonation(donationData);
-    if (errors) {
-      setValidationErrors(errors);
-      throw 'Cannot add donation';
-    }
-    setValidationErrors(undefined);
-    try {
-      // fetch request to add donor
-      const donationRes = await fetch('/api/donations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(createDonation),
-      });
-
-      if (donationRes.ok) {
-        showSnackbar('Donation added successfully.', 'success');
-      } else {
-        throw `Error adding donor, status: ${donationRes.status}`;
-      }
-    } catch (error) {
-      throw `Error:'${error}`;
-    }
-  };
+  }, [loadCategories]);
 
   return (
     <ThemeProvider theme={mohColors}>
       <Box display={'flex'} justifyContent={'center'}>
         <Box
+          component={'form'}
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleAddDonation();
+          }}
           sx={{
             padding: '20px',
             margin: '20px',
@@ -286,6 +178,23 @@ export default function AddDonationView({
             boxShadow: '0px 4px 4px 0px #00000040',
           }}
         >
+          <Box
+            sx={{
+              display: loading ? 'flex' : 'none',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              height: '100%',
+              width: '100%',
+              backgroundColor: 'rgba(0, 0, 0, 0.25)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              pointerEvents: 'auto',
+              zIndex: 2000,
+            }}
+          >
+            <CircularProgress />
+          </Box>
           <Typography variant="h4" sx={{ mb: 2, ml: 2 }}>
             Add Donation
           </Typography>
@@ -294,14 +203,20 @@ export default function AddDonationView({
               backgroundColor: '#379541',
             }}
           ></Divider>
+          <Typography variant="overline" fontSize={'large'}>
+            Donor Information
+          </Typography>
           <Grid container spacing={2} sx={{ mt: 1, pl: 2, pr: 2 }}>
             <Grid item xs={12} sm={8}>
-              <AutofillDonorEmail
-                DonorOptions={donorOptions}
-                DonorForm={donorFormData}
-                onDonorSelect={handleDonorSelect}
-                onChange={setDonorFormData}
-                onClear={() => setDonorInfoFormDisabled(false)}
+              <ApiAutoComplete
+                apiUrl="/api/donors/autocomplete"
+                label="Email Address"
+                value={donorOption}
+                onChange={(newDonorOption) => {
+                  setDonorOption(newDonorOption);
+                  handleDonorOptionChange(newDonorOption);
+                }}
+                creatable
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -321,8 +236,7 @@ export default function AddDonationView({
                   shrink: true,
                   style: { paddingRight: '10px' },
                 }}
-                error={!!validationErrors?.donationDate}
-                helperText={validationErrors?.donationDate}
+                required
               />
             </Grid>
 
@@ -337,7 +251,8 @@ export default function AddDonationView({
                 fullWidth
                 id="outlined-required"
                 label="Receipt"
-                value={donationData.receipt}
+                required
+                value={donationData.receipt || ''}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const re = /^[0-9\b]+$/;
                   // if value is not blank, then test the regex
@@ -372,52 +287,58 @@ export default function AddDonationView({
                     />
                   ),
                 }}
-                error={!!validationErrors?.receipt}
-                helperText={validationErrors?.receipt}
               />
             </Grid>
-
+            <Grid item xs={12}>
+              <Typography variant="overline" fontSize={'large'} mb={2}>
+                ITEMS
+              </Typography>
+            </Grid>
             {donationItemFormDatas.map((_, index) => (
-              <>
-                <Grid item xs={12}>
-                  <Divider
-                    sx={{
-                      margin: '18px',
-                      backgroundColor: '#379541',
-                    }}
-                  />
-                </Grid>
+              <Grid item xs={12} container spacing={2} key={index}>
                 <DonationItemForm
-                  itemOptions={itemOptions}
                   donationItemData={donationItemFormDatas[index]}
                   onChange={(value: DonationItemFormData) =>
                     handleDonationItemFormChange(value, index)
                   }
                   key={index}
                   disabled={false}
-                  // validationErrors={}
+                  categoryOptions={categoryOptions}
                 />
-                <Grid
-                  item
-                  xs={12}
-                  sm={1}
-                  md={0.5}
-                  display={'flex'}
-                  alignContent={'center'}
-                >
-                  <Tooltip title="Remove">
-                    <IconButton
-                      onClick={() => {
-                        donationItemFormDatas.splice(index, 1);
-                        setDonationItemFormDatas([...donationItemFormDatas]);
+                {donationItemFormDatas.length > 1 && (
+                  <Grid
+                    item
+                    xs={12}
+                    display={'flex'}
+                    alignContent={'center'}
+                    justifyContent={'flex-end'}
+                  >
+                    <Tooltip title="Remove">
+                      <Button
+                        onClick={() => {
+                          donationItemFormDatas.splice(index, 1);
+                          setDonationItemFormDatas([...donationItemFormDatas]);
+                        }}
+                        key={index}
+                        endIcon={<DeleteIcon />}
+                        color="moh"
+                      >
+                        Remove Item
+                      </Button>
+                    </Tooltip>
+                  </Grid>
+                )}
+                {index != donationItemFormDatas.length - 1 && (
+                  <Grid item xs={12}>
+                    <Divider
+                      sx={{
+                        margin: '18px',
+                        backgroundColor: '#379541',
                       }}
-                      key={index}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </>
+                    />
+                  </Grid>
+                )}
+              </Grid>
             ))}
             <Grid item xs={12}>
               <Button
@@ -433,7 +354,9 @@ export default function AddDonationView({
                 }
                 fullWidth
               >
-                Add Additional Item
+                {donationItemFormDatas.length == 0
+                  ? 'Add Item'
+                  : 'Add Additional Item'}
               </Button>
             </Grid>
 
@@ -441,7 +364,7 @@ export default function AddDonationView({
               <Button
                 variant="contained"
                 sx={{ height: '40px' }}
-                onClick={() => handleAddDonation()}
+                type="submit"
                 color="moh"
                 fullWidth
               >

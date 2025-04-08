@@ -1,14 +1,14 @@
 import zBase from './base';
 import { z } from 'zod';
 import zObjectId from './objectId';
-import { zItemResponse } from './items';
+import { zCreateItemRequest, zItemResponse } from './items';
 import { zUserResponse } from './users';
-import { zDonorResponse } from './donors';
+import { zDonorResponse, zCreateDonorRequest } from './donors';
 
 export const evaluationEnum = ['High', 'Low', 'New'] as const;
 
 export const zDonationItemBase = z.object({
-  item: zObjectId,
+  item: z.union([zObjectId, zCreateItemRequest]),
   quantity: z.number(),
   barcode: z.string().optional(),
   value: z.object({
@@ -40,8 +40,9 @@ export interface UpdateDonationItemRequest
   extends z.infer<typeof zUpdateDonationItemRequest> {}
 
 export const zDonationBase = z.object({
+  _id: zObjectId,
   user: zObjectId,
-  items: z.array(zObjectId),
+  donationItems: z.array(zObjectId),
   entryDate: z.coerce.date(),
   donor: zObjectId,
   receipt: z.string(),
@@ -49,7 +50,10 @@ export const zDonationBase = z.object({
 
 export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });
 
-export const zCreateDonationRequest = zDonationBase;
+export const zCreateDonationRequest = zDonationBase.extend({
+  donor: z.union([zObjectId, zCreateDonorRequest]),
+  donationItems: z.array(zCreateDonationItemRequest),
+});
 
 export const zDonationResponse = zDonationEntity.extend({
   user: zUserResponse,

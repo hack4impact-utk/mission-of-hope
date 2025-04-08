@@ -20,10 +20,7 @@ const initialFormData: ItemFormData = {
   category: '',
   high: 0,
   low: 0,
-  highString: '',
-  lowString: '',
 };
-
 
 interface AddItemViewProps {
   categories: string[];
@@ -43,6 +40,9 @@ export default function AddItemView(props: AddItemViewProps) {
     e.preventDefault();
 
     const { high, low } = itemFormData;
+    if (high == undefined || low == undefined) {
+      return;
+    }
 
     // Check if high is greater than low
     if (high < low) {
