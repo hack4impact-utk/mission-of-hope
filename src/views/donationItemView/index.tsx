@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Chip,
   Container,
   Grid,
   IconButton,
@@ -27,33 +26,33 @@ interface DonationItemProps {
 }
 
 const allColumns: GridColDef[] = [
-  { field: 'product', headerName: 'Product', maxWidth: 300, flex: 0.4 },
-  { field: 'category', headerName: 'Category', maxWidth: 300, flex: 0.4 },
-  { field: 'quantity', headerName: 'Quantity', maxWidth: 80, flex: 0.5 },
-  { field: 'evaluation', headerName: 'Evaluation', maxWidth: 80, flex: 0.5 },
-  {
-    field: 'barcode',
-    headerName: 'Barcode (if food)',
-    maxWidth: 200,
-    flex: 0.5,
-    renderCell: (params) =>
-      params.value ? (
-        <Chip
-          label={params.value}
-          sx={{
-            bgcolor: '#37954173',
-            border: 'solid',
-            borderColor: '#ABABAB',
-          }}
-        />
-      ) : null,
-  },
-  { field: 'price', headerName: 'Price', maxWidth: 100, flex: 0.5 },
+  { field: 'product', headerName: 'Product', maxWidth: 300, flex: 2 },
+  { field: 'category', headerName: 'Category', maxWidth: 300, flex: 2 },
+  { field: 'quantity', headerName: 'Quantity', maxWidth: 300, flex: 1 },
+  // { field: 'evaluation', headerName: 'Evaluation', maxWidth: 80, flex: 0.5 },
+  // {
+  //   field: 'barcode',
+  //   headerName: 'Barcode (if food)',
+  //   maxWidth: 200,
+  //   flex: 0.5,
+  //   renderCell: (params) =>
+  //     params.value ? (
+  //       <Chip
+  //         label={params.value}
+  //         sx={{
+  //           bgcolor: '#37954173',
+  //           border: 'solid',
+  //           borderColor: '#ABABAB',
+  //         }}
+  //       />
+  //     ) : null,
+  // },
+  { field: 'price', headerName: 'Value', flex: 1 },
   {
     field: 'edit',
     headerName: 'Edit',
     maxWidth: 80,
-    flex: 0.5,
+    flex: 1,
     sortable: false,
     filterable: false,
     renderCell: (params) => (
