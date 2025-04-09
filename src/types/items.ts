@@ -2,8 +2,8 @@ import { z } from 'zod';
 import zBase from './base';
 
 export const zItemBase = z.object({
-  category: z.string(),
-  name: z.string(),
+  category: z.string().trim(),
+  name: z.string().trim(),
   high: z.number().optional(),
   low: z.number().optional(),
 });
