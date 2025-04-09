@@ -43,6 +43,7 @@ export default function AddDonationView({
 }: AddDonationViewProps) {
   const [donationData, setDonationFormData] = useState<DonationFormData>({
     donationDate: new Date(),
+    receipt: '',
   } as DonationFormData);
   const [donorFormData, setDonorFormData] = useState<DonorFormData>(
     {} as DonorFormData
@@ -77,7 +78,7 @@ export default function AddDonationView({
       setPrevDonated(true);
       setDonorInfoFormDisabled(true);
     } else {
-      setDonorFormData({} as DonorFormData); // Clear form when donor is deselected
+      setDonorFormData({ _id: '' } as DonorFormData); // Clear form when donor is deselected
       setDonorInfoFormDisabled(false);
       setPrevDonated(false);
     }
@@ -387,7 +388,7 @@ export default function AddDonationView({
             </Grid>
 
             {donationItemFormDatas.map((_, index) => (
-              <>
+              <React.Fragment key={index}>
                 <Grid item xs={12}>
                   <Divider
                     sx={{
@@ -427,7 +428,7 @@ export default function AddDonationView({
                     </IconButton>
                   </Tooltip>
                 </Grid>
-              </>
+              </React.Fragment>
             ))}
             <Grid item xs={12}>
               <Button

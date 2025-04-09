@@ -1,5 +1,5 @@
 'use client';
-import { Button, Link, Menu, MenuItem, Avatar, Box } from '@mui/material';
+import { Button, Link, Menu, MenuItem, Avatar } from '@mui/material';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -64,14 +64,7 @@ export default function AccountMenu() {
         disableScrollLock // Prevents MUI from managing scroll behavior
       >
         {session?.user ? (
-          <Box>
-            <MenuItem onClick={handleNavigateToPages}>
-              <Link href="/settings" underline="none" color="#000">
-                Settings
-              </Link>
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          </Box>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         ) : (
           <MenuItem onClick={handleNavigateToPages}>
             <Link href="/signin" underline="none" color="#000">

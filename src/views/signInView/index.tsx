@@ -2,6 +2,8 @@
 
 import { Card, Box, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Image from 'next/image';
+import logo from '/public/cropped-MOH-Logo-768x393.png';
 import { signIn } from 'next-auth/react';
 import GoogleButton from 'react-google-button';
 
@@ -14,21 +16,18 @@ export default function SignInView() {
         alignContent: 'center',
         justifyContent: 'space-around;',
         alignItems: 'center',
-        position: 'absolute',
-        left: '0',
-        right: '0',
-        top: '0',
-        bottom: '0',
-        padding: '10%',
+        marginTop: 5,
       }}
     >
-      <img
+      <Image
+        priority={true}
         className="rounded-md"
         alt="logo"
-        src="https://missionofhope.org/wp-content/uploads/2023/04/cropped-MOH-Logo-768x393.png"
-        width="360px"
-        height="200px"
-        style={{ marginRight: '100px' }}
+        src={logo}
+        style={{
+          width: '30%', // 768px
+          height: 'auto', // 393px
+        }}
       />
       <Card
         sx={{
@@ -39,7 +38,7 @@ export default function SignInView() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-between',
-          width: '25%',
+          width: '20%',
         }}
       >
         <Typography
@@ -53,6 +52,7 @@ export default function SignInView() {
           Sign in with your Google Account
         </Typography>
         <AccountCircleIcon sx={{ color: '#FFFFFF', fontSize: '8rem' }} />
+
         <GoogleButton
           onClick={() => signIn('google', { callbackUrl: '/' })}
         ></GoogleButton>
