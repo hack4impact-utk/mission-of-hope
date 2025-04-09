@@ -71,6 +71,7 @@ const allColumns: GridColDef[] = [
 export default function DonationItemView({ donations }: DonationItemProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+  const [columnSelectorOpen, setColumnSelectorOpen] = useState<boolean>(false);
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     allColumns.map((col) => col.field)
@@ -173,6 +174,9 @@ export default function DonationItemView({ donations }: DonationItemProps) {
           <InputLabel></InputLabel>
           <Select
             multiple
+            open={columnSelectorOpen}
+            onOpen={() => setColumnSelectorOpen(true)}
+            onClose={() => setColumnSelectorOpen(false)}
             value={visibleColumns}
             onChange={handleColumnSelectionChange}
             renderValue={(selected) =>

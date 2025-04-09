@@ -32,12 +32,14 @@ export default function DonationView({ donations }: DonationViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedYear, yearQuery, setYearQuery } = useYear();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+  const [columnSelectorOpen, setColumnSelectorOpen] = useState<boolean>(false);
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     'donor',
     'quantity',
     'user_name',
     'date',
+    'receipt',
     'edit',
   ]);
 
@@ -123,6 +125,7 @@ export default function DonationView({ donations }: DonationViewProps) {
   );
 
   const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
+    event.preventDefault();
     const selectedColumns = event.target.value as string[];
     setVisibleColumns(selectedColumns);
   };
@@ -141,6 +144,9 @@ export default function DonationView({ donations }: DonationViewProps) {
           <InputLabel></InputLabel>
           <Select
             multiple
+            open={columnSelectorOpen}
+            onOpen={() => setColumnSelectorOpen(true)}
+            onClose={() => setColumnSelectorOpen(false)}
             sx={{
               padding: '0px 6px',
               minWidth: 'auto',
