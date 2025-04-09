@@ -202,9 +202,12 @@ export default function DonationView({ donations }: DonationViewProps) {
       .map((col) => col.headerName)
       .join(',');
     const csvRows = rows.map((row) =>
-      [row.donor, row.user_name, new Date(row.date).toLocaleDateString()].join(
-        ','
-      )
+      [
+        row.donor,
+        row.user_name,
+        new Date(row.date).toLocaleDateString(),
+        row.receipt,
+      ].join(',')
     );
     const csvContent = `data:text/csv;charset=utf-8,${headers}\n${csvRows.join(
       '\n'
