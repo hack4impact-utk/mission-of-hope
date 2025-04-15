@@ -19,7 +19,7 @@ import {
 import Image from 'next/image';
 import logo from '/public/cropped-MOH-Logo-768x393.png';
 
-// Reusable buttonStyles
+// Shared buttonStyles
 const buttonStyles: React.CSSProperties = {
   color: '#ff8a65',
   textTransform: 'none',
@@ -28,7 +28,7 @@ const buttonStyles: React.CSSProperties = {
   padding: '10px 10px',
 };
 
-// Menu of the Navbar
+// Menu
 const sections = [
   {
     title: 'Donations',
