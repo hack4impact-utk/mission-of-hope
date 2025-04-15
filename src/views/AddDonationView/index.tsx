@@ -346,6 +346,7 @@ export default function AddDonationView({
                 id="outlined-required"
                 label="Receipt"
                 value={donationData.receipt}
+                autoComplete="off" // Disable auto fill
                 disabled={isLoading}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const re = /^[0-9\b]+$/;
