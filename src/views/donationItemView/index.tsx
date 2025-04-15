@@ -16,7 +16,11 @@ import {
   Button,
 } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { DonationResponse } from '@/types/donation';
+import {
+  DonationResponse,
+  DonationItemResponse,
+  GroupedDonationItem,
+} from '@/types/donation';
 import EditIcon from '@mui/icons-material/Edit';
 import useMonth from '@/hooks/useMonth';
 import useSearch from '@/hooks/useSearch';
@@ -29,24 +33,6 @@ const allColumns: GridColDef[] = [
   { field: 'product', headerName: 'Product', maxWidth: 300, flex: 2 },
   { field: 'category', headerName: 'Category', maxWidth: 300, flex: 2 },
   { field: 'quantity', headerName: 'Quantity', maxWidth: 300, flex: 1 },
-  // { field: 'evaluation', headerName: 'Evaluation', maxWidth: 80, flex: 0.5 },
-  // {
-  //   field: 'barcode',
-  //   headerName: 'Barcode (if food)',
-  //   maxWidth: 200,
-  //   flex: 0.5,
-  //   renderCell: (params) =>
-  //     params.value ? (
-  //       <Chip
-  //         label={params.value}
-  //         sx={{
-  //           bgcolor: '#37954173',
-  //           border: 'solid',
-  //           borderColor: '#ABABAB',
-  //         }}
-  //       />
-  //     ) : null,
-  // },
   { field: 'price', headerName: 'Value', flex: 1 },
   {
     field: 'edit',
@@ -100,20 +86,7 @@ export default function DonationItemView({ donations }: DonationItemProps) {
 
   // Then, group items by name and aggregate quantities and values
   const groupedItems = flatItems.reduce(
-    (
-      acc: Record<
-        string,
-        {
-          item: { name: string; category: string; _id: string };
-          quantity: number;
-          totalValue: number;
-          barcode?: string;
-          evaluation: string;
-          itemIds: string[];
-        }
-      >,
-      item
-    ) => {
+    (acc: Record<string, GroupedDonationItem>, item: DonationItemResponse) => {
       const key = item.item.name;
 
       // If an item name hasn't been added yet, create a new entry
