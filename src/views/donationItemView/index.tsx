@@ -5,7 +5,6 @@ import {
   Chip,
   Container,
   Grid,
-  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -18,7 +17,6 @@ import {
 } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { DonationResponse } from '@/types/donation';
-import EditIcon from '@mui/icons-material/Edit';
 import useMonth from '@/hooks/useMonth';
 import useSearch from '@/hooks/useSearch';
 
@@ -49,23 +47,6 @@ const allColumns: GridColDef[] = [
       ) : null,
   },
   { field: 'price', headerName: 'Price', maxWidth: 100, flex: 0.5 },
-  {
-    field: 'edit',
-    headerName: 'Edit',
-    maxWidth: 80,
-    flex: 0.5,
-    sortable: false,
-    filterable: false,
-    renderCell: (params) => (
-      <IconButton
-        color="primary"
-        size="small"
-        onClick={() => (window.location.href = `/donation/${params.value}`)}
-      >
-        <EditIcon></EditIcon>
-      </IconButton>
-    ),
-  },
 ];
 
 export default function DonationItemView({ donations }: DonationItemProps) {
@@ -110,14 +91,11 @@ export default function DonationItemView({ donations }: DonationItemProps) {
       evaluation: row.value.evaluation,
       barcode: row.barcode,
       price: `$${row.value.price}`,
-      edit: row._id,
     }))
     .filter((row) =>
-      Object.entries(row)
-        .filter(([key]) => key !== 'edit') // Exclude 'edit' (row._id) value from search
-        .some((value) =>
-          String(value).toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      Object.entries(row).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+      )
     );
 
   const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
@@ -134,7 +112,6 @@ export default function DonationItemView({ donations }: DonationItemProps) {
     };
 
     const headers = visibleColumns
-      .filter((field) => field !== 'edit')
       .map(
         (field) =>
           allColumns.find((col) => col.field === field)?.headerName || ''
@@ -143,7 +120,6 @@ export default function DonationItemView({ donations }: DonationItemProps) {
 
     const csvRows = formattedRows.map((row) =>
       visibleColumns
-        .filter((field) => field !== 'edit')
         .map((field) => escapeCSVValue(row[field as keyof typeof row]))
         .join(',')
     );
