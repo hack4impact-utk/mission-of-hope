@@ -13,7 +13,7 @@ export const zAuditBase = z.object({
   docType: z.enum(auditDocumentType),
   user: zObjectId,
   doc: zObjectId,
-  timestamp: z.coerce.date(), // TODO: Figure out if this includes time or just day
+  timestamp: z.string().datetime(),
   newFields: z.map(z.string(), z.string()).optional(),
   oldFields: z.map(z.string(), z.string()).optional(),
 });
