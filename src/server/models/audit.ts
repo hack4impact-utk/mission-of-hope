@@ -41,4 +41,4 @@ const AuditSchema = new Schema({
 export interface AuditDocument extends Omit<AuditEntity, '_id'>, Document {}
 
 export default (models.Audit as Model<AuditDocument>) ||
-  model<AuditDocument>('MailMerge', AuditSchema);
+  model<AuditDocument>('Audit', AuditSchema);
