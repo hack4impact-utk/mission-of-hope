@@ -4,7 +4,6 @@ import {
   Box,
   Container,
   Grid,
-  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -21,7 +20,6 @@ import {
   DonationItemResponse,
   GroupedDonationItem,
 } from '@/types/donation';
-import EditIcon from '@mui/icons-material/Edit';
 import useMonth from '@/hooks/useMonth';
 import useSearch from '@/hooks/useSearch';
 
@@ -30,27 +28,14 @@ interface DonationItemProps {
 }
 
 const allColumns: GridColDef[] = [
+  { field: 'product', headerName: 'Product', maxWidth: 300, flex: 0.4 },
+  { field: 'category', headerName: 'Category', maxWidth: 300, flex: 0.4 },
+  { field: 'quantity', headerName: 'Quantity', maxWidth: 80, flex: 0.5 },
+  { field: 'evaluation', headerName: 'Evaluation', maxWidth: 80, flex: 0.5 },
   { field: 'product', headerName: 'Product', maxWidth: 300, flex: 2 },
   { field: 'category', headerName: 'Category', maxWidth: 300, flex: 2 },
   { field: 'quantity', headerName: 'Quantity', maxWidth: 300, flex: 1 },
   { field: 'price', headerName: 'Value', flex: 1 },
-  {
-    field: 'edit',
-    headerName: 'Edit',
-    maxWidth: 80,
-    flex: 1,
-    sortable: false,
-    filterable: false,
-    renderCell: (params) => (
-      <IconButton
-        color="primary"
-        size="small"
-        onClick={() => (window.location.href = `/donation/${params.value}`)}
-      >
-        <EditIcon></EditIcon>
-      </IconButton>
-    ),
-  },
 ];
 
 export default function DonationItemView({ donations }: DonationItemProps) {
@@ -125,14 +110,11 @@ export default function DonationItemView({ donations }: DonationItemProps) {
       evaluation: groupedItem.evaluation,
       barcode: groupedItem.barcode,
       price: `$${groupedItem.totalValue.toFixed(2)}`,
-      edit: groupedItem.itemIds[0], // Use the first item ID for editing
     }))
     .filter((row) =>
-      Object.entries(row)
-        .filter(([key]) => key !== 'edit') // Exclude 'edit' (row._id) value from search
-        .some((value) =>
-          String(value).toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      Object.entries(row).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+      )
     );
 
   const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
@@ -149,7 +131,6 @@ export default function DonationItemView({ donations }: DonationItemProps) {
     };
 
     const headers = visibleColumns
-      .filter((field) => field !== 'edit')
       .map(
         (field) =>
           allColumns.find((col) => col.field === field)?.headerName || ''
@@ -158,7 +139,6 @@ export default function DonationItemView({ donations }: DonationItemProps) {
 
     const csvRows = formattedRows.map((row) =>
       visibleColumns
-        .filter((field) => field !== 'edit')
         .map((field) => escapeCSVValue(row[field as keyof typeof row]))
         .join(',')
     );
