@@ -21,6 +21,9 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 interface donationProps {
   id: string;
@@ -36,6 +39,9 @@ export default function DonationIdView(props: donationProps) {
     receipt: props.donation.receipt ?? '',
     prevDonated: !!props.donation.entryDate,
   } as DonationFormData);
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
   const [donationItemFormData, setDonationItemFormData] = useState<
     DonationItemFormData[]
@@ -99,6 +105,14 @@ export default function DonationIdView(props: donationProps) {
   const handleUpdate = async () => {
     if (!props.donation._id) {
       console.error('Donation ID is missing');
+      return;
+    }
+
+    if (validationErrors.donationDate) {
+      showSnackbar(
+        'Please fix the donation date error before saving.',
+        'error'
+      );
       return;
     }
 
@@ -187,27 +201,47 @@ export default function DonationIdView(props: donationProps) {
                     <Divider></Divider>
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <TextField
-                      fullWidth
-                      id="outlined-required"
-                      label="Donation Date"
-                      type="date"
-                      value={
-                        donationFormData?.donationDate
-                          ?.toISOString()
-                          ?.split('T')[0] || ''
-                      }
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setDonationFormData({
-                          ...donationFormData,
-                          donationDate: new Date(e.target.value),
-                        });
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { paddingRight: '10px' },
-                      }}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        label="Donation Date"
+                        value={donationFormData?.donationDate || null}
+                        onChange={(newDate) => {
+                          if (newDate) {
+                            setDonationFormData({
+                              ...donationFormData,
+                              donationDate: newDate,
+                            });
+                          }
+                        }}
+                        maxDate={new Date()}
+                        onError={(reason) => {
+                          if (reason === 'maxDate') {
+                            setValidationErrors((prev) => ({
+                              ...prev,
+                              donationDate:
+                                'Donation date cannot be in the future',
+                            }));
+                          } else {
+                            setValidationErrors((prev) => {
+                              const newErrors = { ...prev };
+                              delete newErrors.donationDate;
+                              return newErrors;
+                            });
+                          }
+                        }}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            error: !!validationErrors?.donationDate,
+                            helperText: validationErrors?.donationDate,
+                            InputLabelProps: {
+                              shrink: true,
+                              style: { paddingRight: '10px' },
+                            },
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
                   </Grid>
                   {donationItemFormData.map((_, index) => (
                     <DonationItemForm

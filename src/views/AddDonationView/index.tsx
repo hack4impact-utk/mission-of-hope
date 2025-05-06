@@ -31,6 +31,9 @@ import {
   DonationItemResponse,
 } from '@/types/donation';
 import GenerateReceiptButton from '@/components/generateReceiptButton';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 interface AddDonationViewProps {
   donorOptions: DonorResponse[];
@@ -97,6 +100,14 @@ export default function AddDonationView({
   };
 
   const handleAddDonation = async () => {
+    if (validationErrors?.donationDate) {
+      showSnackbar(
+        'Please fix the donation date error before submitting.',
+        'error'
+      );
+      return;
+    }
+
     setIsLoading(true);
     const createDonation: CreateDonationRequest = {
       entryDate: new Date(donationData.donationDate),
@@ -144,8 +155,8 @@ export default function AddDonationView({
               itemForm.newOrUsed === 'New'
                 ? 'New'
                 : itemForm.highOrLow === 'High'
-                ? 'High'
-                : 'Low',
+                  ? 'High'
+                  : 'Low',
           },
         };
 
@@ -312,26 +323,47 @@ export default function AddDonationView({
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                id="outlined-required"
-                label="Donation Date"
-                type="date"
-                disabled={isLoading}
-                value={
-                  donationData?.donationDate?.toISOString()?.split('T')[0] || ''
-                }
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const date = new Date(e.target.value);
-                  setDonationFormData({ ...donationData, donationDate: date });
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                  style: { paddingRight: '10px' },
-                }}
-                error={!!validationErrors?.donationDate}
-                helperText={validationErrors?.donationDate}
-              />
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Donation Date"
+                  value={donationData?.donationDate || null}
+                  onChange={(newDate) => {
+                    if (newDate) {
+                      setDonationFormData({
+                        ...donationData,
+                        donationDate: newDate,
+                      });
+                    }
+                  }}
+                  maxDate={new Date()}
+                  onError={(reason) => {
+                    if (reason === 'maxDate') {
+                      setValidationErrors((prev) => ({
+                        ...(prev || {}),
+                        donationDate: 'Donation date cannot be in the future',
+                      }));
+                    } else {
+                      setValidationErrors((prev) => {
+                        const newErrors = { ...(prev || {}) };
+                        delete newErrors.donationDate;
+                        return newErrors;
+                      });
+                    }
+                  }}
+                  disabled={isLoading}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      error: !!validationErrors?.donationDate,
+                      helperText: validationErrors?.donationDate,
+                      InputLabelProps: {
+                        shrink: true,
+                        style: { paddingRight: '10px' },
+                      },
+                    },
+                  }}
+                />
+              </LocalizationProvider>
             </Grid>
 
             <DonorForm
