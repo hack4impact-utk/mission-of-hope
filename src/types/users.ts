@@ -3,7 +3,7 @@ import { z } from 'zod';
 import zObjectId from './objectId';
 
 export const zUserEntity = zBase.extend({
-  name: z.string(),
+  name: z.string().trim(),
   email: z.string().email(),
   image: z.string(),
   isAdmin: z.boolean(),

@@ -24,7 +24,6 @@ const initialFormData: ItemFormData = {
   lowString: '',
 };
 
-
 interface AddItemViewProps {
   categories: string[];
 }
@@ -39,17 +38,42 @@ export default function AddItemView(props: AddItemViewProps) {
     setItemFormData(newItemForm);
   };
 
+  const validateForm = (): boolean => {
+    if (!itemFormData.name.trim()) {
+      showSnackbar('Item name cannot be empty', 'error');
+      return false;
+    }
+
+    if (!itemFormData.category.trim()) {
+      showSnackbar('Category cannot be empty', 'error');
+      return false;
+    }
+
+    if (itemFormData.high < 0 || isNaN(itemFormData.high)) {
+      showSnackbar('High value must be a positive number', 'error');
+      return false;
+    }
+
+    if (itemFormData.low < 0 || isNaN(itemFormData.low)) {
+      showSnackbar('Low value must be a positive number', 'error');
+      return false;
+    }
+
+    if (itemFormData.high < itemFormData.low) {
+      showSnackbar(
+        'High value must be greater than or equal to Low value',
+        'error'
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { high, low } = itemFormData;
-
-    // Check if high is greater than low
-    if (high < low) {
-      showSnackbar(
-        'Low Value must be less than or equal to High Value',
-        'error'
-      );
+    if (!validateForm()) {
       return;
     }
 

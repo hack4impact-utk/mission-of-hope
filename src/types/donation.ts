@@ -10,7 +10,7 @@ export const evaluationEnum = ['High', 'Low', 'New'] as const;
 export const zDonationItemBase = z.object({
   item: zObjectId,
   quantity: z.number(),
-  barcode: z.string().optional(),
+  barcode: z.string().trim().optional(),
   value: z.object({
     price: z.number(),
     evaluation: z.enum(evaluationEnum),
@@ -44,7 +44,7 @@ export const zDonationBase = z.object({
   items: z.array(zObjectId),
   entryDate: z.coerce.date(),
   donor: zObjectId,
-  receipt: z.string(),
+  receipt: z.string().trim(),
 });
 
 export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });

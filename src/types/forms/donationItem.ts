@@ -3,12 +3,12 @@ import { zItemResponse } from '../items';
 
 export const zDonationItemFormData = z.object({
   itemRes: zItemResponse,
-  category: z.string().min(1, { message: 'Required' }),
-  name: z.string().min(1, { message: 'Required' }),
+  category: z.string().trim().min(1, { message: 'Required' }),
+  name: z.string().trim().min(1, { message: 'Required' }),
   quantity: z.number().positive().min(1, { message: 'Required' }),
-  barcode: z.string(),
-  newOrUsed: z.string().min(1, { message: 'Required' }),
-  highOrLow: z.string().optional(),
+  barcode: z.string().trim(),
+  newOrUsed: z.string().trim().min(1, { message: 'Required' }),
+  highOrLow: z.string().trim().optional(),
   price: z.number().positive().min(1, { message: 'Required' }),
 });
 

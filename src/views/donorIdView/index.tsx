@@ -75,7 +75,16 @@ export default function DonorIdView(props: donorProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(donorForm),
+        body: JSON.stringify({
+          ...donorForm,
+          firstName: donorForm.firstName.trim(),
+          lastName: donorForm.lastName.trim(),
+          email: donorForm.email.trim(),
+          address: donorForm.address.trim(),
+          city: donorForm.city.trim(),
+          state: donorForm.state.trim(),
+          zip: donorForm.zip.trim(),
+        }),
       });
 
       if (!response.ok) {
@@ -144,7 +153,7 @@ export default function DonorIdView(props: donorProps) {
                   <TextField
                     fullWidth
                     id="outlined-required"
-                    label="Last Name"
+                    label="Email"
                     disabled={!editSwitch}
                     value={donorForm.email ?? ''}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
