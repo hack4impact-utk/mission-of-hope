@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     if (donationItems.length === 0) {
       return NextResponse.json(
-        { message: 'items array cannot be empty' },
+        { message: 'The donation must contain at least one item' },
         { status: 400 }
       );
     }
