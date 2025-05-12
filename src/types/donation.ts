@@ -41,7 +41,7 @@ export interface UpdateDonationItemRequest
 
 export const zDonationBase = z.object({
   user: zObjectId,
-  donationItems: z.array(zObjectId),
+  items: z.array(zObjectId),
   entryDate: z.coerce.date(),
   donor: zObjectId,
   receipt: z.string(),
@@ -51,7 +51,7 @@ export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });
 
 export const zCreateDonationRequest = zDonationBase.extend({
   donor: z.union([zObjectId, zCreateDonorRequest]),
-  donationItems: z.array(zCreateDonationItemRequest),
+  items: z.array(zCreateDonationItemRequest),
 });
 
 export const zDonationResponse = zDonationEntity.extend({

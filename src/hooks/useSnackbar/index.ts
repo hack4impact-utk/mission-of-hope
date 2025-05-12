@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import SnackbarContext, { MuiSeverity } from './SnackbarContext';
 
 export default function useSnackbar() {
@@ -11,13 +11,16 @@ export default function useSnackbar() {
 
   const { snackbar, setSnackbar } = ctx;
 
-  const showSnackbar = (msg: string, color: MuiSeverity = 'info') => {
-    setSnackbar({ open: true, msg, color });
-  };
+  const showSnackbar = useCallback(
+    (msg: string, color: MuiSeverity = 'info') => {
+      setSnackbar({ open: true, msg, color });
+    },
+    [setSnackbar]
+  );
 
-  const hideSnackbar = () => {
+  const hideSnackbar = useCallback(() => {
     setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+  }, [setSnackbar]);
 
   return {
     snackbar,

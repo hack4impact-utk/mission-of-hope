@@ -17,7 +17,7 @@ export async function GET() {
     const result = await getAllDonations();
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error('[DONATION_GET_ALL_ERROR]', error);
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
 }
@@ -28,32 +28,29 @@ export async function POST(request: NextRequest) {
 
   try {
     const requestBody = await request.json();
-    const validationResult = zCreateDonationRequest.safeParse(requestBody);
+    const parseResult = zCreateDonationRequest.safeParse(requestBody);
 
-    if (!validationResult.success) {
-      console.log(validationResult.error);
-      return NextResponse.json(
-        { message: validationResult.error },
-        { status: 400 }
-      );
+    if (!parseResult.success) {
+      console.error('[DONATION_CREATE_VALIDATION]', parseResult.error);
+      const validation = parseResult.error.flatten();
+      return NextResponse.json({ validation }, { status: 400 });
     }
 
     const {
       user,
-      donationItems,
+      items: donationItems,
       entryDate,
       donor: donorField,
       receipt,
-    } = validationResult.data;
+    } = parseResult.data;
 
     if (donationItems.length === 0) {
       return NextResponse.json(
-        { message: 'donationItems array cannot be empty' },
+        { message: 'items array cannot be empty' },
         { status: 400 }
       );
     }
 
-    // 1. Handle donor
     let donorId: mongoose.Types.ObjectId;
     if (typeof donorField === 'string') {
       donorId = new mongoose.Types.ObjectId(donorField);
@@ -62,34 +59,30 @@ export async function POST(request: NextRequest) {
       donorId = donorDoc[0]._id;
     }
 
-    // 2. Handle donation items
     const donationItemIds: mongoose.Types.ObjectId[] = [];
-
-    for (const donationItem of donationItems) {
+    for (const di of donationItems) {
       let itemId: mongoose.Types.ObjectId;
-      if (typeof donationItem.item === 'string') {
-        itemId = new mongoose.Types.ObjectId(donationItem.item);
+      if (typeof di.item === 'string') {
+        itemId = new mongoose.Types.ObjectId(di.item);
       } else {
-        const itemDoc = await Item.create([donationItem.item], { session });
+        const itemDoc = await Item.create([di.item], { session });
         itemId = itemDoc[0]._id;
       }
 
-      const donationItemDoc = await DonationItem.create(
+      const diDoc = await DonationItem.create(
         [
           {
             item: itemId,
-            quantity: donationItem.quantity,
-            barcode: donationItem.barcode,
-            value: donationItem.value,
+            quantity: di.quantity,
+            barcode: di.barcode,
+            value: di.value,
           },
         ],
         { session }
       );
-
-      donationItemIds.push(donationItemDoc[0]._id);
+      donationItemIds.push(diDoc[0]._id);
     }
 
-    // 3. Create donation
     await Donation.create(
       [
         {
@@ -103,15 +96,13 @@ export async function POST(request: NextRequest) {
       { session }
     );
 
-    // 4. Commit transaction
     await session.commitTransaction();
     session.endSession();
 
-    // Send email to donor
     const donor = await getDonorById(donorId.toString());
     if (donor) {
       const receiptTemplate = (await getAllMailMerge()).find(
-        (value) => value.type === 'Receipt'
+        (t) => t.type === 'Receipt'
       );
       if (receiptTemplate) {
         const body = populateEmailTemplate(
@@ -122,6 +113,7 @@ export async function POST(request: NextRequest) {
         await sendEmail([donor.email], receiptTemplate.subject, body);
       }
     }
+
     return NextResponse.json({ message: 'Success' }, { status: 201 });
   } catch (error) {
     await session.abortTransaction();
@@ -135,6 +127,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.error('[DONATION_CREATE_ERROR]', error);
-    return NextResponse.json({ error: 'Unknown Error' }, { status: 500 });
+    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }
 }
