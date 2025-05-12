@@ -31,6 +31,7 @@ export const handler: NextAuthOptions = {
       if (token.data && session.user) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         session.user.isAdmin = (token.data as any).isAdmin;
+        session.user._id = (await getUserByEmail(session.user.email))._id;
       }
       return session;
     },
@@ -38,6 +39,7 @@ export const handler: NextAuthOptions = {
       if (token.email) {
         try {
           const user = await getUserByEmail(token.email);
+          user._id = user._id.toString();
           token.data = user;
         } catch {}
       }

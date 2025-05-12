@@ -1,15 +1,17 @@
 import { z } from 'zod';
-import { zItemResponse } from '../items';
+import { evaluationEnum } from '../donation';
+import { zItemFormData } from './item';
 
 export const zDonationItemFormData = z.object({
-  itemRes: zItemResponse,
-  category: z.string().min(1, { message: 'Required' }),
-  name: z.string().min(1, { message: 'Required' }),
+  item: z.optional(zItemFormData),
   quantity: z.number().positive().min(1, { message: 'Required' }),
   barcode: z.string(),
   newOrUsed: z.string().min(1, { message: 'Required' }),
   highOrLow: z.string().optional(),
-  price: z.number().positive().min(1, { message: 'Required' }),
+  value: z.object({
+    price: z.number().positive().min(1, { message: 'Required' }),
+    evaluation: z.enum(evaluationEnum),
+  }),
 });
 
 export interface DonationItemFormData

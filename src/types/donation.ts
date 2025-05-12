@@ -1,14 +1,14 @@
 import zBase from './base';
 import { z } from 'zod';
 import zObjectId from './objectId';
-import { zItemResponse, ItemResponse } from './items';
+import { zCreateItemRequest, zItemResponse, ItemResponse } from './items';
 import { zUserResponse } from './users';
-import { zDonorResponse } from './donors';
+import { zDonorResponse, zCreateDonorRequest } from './donors';
 
 export const evaluationEnum = ['High', 'Low', 'New'] as const;
 
 export const zDonationItemBase = z.object({
-  item: zObjectId,
+  item: z.union([zObjectId, zCreateItemRequest]),
   quantity: z.number(),
   barcode: z.string().optional(),
   value: z.object({
@@ -49,9 +49,13 @@ export const zDonationBase = z.object({
 
 export const zDonationEntity = zDonationBase.extend({ ...zBase.shape });
 
-export const zCreateDonationRequest = zDonationBase;
+export const zCreateDonationRequest = zDonationBase.extend({
+  donor: z.union([zObjectId, zCreateDonorRequest]),
+  items: z.array(zCreateDonationItemRequest),
+});
 
 export const zDonationResponse = zDonationEntity.extend({
+  _id: zObjectId,
   user: zUserResponse,
   donor: zDonorResponse,
   items: z.array(zDonationItemResponse),

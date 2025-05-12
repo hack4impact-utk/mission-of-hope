@@ -25,6 +25,7 @@ const DonationSchema = new Schema(
     receipt: {
       type: String,
       required: true,
+      unique: true,
     },
   },
   {
