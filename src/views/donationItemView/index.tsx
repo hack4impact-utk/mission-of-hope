@@ -2,10 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Chip,
   Container,
   Grid,
-  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -17,8 +15,11 @@ import {
   Button,
 } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { DonationResponse } from '@/types/donation';
-import EditIcon from '@mui/icons-material/Edit';
+import {
+  DonationResponse,
+  DonationItemResponse,
+  GroupedDonationItem,
+} from '@/types/donation';
 import useMonth from '@/hooks/useMonth';
 import useSearch from '@/hooks/useSearch';
 
@@ -31,46 +32,16 @@ const allColumns: GridColDef[] = [
   { field: 'category', headerName: 'Category', maxWidth: 300, flex: 0.4 },
   { field: 'quantity', headerName: 'Quantity', maxWidth: 80, flex: 0.5 },
   { field: 'evaluation', headerName: 'Evaluation', maxWidth: 80, flex: 0.5 },
-  {
-    field: 'barcode',
-    headerName: 'Barcode (if food)',
-    maxWidth: 200,
-    flex: 0.5,
-    renderCell: (params) =>
-      params.value ? (
-        <Chip
-          label={params.value}
-          sx={{
-            bgcolor: '#37954173',
-            border: 'solid',
-            borderColor: '#ABABAB',
-          }}
-        />
-      ) : null,
-  },
-  { field: 'price', headerName: 'Price', maxWidth: 100, flex: 0.5 },
-  {
-    field: 'edit',
-    headerName: 'Edit',
-    maxWidth: 80,
-    flex: 0.5,
-    sortable: false,
-    filterable: false,
-    renderCell: (params) => (
-      <IconButton
-        color="primary"
-        size="small"
-        onClick={() => (window.location.href = `/donation/${params.value}`)}
-      >
-        <EditIcon></EditIcon>
-      </IconButton>
-    ),
-  },
+  { field: 'product', headerName: 'Product', maxWidth: 300, flex: 2 },
+  { field: 'category', headerName: 'Category', maxWidth: 300, flex: 2 },
+  { field: 'quantity', headerName: 'Quantity', maxWidth: 300, flex: 1 },
+  { field: 'price', headerName: 'Value', flex: 1 },
 ];
 
 export default function DonationItemView({ donations }: DonationItemProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+  const [columnSelectorOpen, setColumnSelectorOpen] = useState<boolean>(false);
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     allColumns.map((col) => col.field)
@@ -96,27 +67,54 @@ export default function DonationItemView({ donations }: DonationItemProps) {
         )
       : donations;
 
-  const uniqueDonationItems = Array.from(
-    new Set(filteredDonations.map((donation) => donation.items).flat(1))
+  // Grab all donation items from all donations and make a single flat array
+  const flatItems = filteredDonations.flatMap((donation) => donation.items);
+
+  // Then, group items by name and aggregate quantities and values
+  const groupedItems = flatItems.reduce(
+    (acc: Record<string, GroupedDonationItem>, item: DonationItemResponse) => {
+      const key = item.item.name;
+
+      // If an item name hasn't been added yet, create a new entry
+      if (!acc[key]) {
+        acc[key] = {
+          item: item.item,
+          quantity: 0,
+          totalValue: 0,
+          barcode: item.barcode,
+          evaluation: item.value.evaluation,
+          itemIds: [],
+        };
+      }
+
+      // Add values
+      acc[key].quantity += item.quantity;
+      acc[key].totalValue += item.value.price * item.quantity;
+
+      // Only add each item ID once
+      if (!acc[key].itemIds.includes(item._id)) {
+        acc[key].itemIds.push(item._id);
+      }
+
+      return acc;
+    },
+    {}
   );
 
-  const formattedRows = uniqueDonationItems
-    .map((row, index) => ({
+  const formattedRows = Object.values(groupedItems)
+    .map((groupedItem, index) => ({
       id: index + 1,
-      product: row.item.name,
-      category: row.item.category,
-      quantity: row.quantity,
-      evaluation: row.value.evaluation,
-      barcode: row.barcode,
-      price: `$${row.value.price}`,
-      edit: row._id,
+      product: groupedItem.item.name,
+      category: groupedItem.item.category,
+      quantity: groupedItem.quantity,
+      evaluation: groupedItem.evaluation,
+      barcode: groupedItem.barcode,
+      price: `$${groupedItem.totalValue.toFixed(2)}`,
     }))
     .filter((row) =>
-      Object.entries(row)
-        .filter(([key]) => key !== 'edit') // Exclude 'edit' (row._id) value from search
-        .some((value) =>
-          String(value).toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      Object.entries(row).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+      )
     );
 
   const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
@@ -133,7 +131,6 @@ export default function DonationItemView({ donations }: DonationItemProps) {
     };
 
     const headers = visibleColumns
-      .filter((field) => field !== 'edit')
       .map(
         (field) =>
           allColumns.find((col) => col.field === field)?.headerName || ''
@@ -142,7 +139,6 @@ export default function DonationItemView({ donations }: DonationItemProps) {
 
     const csvRows = formattedRows.map((row) =>
       visibleColumns
-        .filter((field) => field !== 'edit')
         .map((field) => escapeCSVValue(row[field as keyof typeof row]))
         .join(',')
     );
@@ -173,6 +169,9 @@ export default function DonationItemView({ donations }: DonationItemProps) {
           <InputLabel></InputLabel>
           <Select
             multiple
+            open={columnSelectorOpen}
+            onOpen={() => setColumnSelectorOpen(true)}
+            onClose={() => setColumnSelectorOpen(false)}
             value={visibleColumns}
             onChange={handleColumnSelectionChange}
             renderValue={(selected) =>

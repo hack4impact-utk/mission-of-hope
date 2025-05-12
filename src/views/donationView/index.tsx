@@ -32,12 +32,14 @@ export default function DonationView({ donations }: DonationViewProps) {
   const { searchString, searchQuery, setSearchQuery } = useSearch();
   const { selectedYear, yearQuery, setYearQuery } = useYear();
   const { selectedMonth, monthQuery, setMonthQuery } = useMonth();
+  const [columnSelectorOpen, setColumnSelectorOpen] = useState<boolean>(false);
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     'donor',
     'quantity',
     'user_name',
     'date',
+    'receipt',
     'edit',
   ]);
 
@@ -123,6 +125,7 @@ export default function DonationView({ donations }: DonationViewProps) {
   );
 
   const handleColumnSelectionChange = (event: SelectChangeEvent<string[]>) => {
+    event.preventDefault();
     const selectedColumns = event.target.value as string[];
     setVisibleColumns(selectedColumns);
   };
@@ -141,6 +144,9 @@ export default function DonationView({ donations }: DonationViewProps) {
           <InputLabel></InputLabel>
           <Select
             multiple
+            open={columnSelectorOpen}
+            onOpen={() => setColumnSelectorOpen(true)}
+            onClose={() => setColumnSelectorOpen(false)}
             sx={{
               padding: '0px 6px',
               minWidth: 'auto',
@@ -181,12 +187,10 @@ export default function DonationView({ donations }: DonationViewProps) {
         </Button>
       </Box>
       <GridToolbarQuickFilter
-        quickFilterProps={{
-          debounceMs: 100,
-          value: searchString,
-          onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-            setSearchQuery(event.target.value);
-          },
+        debounceMs={100}
+        value={searchString}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setSearchQuery(event.target.value);
         }}
       />
     </Box>
@@ -198,9 +202,12 @@ export default function DonationView({ donations }: DonationViewProps) {
       .map((col) => col.headerName)
       .join(',');
     const csvRows = rows.map((row) =>
-      [row.donor, row.user_name, new Date(row.date).toLocaleDateString()].join(
-        ','
-      )
+      [
+        row.donor,
+        row.user_name,
+        new Date(row.date).toLocaleDateString(),
+        row.receipt,
+      ].join(',')
     );
     const csvContent = `data:text/csv;charset=utf-8,${headers}\n${csvRows.join(
       '\n'
@@ -235,15 +242,19 @@ export default function DonationView({ donations }: DonationViewProps) {
               displayEmpty
               inputProps={{ 'aria-label': 'Select year' }}
             >
-              <MenuItem value="0">All Years</MenuItem>
               {/* Generate year options */}
-              {[...Array(new Date().getFullYear() - START_YEAR + 2).keys()].map(
-                (yearIndex) => (
+              {[
+                <MenuItem key="all-years" value="0">
+                  All Years
+                </MenuItem>,
+                ...[
+                  ...Array(new Date().getFullYear() - START_YEAR + 2).keys(),
+                ].map((yearIndex) => (
                   <MenuItem key={yearIndex} value={START_YEAR + yearIndex}>
                     {START_YEAR + yearIndex}
                   </MenuItem>
-                )
-              )}
+                )),
+              ]}
             </Select>
           </Grid>
           <Grid item xs={2}>
@@ -255,16 +266,19 @@ export default function DonationView({ donations }: DonationViewProps) {
               displayEmpty
               inputProps={{ 'aria-label': 'Select month' }}
             >
-              <MenuItem value="0">All Months</MenuItem>
               {/* Generate month options */}
-
-              {[...Array(12).keys()].map((month) => (
-                <MenuItem key={month} value={month + 1}>
-                  {new Date(2000, month).toLocaleString('default', {
-                    month: 'long',
-                  })}
-                </MenuItem>
-              ))}
+              {[
+                <MenuItem key="all-months" value="0">
+                  All Months
+                </MenuItem>,
+                ...[...Array(12).keys()].map((month) => (
+                  <MenuItem key={month} value={month + 1}>
+                    {new Date(2000, month).toLocaleString('default', {
+                      month: 'long',
+                    })}
+                  </MenuItem>
+                )),
+              ]}
             </Select>
           </Grid>
         </Grid>

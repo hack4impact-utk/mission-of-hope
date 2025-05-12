@@ -130,7 +130,7 @@ export default function SettingsView({ users, settings }: SettingsViewProps) {
             </Grid2>
             <Grid2 xs={12} md={6} sx={{ mt: 1 }}>
               <MuiChipsInput
-                validate={(email) => {
+                validate={(email: string) => {
                   const emailSchema = z.string().email();
                   return (
                     emailSchema.safeParse(email).success &&

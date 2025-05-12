@@ -18,9 +18,10 @@ import { useState } from 'react';
 import { ItemResponse, UpdateItemRequest } from '@/types/items';
 import useSnackbar from '@/hooks/useSnackbar';
 
-interface itemProps {
+interface ItemIdViewProps {
   id: string;
   item: ItemResponse;
+  categories: string[];
 }
 
 declare module '@mui/material/Button' {
@@ -29,7 +30,7 @@ declare module '@mui/material/Button' {
   }
 }
 
-export default function ItemIdView(props: itemProps) {
+export default function ItemIdView(props: ItemIdViewProps) {
   const { showSnackbar } = useSnackbar();
   const [editSwitch, setEditSwitch] = useState<boolean>(false);
   const [itemForm, setItemForm] = useState<ItemFormData>({
@@ -153,7 +154,7 @@ export default function ItemIdView(props: itemProps) {
                 itemForm={itemForm}
                 onChange={setItemForm}
                 disabled={!editSwitch}
-                categories={[]}
+                categories={props.categories}
               ></ItemForm>
               <Grid item xs={3} sm={6}></Grid>
               <Grid item xs={3} sm={3}>

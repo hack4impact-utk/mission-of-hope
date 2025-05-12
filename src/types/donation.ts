@@ -1,7 +1,7 @@
 import zBase from './base';
 import { z } from 'zod';
 import zObjectId from './objectId';
-import { zCreateItemRequest, zItemResponse } from './items';
+import { zCreateItemRequest, zItemResponse, ItemResponse } from './items';
 import { zUserResponse } from './users';
 import { zDonorResponse, zCreateDonorRequest } from './donors';
 
@@ -72,3 +72,12 @@ export interface DonationResponse extends z.infer<typeof zDonationResponse> {}
 
 export interface UpdateDonationRequest
   extends z.infer<typeof zUpdateDonationRequest> {}
+
+export interface GroupedDonationItem {
+  item: ItemResponse;
+  quantity: number;
+  totalValue: number;
+  barcode?: string;
+  evaluation: string;
+  itemIds: string[];
+}
